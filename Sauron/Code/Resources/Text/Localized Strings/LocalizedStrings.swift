@@ -1,0 +1,72 @@
+//
+//  LocalizedStrings.swift
+//  Inspec
+//
+//  Created by Justin Cook on 10/29/22.
+//
+
+import Foundation
+import SwiftUI
+
+/// Note: If a new string is added to the localization file(s) please update these enums accordingly
+enum LocalizedStrings: String, CaseIterable {
+    case APP_NAME,
+         TABBAR_BUTTON_HOME,
+         TABBAR_BUTTON_WALLET,
+         TABBAR_BUTTON_SETTINGS,
+         TABBAR_BUTTON_ALERTS,
+         NAVIGATION_BUTTON_SKIP,
+         ONBOARDING_PAGE_1_TITLE,
+         ONBOARDING_PAGE_2_TITLE,
+         ONBOARDING_PAGE_3_TITLE,
+         ONBOARDING_PAGE_3_CTA,
+         TOS,
+         PP,
+         OR_FORK_PROMPT,
+         CONTINUE,
+         HOME_SCREEN_CURATE_BUTTON,
+         HOME_SCREEN_AUTO_GEN_BUTTON,
+         HOME_SCREEN_GET_STARTED_PROMPT,
+         HOME_SCREEN_LEARN_MORE_BUTTON,
+         PORTFOLIO_CURATION_SCREEN_TITLE_FTUE_NEWLINE,
+         PORTFOLIO_CURATION_SCREEN_TITLE_FTUE,
+         PORTFOLIO_CURATION_SCREEN_TITLE,
+         PORTFOLIO_CURATION_SCREEN_SEARCHBAR_PLACEHOLDER,
+         PORTFOLIO_CURATION_SCREEN_SYMBOL_HEADER,
+         PORTFOLIO_CURATION_SCREEN_VOLUME_HEADER,
+         PORTFOLIO_CURATION_SCREEN_ASSET_ID_HEADER,
+         PORTFOLIO_CURATION_SCREEN_ASSET_NAME_HEADER,
+         PORTFOLIO_CURATION_SCREEN_PRICE_HEADER,
+         PORTFOLIO_CURATION_SCREEN_CURRENCY_PREFERENCES_BUTTON,
+         PORTFOLIO_CURATION_SCREEN_LANGUAGE_PREFERENCES_BUTTON,
+         PORTFOLIO_CURATION_SCREEN_MAKE_CHANGES_LATER_PROMPT,
+         PORTFOLIO_CURATION_SCREEN_SEARCH_RESULT_COUNT_SINGULAR,
+         PORTFOLIO_CURATION_SCREEN_SEARCH_RESULT_COUNT_PLURAL,
+         PORTFOLIO_CURATION_SCREEN_SEARCH_RESULT_COUNT_NONE,
+         PORTFOLIO_CURATION_SCREEN_NO_SEARCH_RESULTS,
+         PORTFOLIO_CURATION_SCREEN_PORTFOLIO_COIN_COUNT_SINGULAR,
+         PORTFOLIO_CURATION_SCREEN_PORTFOLIO_COIN_COUNT_PLURAL,
+         SORT_FILTER_CONTEXT_MENU_TITLE,
+         SORT_FILTER_CONTEXT_MENU_NAME_OPTION,
+         SORT_FILTER_CONTEXT_MENU_ID_OPTION,
+         SORT_FILTER_CONTEXT_MENU_PRICE_OPTION,
+         SORT_FILTER_CONTEXT_MENU_VOLUME_OPTION,
+         HUMAN_READABLE_INTERNET_NOT_AVAILABLE,
+         HUMAN_READABLE_INTERNET_CELLULAR_DENIED,
+         HUMAN_READABLE_INTERNET_WIFI_DENIED,
+         HUMAN_READABLE_INTERNET_LOCAL_NETWORK_DENIED
+}
+
+extension LocalizedStrings {
+    /// String keys for SwiftUI and compiler time localization
+    static func getLocalizedStringKey(for key: LocalizedStrings) -> LocalizedStringKey {
+        
+        return LocalizedStringKey(key.rawValue)
+    }
+    
+    /// Strings for UIKit and manual localization
+    static func getLocalizedString(for string: LocalizedStrings) -> String {
+        return string.rawValue.localized
+    }
+}
+
