@@ -11,6 +11,6 @@ Keep your eye in the sky with this modern, robust, and responsive crypto tracker
 
 <div align="center">
  
-<img src="https://github.com/jcook03266/Sauron-iOS/blob/dev/Resources/Sauron-iOS-MVP-Collage.png" width = "400">
+<img src="https://github.com/jcook03266/Sauron-iOS/blob/dev/Resources/Sauron-iOS-MVP-Collage.png" width = "800">
  
 </div>
