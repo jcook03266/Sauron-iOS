@@ -47,6 +47,10 @@ struct HapticFeedbackDispatcher {
         Impacts.generateImpact(with: .medium, intensity: 0.4)
     }
     
+    static func fullScreenCoverDismissed() {
+        Impacts.generateImpact(with: .light, intensity: 1)
+    }
+    
     struct Impacts{}
 }
 

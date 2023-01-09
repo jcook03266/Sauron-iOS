@@ -63,6 +63,13 @@ class OnboardingRouter: Routable {
             view = SafariView(url: webURL)
             
             statusBarHidden = false
+            
+        case .currencyPreferenceBottomSheet:
+            view = PreferenceBottomSheet(model: BottomSheetDispatcher.getCurrencyPreferenceModel(using: self.coordinator))
+            
+        case .languagePreferenceBottomSheet:
+            view = PreferenceBottomSheet(model: BottomSheetDispatcher.getCurrencyPreferenceModel(using: self.coordinator))
+            
         }
         
         return AnyView(view

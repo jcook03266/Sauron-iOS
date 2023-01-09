@@ -12,11 +12,13 @@ class OnboardingCoordinator: RootCoordinator {
     typealias Router = OnboardingRouter
     typealias Body = AnyView
     
+    // MARK: - Properties
     unowned var parent: any Coordinator {
         return self
     }
     var children: [any Coordinator] = []
     var deferredDismissalActionStore: [OnboardingRoutes : (() -> Void)?] = [:]
+    var statusBarHidden: Bool = true // Important: Do not publish changes from this variable, it disrupts the presentation of sheet modifiers
     
     // MARK: - Published
     @Published var router: OnboardingRouter!
@@ -24,7 +26,6 @@ class OnboardingCoordinator: RootCoordinator {
     @Published var sheetItem: OnboardingRoutes?
     @Published var fullCoverItem: OnboardingRoutes?
     @Published var rootView: AnyView!
-    @Published var statusBarHidden: Bool = true
     @Published var rootRoute: OnboardingRoutes! = RootCoordinatorDelegate.shared.onboardingRootRoute
     
     // MARK: - Observed

@@ -32,8 +32,18 @@ struct LaunchScreenCoordinatorView: CoordinatedView {
             NavigationStack(path: $coordinator.navigationPath) {
                 coordinator.rootView
                     .fullScreenCover(item: $fullCoverItemState,
+                                     onDismiss: {
+                        DispatchQueue.main.async {
+                            coordinator.dismissFullScreenCover()
+                        }
+                    },
                                      content: { route in coordinator.router.view(for: route) })
                     .sheet(item: $sheetItemState,
+                           onDismiss: {
+                        DispatchQueue.main.async {
+                            coordinator.dismissSheet()
+                        }
+                    },
                            content: { route in coordinator.router.view(for: route) })
                     .navigationDestination(for: Router.Route.self,
                                            destination: { route in coordinator.router.view(for: route) })

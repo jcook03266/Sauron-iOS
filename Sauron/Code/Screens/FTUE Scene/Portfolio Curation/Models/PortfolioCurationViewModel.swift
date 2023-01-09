@@ -15,7 +15,6 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     @ObservedObject var coordinator: OnboardingCoordinator
     
     // MARK: - Published
-    @Published var sortButtonToggled: Bool = false
     @Published var assetIdentifierDisplayType: AssetIdentifierDisplayType = .Name
     @Published var isReloading: Bool = false
     @Published var searchBarTextFieldModel: SatelliteTextFieldModel!
@@ -29,6 +28,8 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Models
+    var contextMenuModel: FloatingContextMenuViewModel = .init()
+    
     private var builtSearchBarTextFieldModel: SatelliteTextFieldModel {
         let searchBarTextFieldModel: SatelliteTextFieldModel = .init()
         
@@ -66,6 +67,14 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     var canContinue: Bool {
         let condition: Bool = userHasSelectedCoins
         return condition
+    }
+    
+    var shouldDisplayNoSearchResultsText: Bool {
+        return isCoinsEmpty && (isSearchBarActive || isUserSearching)
+    }
+    
+    var isCoinsEmpty: Bool {
+        return coins.isEmpty
     }
     
     var userHasSelectedCoins: Bool {
@@ -124,8 +133,11 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     }
     
     var goBackAction: (() -> Void) {
-        return {
+        return { [weak self] in
+            
             HapticFeedbackDispatcher.arrowButtonPress()
+            guard let self = self else { return }
+            
             self.coordinator.popView()
         }
     }
@@ -133,30 +145,66 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     var continueAction: (() -> Void) {
         return {
             HapticFeedbackDispatcher.interstitialCTAButtonPress()
+                
         }
     }
     
-    var searchAction: (() -> Void) {
-        return {
+    // MARK: - Context Menu Sorting Actions
+    var sortByNameAction: (() -> Void) {
+        return { [weak self] in
             HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
+            self.dataStores.coinStore.sort(ascending: self.contextMenuModel.sortInAscendingOrder,
+                                           sortKey: .name,
+                                           sortKeyType: String.self)
+        }
+    }
+    
+    var sortByIDAction: (() -> Void) {
+        return { [weak self] in
+            HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
+            self.dataStores.coinStore.sort(ascending: self.contextMenuModel.sortInAscendingOrder,
+                                           sortKey: .id,
+                                           sortKeyType: String.self)
+        }
+    }
+    
+    var sortByPriceAction: (() -> Void) {
+        return { [weak self] in
+            HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
+            self.dataStores.coinStore.sort(ascending: self.contextMenuModel.sortInAscendingOrder,
+                                           sortKey: .price,
+                                           sortKeyType: Double.self)
         }
     }
     
     var sortButtonPressedAction: (() -> Void) {
-        return {
+        return { [weak self] in
             HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
+            hideKeyboard()
+            
+            self.contextMenuModel.shouldDisplay.toggle()
         }
     }
     
     var currencyPreferenceAction: (() -> Void) {
         return {
             HapticFeedbackDispatcher.bottomSheetPresented()
+            self.coordinator.presentSheet(with: .currencyPreferenceBottomSheet)
         }
     }
     
     var languagePreferenceAction: (() -> Void) {
         return {
             HapticFeedbackDispatcher.bottomSheetPresented()
+            self.coordinator.presentSheet(with: .languagePreferenceBottomSheet)
         }
     }
     
@@ -223,7 +271,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         continueButtonText = LocalizedStrings.getLocalizedStringKey(for: .CONTINUE),
         makeChangesLaterPrompt = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_MAKE_CHANGES_LATER_PROMPT),
         searchBarPlaceholder = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_SEARCHBAR_PLACEHOLDER),
-        noSearchResultsText = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_NO_SEARCH_RESULTS)
+        noSearchResultsText = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_NO_SEARCH_RESULTS_NEWLINE)
     
     // MARK: - Assets
     var sortButtonIcon: Image {
@@ -282,7 +330,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         titleFontWeight: Font.Weight = .semibold,
         searchResultsCountFont: FontRepository = .body_M,
         searchResultsCountFontWeight: Font.Weight = .regular,
-        noSearchResultsTextFont: FontRepository = .heading_4,
+        noSearchResultsTextFont: FontRepository = .heading_3,
         noSearchResultsTextFontWeight: Font.Weight = .semibold,
         contextPropertiesHeaderFont: FontRepository = .body_S,
         contextPropertiesHeaderFontWeight: Font.Weight = .regular
@@ -292,6 +340,32 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         self.searchBarTextFieldModel = builtSearchBarTextFieldModel
         
         addSubscribers()
+        buildContextMenuModel()
+    }
+    
+    // MARK: - Model Building
+    func anchorContextMenuTo(anchor: CGPoint) {
+        contextMenuModel.anchorPoint = anchor
+    }
+    
+    func buildContextMenuModel() {
+        let contextMenuRows: [FloatingContextMenuViewModel.FloatingContextMenuRow] = [
+            .init(action: self.sortByNameAction,
+                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_NAME_OPTION),
+                  sideBarIcon: Icons.getIconImage(named: .textformat_abc),
+                  isSelected: false),
+            .init(action: self.sortByIDAction,
+                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_ID_OPTION),
+                  sideBarIcon: Icons.getIconImage(named: .tag_fill),
+                  isSelected: false),
+            .init(action: self.sortByPriceAction,
+                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_PRICE_OPTION),
+                  sideBarIcon: Icons.getIconImage(named: .dollarsign_square_fill),
+                  isSelected: false),
+        ]
+        
+        contextMenuModel.rows = contextMenuRows
+        contextMenuModel.menuTitle = LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_TITLE)
     }
     
     // MARK: - Subscriptions

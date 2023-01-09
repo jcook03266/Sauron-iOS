@@ -202,7 +202,9 @@ debounceInterval: Double = 0.25,
     }
     
     // MARK: - Filtering
-    private func filter(using query: String, on unfilteredCoins: [CoinModel]) -> [CoinModel] {
+    private func filter(using query: String,
+                        on unfilteredCoins: [CoinModel]) -> [CoinModel]
+    {
         guard !query.isEmpty else { return unfilteredCoins }
         
         // To accurately compare the model's identifier strings with the given query, all strings have to be lowercased
@@ -246,6 +248,9 @@ debounceInterval: Double = 0.25,
             case .name:
                 value1 = coin1.name as! T
                 value2 = coin2.name as! T
+            case .id:
+                value1 = coin1.id as! T
+                value2 = coin2.id as! T
             case .price:
                 value1 = coin1.currentPrice as! T
                 value2 = coin2.currentPrice as! T
@@ -266,6 +271,7 @@ debounceInterval: Double = 0.25,
     
     enum SortKeys: CaseIterable, Hashable, Codable {
         case name
+        case id
         case price
     }
 }

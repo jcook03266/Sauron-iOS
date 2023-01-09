@@ -19,58 +19,66 @@ struct PortfolioCurationView: View {
     
     // MARK: - Dimensions + Padding
     private let backButtonTrailingPadding: CGFloat = 20,
-backButtonLeadingPadding: CGFloat = 9,
-titleViewLeadingPadding: CGFloat = 90,
-titleViewTrailingPadding: CGFloat = 20,
-titleViewHeight: CGFloat = 100,
-sideVerticalDividerWidth: CGFloat = 3,
-sideVerticalDividerLeadingPadding: CGFloat = 35,
-searchBarTopPadding: CGFloat = 20,
-searchBarBottomPadding: CGFloat = 10,
-searchBarLeadingPadding: CGFloat = -45,
-assetPropertiesHeaderHeight: CGFloat = 35,
-assetPropertiesHeaderDividerWidth: CGFloat = 2,
-assetPropertiesHeaderLeadingPadding: CGFloat = 60,
-assetPropertiesHeaderTopPadding: CGFloat = 5,
-assetPropertiesHeaderTrailingPadding: CGFloat = 10,
-assetsListViewItemSpacing: CGFloat = 10,
-assetsListViewTopPadding: CGFloat = 10,
-assetsListViewLeadingPadding: CGFloat = -13,
-assetsListViewTrailingPadding: CGFloat = 5,
-assetsListScrollViewVerticalPadding: CGFloat = 25,
-scrollViewBottomPadding: CGFloat = 200,
-assetSymbolContainerBorderWidth: CGFloat = 1,
-assetSymbolContainerWidth: CGFloat = 75,
-assetSymbolContainerLeadingPadding: CGFloat = 60,
-assetSymbolContainerBottomPadding: CGFloat = -15,
-assetSymbolContainerCornerRadius: CGFloat = 10,
-infoSectionLeadingPadding: CGFloat = 10,
-infoSectionTrailingPadding: CGFloat = 40,
-infoSectionTopPadding: CGFloat = 10,
-continueCTAButtonLeadingPadding: CGFloat = 10,
-continueCTAButtonSize: CGSize = .init(width: 260,
-                                      height: 60),
-preferenceChipletButtonSize: CGSize = .init(width: 200,
-                                            height: 40),
-preferenceChipletButtonContainerPadding: CGFloat = 5,
-preferenceChipletButtonShadowOffset: CGSize = .init(width: 0,
-                                                    height: 1),
-preferenceChipletButtonBorderWidth: CGFloat = 1,
-preferenceChipletButtonShadowRadius: CGFloat = 4,
-preferenceChipletButtonCornerRadius: CGFloat = 10,
-preferenceButtonsInsetPadding: CGFloat = 10,
-preferenceButtonsItemSpacing: CGFloat = 10,
-bottomSectionBackgroundTopPadding: CGFloat = -15,
-bottomSectionBackgroundBottomPadding: CGFloat = -60,
-bottomSectionCornerRadius: CGFloat = 30,
-bottomSectionShadowOffset: CGSize = .init(width: 0,
-                                          height: -2),
-bottomSectionShadowRadius: CGFloat = 2,
-bottomSectionHideVerticalOffset: CGFloat = 400,
-contextPropertiesHeaderBorderWidth: CGFloat = 1,
-contextPropertiesHeaderVerticalPadding: CGFloat = 10,
-contextPropertiesHeaderHorizontalPadding: CGFloat = 10,
-contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
+                backButtonLeadingPadding: CGFloat = 7,
+                titleViewLeadingPadding: CGFloat = 90,
+                titleViewTrailingPadding: CGFloat = 20,
+                titleViewHeight: CGFloat = 100,
+                sideVerticalDividerWidth: CGFloat = 3,
+                sideVerticalDividerLeadingPadding: CGFloat = 35,
+                searchBarTopPadding: CGFloat = 20,
+                searchBarBottomPadding: CGFloat = 10,
+                searchBarLeadingPadding: CGFloat = 12,
+                assetPropertiesHeaderHeight: CGFloat = 35,
+                assetPropertiesHeaderDividerWidth: CGFloat = 2,
+                assetPropertiesHeaderLeadingPadding: CGFloat = 60,
+                assetPropertiesHeaderTopPadding: CGFloat = 5,
+                assetPropertiesHeaderTrailingPadding: CGFloat = 10,
+                assetsListViewItemSpacing: CGFloat = 10,
+                assetsListViewTopPadding: CGFloat = 10,
+                assetsListViewTrailingPadding: CGFloat = 5,
+                assetsListScrollViewVerticalPadding: CGFloat = 25,
+                scrollViewBottomPadding: CGFloat = 200,
+                assetSymbolContainerBorderWidth: CGFloat = 1,
+                assetSymbolContainerWidth: CGFloat = 75,
+                assetSymbolContainerLeadingPadding: CGFloat = 60,
+                assetSymbolContainerBottomPadding: CGFloat = -15,
+                assetSymbolContainerCornerRadius: CGFloat = 10,
+                infoSectionLeadingPadding: CGFloat = 10,
+                infoSectionTrailingPadding: CGFloat = 40,
+                infoSectionTopPadding: CGFloat = 10,
+                continueCTAButtonLeadingPadding: CGFloat = 10,
+                continueCTAButtonSize: CGSize = .init(width: 260,
+                                                      height: 60),
+                preferenceChipletButtonSize: CGSize = .init(width: 200,
+                                                            height: 40),
+                preferenceChipletButtonContainerPadding: CGFloat = 5,
+                preferenceChipletButtonShadowOffset: CGSize = .init(width: 0,
+                                                                    height: 1),
+                preferenceChipletButtonBorderWidth: CGFloat = 1,
+                preferenceChipletButtonShadowRadius: CGFloat = 4,
+                preferenceChipletButtonCornerRadius: CGFloat = 10,
+                preferenceButtonsInsetPadding: CGFloat = 10,
+                preferenceButtonsItemSpacing: CGFloat = 10,
+                bottomSectionBackgroundTopPadding: CGFloat = -15,
+                bottomSectionBackgroundBottomPadding: CGFloat = -60,
+                bottomSectionCornerRadius: CGFloat = 30,
+                bottomSectionShadowOffset: CGSize = .init(width: 0,
+                                                          height: -2),
+                bottomSectionShadowRadius: CGFloat = 2,
+                bottomSectionHideVerticalOffset: CGFloat = 400,
+                contextPropertiesHeaderBorderWidth: CGFloat = 1,
+                contextPropertiesHeaderVerticalPadding: CGFloat = 10,
+                contextPropertiesHeaderHorizontalPadding: CGFloat = 10,
+                contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40),
+                noSearchResultsTextLeadingPadding: CGFloat = 30,
+                noSearchResultsTextTrailingPadding: CGFloat = 40,
+                sortButtonIconSize: CGSize = .init(width: 30,
+                                                   height: 30),
+                sortButtonLeadingPadding: CGFloat = 10
+    
+    var assetsListViewLeadingPadding: CGFloat {
+        return DeviceConstants.isDeviceSmallFormFactor() ? 0 : -8
+    }
     
     var contextPropertiesHeaderChipSize: CGSize {
         return CGSize(width: contextPropertiesHeaderSize.width/2,
@@ -241,6 +249,45 @@ contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
                     model.assetIdentifierDisplayType)
     }
     
+    var sortCoinsButton: some View {
+        GeometryReader { geom in
+            Button {
+                model.sortButtonPressedAction()
+            } label: {
+                model.sortButtonIcon
+                    .resizable()
+                    .renderingMode(.template)
+                    .aspectRatio(contentMode: .fit)
+                    .applyGradient(gradient: model.sortButtonGradient)
+                    .frame(width: sortButtonIconSize.width,
+                           height: sortButtonIconSize.height)
+            }
+            .preference(key: PositionPreferenceKey.self,
+                        value: CGPoint(x: geom.frame(in: .global).minX,
+                                       y: geom.frame(in: .global).maxY))
+            .buttonStyle(.genericSpringyShrink)
+            .padding(.leading, sortButtonLeadingPadding)
+        }
+        .onPreferenceChange(PositionPreferenceKey.self) { preferences in
+            model.anchorContextMenuTo(anchor: preferences)
+        }
+        .frame(width: sortButtonIconSize.width,
+               height: sortButtonIconSize.height)
+    }
+    
+    var noSearchResultsTextView: some View {
+        Text(model.noSearchResultsText)
+            .withFont(model.noSearchResultsTextFont)
+            .fontWeight(model.noSearchResultsTextFontWeight)
+            .applyGradient(gradient: model.noSearchResultsTextGradient)
+            .minimumScaleFactor(0.1)
+            .multilineTextAlignment(.leading)
+            .lineLimit(2)
+            .padding(.leading, noSearchResultsTextLeadingPadding)
+            .padding(.trailing, noSearchResultsTextTrailingPadding)
+            .transition(.offset(x: 500))
+    }
+    
     /// Displayed when no data is available
     var placeholderListView: some View {
         ForEach(model.placeholderViewRange, id: \.self) { _ in
@@ -258,7 +305,7 @@ contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
             assetPropertiesHeader
             
             LazyVStack(spacing: assetsListViewItemSpacing) {
-                if !model.coins.isEmpty {
+                if !model.isCoinsEmpty {
                     ForEach(model.coins) {
                         PCCoinRowView(model: .init(parentViewModel: model,
                                                    coinModel: $0,
@@ -269,6 +316,9 @@ contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
                     }
                     .animation(.spring(),
                                value: model.isReloading)
+                }
+                else if model.shouldDisplayNoSearchResultsText {
+                    noSearchResultsTextView
                 }
                 else {
                     placeholderListView
@@ -281,7 +331,7 @@ contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
             .padding(.leading, assetsListViewLeadingPadding)
             .padding(.trailing, assetsListViewTrailingPadding)
             .background(
-                assetSymbolContainer
+                model.shouldDisplayNoSearchResultsText ? nil : assetSymbolContainer
             )
             .scaledToFill()
         }
@@ -396,7 +446,14 @@ contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
     
     var searchBarSection: some View {
         VStack {
-            searchBar
+            HStack(spacing: 0) {
+                searchBar
+                
+                sortCoinsButton
+                
+                Spacer()
+            }
+            
             contextPropertiesHeaderView
         }
     }
@@ -477,6 +534,10 @@ contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
                    value: model.canContinue)
     }
     
+    var floatingContextMenuView: some View {
+        FloatingContextMenu(model: model.contextMenuModel)
+    }
+    
     var body: some View {
         GeometryReader { geom in
             ZStack {
@@ -485,6 +546,8 @@ contextPropertiesHeaderSize: CGSize = CGSize(width: 160, height: 40)
                 topSection
                 
                 bottomSection
+                
+                floatingContextMenuView
             }
         }
         .animation(.spring(),

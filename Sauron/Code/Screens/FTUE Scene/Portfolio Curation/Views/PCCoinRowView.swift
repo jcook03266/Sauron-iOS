@@ -16,11 +16,17 @@ struct PCCoinRowView: View {
     @State var didAppear: Bool = false
     
     // MARK: - Dimensions + Padding
+    private var imageViewTrailingPadding: CGFloat {
+        return DeviceConstants.isDeviceSmallFormFactor() ? 10 : 20
+    }
+    private var radioButtonTrailingPadding: CGFloat {
+        return DeviceConstants.isDeviceSmallFormFactor() ? 20 : 20
+    }
+  
     private let imageViewDiameter: CGFloat = 50,
-                imageViewTrailingPadding: CGFloat = 25,
-                imageViewLeadingPadding: CGFloat = 20,
                 inscribedImageSize: CGSize = .init(width: 30,
                                                    height: 30),
+                imageViewLeadingPadding: CGFloat = 0,
                 textBackgroundRectangleCornerRadius: CGFloat = 10,
                 textBackgroundRectangleBorderWidth: CGFloat = 1,
                 textBackgroundRectangleHeight: CGFloat = 50,
@@ -28,14 +34,13 @@ struct PCCoinRowView: View {
                 assetPriceChipWidth: CGFloat = 110,
                 textBackgroundShadowOffset: CGSize = .init(width: 0, height: 2),
                 textBackgroundShadowRadius: CGFloat = 1,
-                assetIdentifierChipTrailingPadding: CGFloat = 15,
-                assetIdentifierChipLeadingPadding: CGFloat = 10,
-                priceChipLeadingPadding: CGFloat = 20,
+                assetIdentifierChipTrailingPadding: CGFloat = 10,
+                assetIdentifierChipLeadingPadding: CGFloat = 0,
+                priceChipLeadingPadding: CGFloat = 0,
                 priceChipTrailingPadding: CGFloat = 10,
                 radioButtonDiameter: CGFloat = 30,
                 radioButtonInscribedCircleDiameter: CGFloat = 20,
-                radioButtonTrailingPadding: CGFloat = 25,
-                radioButtonLeadingPadding: CGFloat = 25,
+                radioButtonLeadingPadding: CGFloat = 0,
                 radioButtonShadowRadius: CGFloat = 3,
                 radioButtonShadowOffset: CGSize = .init(width: 0, height: 1),
                 rankLeadingPadding: CGFloat = 10,
@@ -114,6 +119,8 @@ radioButtonBackgroundFillGradient: LinearGradient = Colors.gradient_1,
                         y: radioButtonShadowOffset.height)
                 .animation(.spring(),
                            value: model.isSelected)
+                .padding(.leading, radioButtonLeadingPadding)
+                .padding(.trailing, radioButtonTrailingPadding)
         }
         .buttonStyle(.genericSpringyShrink)
     }
@@ -188,11 +195,15 @@ radioButtonBackgroundFillGradient: LinearGradient = Colors.gradient_1,
             
             imageView
             
+            Spacer()
+            
             assetIdentifierChip
+            
+            Spacer()
             
             assetPriceChip
         }
-        .onLongPressGesture {
+        .onTapGesture {
             model.selectedAction()
         }
     }

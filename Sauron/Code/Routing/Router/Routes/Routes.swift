@@ -30,6 +30,8 @@ enum OnboardingRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProto
     case home
     case portfolioCuration
     case web
+    case currencyPreferenceBottomSheet
+    case languagePreferenceBottomSheet
 }
 
 // MARK: - Main / Tabbar Router

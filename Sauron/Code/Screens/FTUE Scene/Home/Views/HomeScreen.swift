@@ -380,6 +380,7 @@ struct HomeScreen: View {
             
             topBar
         }
+        .presentationDetents([.height(400)])
         .onAppear {
             didAppear = true
         }

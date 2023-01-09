@@ -41,13 +41,17 @@ class FiatCurrencyManager: ObservableObject {
     }
     static let defaultCurrency: SupportedFiatCurrencies = .USD
     
-    enum SupportedFiatCurrencies: String, CaseIterable, Hashable{
-        case USD, CAD
+    enum SupportedFiatCurrencies: String, CaseIterable, Hashable {
+        case USD, EUR, JPY, GBP, AUD, CAD, CHF, CNY, HKD, NZD
     }
     
     /// Currency symbols for all supported fiat currencies
     enum FiatSymbols: String, CaseIterable {
-        case dollar = "$"
+        case dollar = "$",
+        euro = "€",
+        yen_yuan = "¥",
+        pound = "£",
+        franc = "CHF"
     }
     
     // MARK: - Formatting
@@ -98,6 +102,11 @@ class FiatCurrencyManager: ObservableObject {
                               uppercased: uppercased)
     }
     
+    /// Use this to detect whether the input currency is the current selected currency reflected across the application
+    func isCurrentCurrency(currency: SupportedFiatCurrencies) -> Bool {
+        return getCurrentCountryCode() == getCountryCode(for: currency)
+    }
+    
     // MARK: - General getters and accessors
     func getCountryCode(for currency: SupportedFiatCurrencies, uppercased: Bool = true) -> String {
         let fiat = getFiat(for: currency)
@@ -107,10 +116,16 @@ class FiatCurrencyManager: ObservableObject {
     
     func getSymbol(for currency: SupportedFiatCurrencies) -> FiatSymbols {
         switch currency {
-        case .USD:
-            return FiatSymbols.dollar
-        case .CAD:
-            return FiatSymbols.dollar
+        case .USD, .CAD, .AUD, .HKD, .NZD:
+            return .dollar
+        case .EUR:
+            return .euro
+        case .JPY, .CNY:
+            return .yen_yuan
+        case .GBP:
+            return .pound
+        case .CHF:
+            return .franc
         }
     }
     
@@ -123,7 +138,14 @@ class FiatCurrencyManager: ObservableObject {
     
     /// Accessor method for private data
     func changePreferredCurrency(to currency: SupportedFiatCurrencies) {
+        guard userPreferredCurrency != currency else { return }
+        
         userPreferredCurrency = currency
+    }
+    
+    /// Returns a formatted string using a sample number specified
+    func getSampleFormattedNumber(number: NSNumber = 12345.67) -> String {
+        return convertToCurrencyFormat(number: number)
     }
 }
 

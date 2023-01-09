@@ -12,11 +12,13 @@ class LaunchScreenCoordinator: RootCoordinator {
     typealias Router = LaunchScreenRouter
     typealias Body = AnyView
     
+    // MARK: - Properties
     unowned var parent: any Coordinator {
         return self
     }
     var children: [any Coordinator] = []
     var deferredDismissalActionStore: [LaunchScreenRoutes : (() -> Void)?] = [:]
+    var statusBarHidden: Bool = true
     
     // MARK: - Published
     @Published var router: LaunchScreenRouter!
@@ -24,7 +26,6 @@ class LaunchScreenCoordinator: RootCoordinator {
     @Published var sheetItem: LaunchScreenRoutes?
     @Published var fullCoverItem: LaunchScreenRoutes?
     @Published var rootView: AnyView!
-    @Published var statusBarHidden: Bool = true
     @Published var rootRoute: LaunchScreenRoutes! = RootCoordinatorDelegate.shared.launchScreenRootRoute
     
     // MARK: - Observed

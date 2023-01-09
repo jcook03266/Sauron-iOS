@@ -48,7 +48,7 @@ struct Icons {
     
     static func getIconImage(named systemName: SystemIconRepository,
                              renderingMode: Image.TemplateRenderingMode = .template) -> Image {
-
+        
         return Image(systemName: systemName.rawValue)
             .renderingMode(renderingMode)
     }
@@ -97,16 +97,23 @@ enum CustomIconRepository: String, CaseIterable, Hashable {
 }
 
 enum SystemIconRepository: String, CaseIterable, Hashable {
-    case eye,
-    eye_circle = "eye.circle",
-    eye_circle_fill = "eye.circle.fill",
-    eye_fill = "eye.fill",
-    eye_trianglebadge_exclamationmark_fill = "eye.trianglebadge.exclamationmark.fill",
-    eye_slash = "eye.slash",
-    eye_slash_fill = "eye.slash.fill",
-    eye_slash_circle = "eye.slash.circle",
-    eye_slash_circle_fill = "eye.slash.circle.fill",
-    chevron_left = "chevron.left",
+    case abc,
+         textformat_abc = "textformat.abc",
+         eye,
+         tag_fill = "tag.fill",
+         tag,
+         arrowtriangle_up_fill = "arrowtriangle.up.fill",
+         arrowtriangle_down_fill = "arrowtriangle.down.fill",
+         dollarsign_square_fill = "dollarsign.square.fill",
+         eye_circle = "eye.circle",
+         eye_circle_fill = "eye.circle.fill",
+         eye_fill = "eye.fill",
+         eye_trianglebadge_exclamationmark_fill = "eye.trianglebadge.exclamationmark.fill",
+         eye_slash = "eye.slash",
+         eye_slash_fill = "eye.slash.fill",
+         eye_slash_circle = "eye.slash.circle",
+         eye_slash_circle_fill = "eye.slash.circle.fill",
+         chevron_left = "chevron.left",
          chevron_right = "chevron.right",
          chevron_up = "chevron.up",
          chevron_down = "chevron.down",

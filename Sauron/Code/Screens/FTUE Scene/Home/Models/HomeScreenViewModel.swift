@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import AVKit
-import SafariServices
 
 class HomeScreenViewModel: CoordinatedGenericViewModel {
     typealias coordinator = OnboardingCoordinator

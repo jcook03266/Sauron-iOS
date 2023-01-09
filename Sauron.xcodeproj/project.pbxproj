@@ -47,6 +47,9 @@
 		4953E5B02968C2C400513560 /* Bool+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4953E5AF2968C2C400513560 /* Bool+Extensions.swift */; };
 		4986C3092960FBF5003CFF84 /* InformationSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4986C3082960FBF5003CFF84 /* InformationSectionView.swift */; };
 		498781C42964A858008F8A9A /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498781C32964A858008F8A9A /* UIImage+Extension.swift */; };
+		49995DE6296ACF2E00ADF1EC /* FloatingContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49995DE5296ACF2E00ADF1EC /* FloatingContextMenu.swift */; };
+		49995DEA296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49995DE9296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift */; };
+		49995DEC296AD71B00ADF1EC /* FloatingContextMenuRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49995DEB296AD71B00ADF1EC /* FloatingContextMenuRowView.swift */; };
 		499E12122954B3FD004C61CE /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 499E12112954B3FD004C61CE /* Lottie */; };
 		499E123B2954B59E004C61CE /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E12262954B59D004C61CE /* Animations.swift */; };
 		499E123C2954B59E004C61CE /* Animations.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 499E12272954B59D004C61CE /* Animations.xcassets */; };
@@ -58,7 +61,6 @@
 		499E12442954B59E004C61CE /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E12372954B59E004C61CE /* Images.swift */; };
 		499E12452954B59E004C61CE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 499E12392954B59E004C61CE /* Colors.xcassets */; };
 		499E12462954B59E004C61CE /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E123A2954B59E004C61CE /* Colors.swift */; };
-		499E12482954C293004C61CE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E12472954C293004C61CE /* ContentView.swift */; };
 		499E126D2954C40F004C61CE /* RouterViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E124B2954C40F004C61CE /* RouterViewModifiers.swift */; };
 		499E126E2954C40F004C61CE /* ShapeModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E124C2954C40F004C61CE /* ShapeModifiers.swift */; };
 		499E126F2954C40F004C61CE /* ScrollViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E124D2954C40F004C61CE /* ScrollViewModifier.swift */; };
@@ -121,6 +123,10 @@
 		499E134329552550004C61CE /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E133E2955254F004C61CE /* VideoPlayer.swift */; };
 		499E1346295525CB004C61CE /* AppInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E1344295525CB004C61CE /* AppInformation.swift */; };
 		499E1347295525CB004C61CE /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E1345295525CB004C61CE /* AppService.swift */; };
+		49A0B582296B8D1D003324A3 /* PreferenceBottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B581296B8D1D003324A3 /* PreferenceBottomSheetViewModel.swift */; };
+		49A0B584296B8D30003324A3 /* PreferenceBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B583296B8D30003324A3 /* PreferenceBottomSheet.swift */; };
+		49A0B586296BA066003324A3 /* BottomSheetDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B585296BA066003324A3 /* BottomSheetDispatcher.swift */; };
+		49A0B588296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B587296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift */; };
 		49A518762964CE7500258F80 /* CoinImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A518752964CE7500258F80 /* CoinImageFetcher.swift */; };
 		49A518792966764600258F80 /* PortfolioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A518782966764600258F80 /* PortfolioManager.swift */; };
 		49A5187C2967378500258F80 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 49A5187B2967378500258F80 /* OrderedCollections */; };
@@ -204,6 +210,9 @@
 		4953E5AF2968C2C400513560 /* Bool+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+Extensions.swift"; sourceTree = "<group>"; };
 		4986C3082960FBF5003CFF84 /* InformationSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationSectionView.swift; sourceTree = "<group>"; };
 		498781C32964A858008F8A9A /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		49995DE5296ACF2E00ADF1EC /* FloatingContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingContextMenu.swift; sourceTree = "<group>"; };
+		49995DE9296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingContextMenuViewModel.swift; sourceTree = "<group>"; };
+		49995DEB296AD71B00ADF1EC /* FloatingContextMenuRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingContextMenuRowView.swift; sourceTree = "<group>"; };
 		499E12262954B59D004C61CE /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		499E12272954B59D004C61CE /* Animations.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Animations.xcassets; sourceTree = "<group>"; };
 		499E122C2954B59D004C61CE /* Videos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Videos.swift; sourceTree = "<group>"; };
@@ -214,7 +223,6 @@
 		499E12372954B59E004C61CE /* Images.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		499E12392954B59E004C61CE /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		499E123A2954B59E004C61CE /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		499E12472954C293004C61CE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		499E124B2954C40F004C61CE /* RouterViewModifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterViewModifiers.swift; sourceTree = "<group>"; };
 		499E124C2954C40F004C61CE /* ShapeModifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeModifiers.swift; sourceTree = "<group>"; };
 		499E124D2954C40F004C61CE /* ScrollViewModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollViewModifier.swift; sourceTree = "<group>"; };
@@ -277,6 +285,10 @@
 		499E133E2955254F004C61CE /* VideoPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
 		499E1344295525CB004C61CE /* AppInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppInformation.swift; sourceTree = "<group>"; };
 		499E1345295525CB004C61CE /* AppService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
+		49A0B581296B8D1D003324A3 /* PreferenceBottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceBottomSheetViewModel.swift; sourceTree = "<group>"; };
+		49A0B583296B8D30003324A3 /* PreferenceBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceBottomSheet.swift; sourceTree = "<group>"; };
+		49A0B585296BA066003324A3 /* BottomSheetDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetDispatcher.swift; sourceTree = "<group>"; };
+		49A0B587296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceBottomSheetSelectionChipView.swift; sourceTree = "<group>"; };
 		49A518752964CE7500258F80 /* CoinImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinImageFetcher.swift; sourceTree = "<group>"; };
 		49A518782966764600258F80 /* PortfolioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioManager.swift; sourceTree = "<group>"; };
 		49A5187D296779D400258F80 /* PortfolioDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioDataProvider.swift; sourceTree = "<group>"; };
@@ -655,7 +667,9 @@
 		4925C8C6295D7EA8006E1A80 /* Bottom Sheets */ = {
 			isa = PBXGroup;
 			children = (
+				49A0B57E296B8CEF003324A3 /* Preferences */,
 				4925C8C7295D7EB7006E1A80 /* Settings */,
+				49A0B585296BA066003324A3 /* BottomSheetDispatcher.swift */,
 			);
 			path = "Bottom Sheets";
 			sourceTree = "<group>";
@@ -691,6 +705,40 @@
 			path = "Information Section";
 			sourceTree = "<group>";
 		};
+		49995DE3296ACEDC00ADF1EC /* Context Menus */ = {
+			isa = PBXGroup;
+			children = (
+				49995DE4296ACEEA00ADF1EC /* Floating Menu */,
+			);
+			path = "Context Menus";
+			sourceTree = "<group>";
+		};
+		49995DE4296ACEEA00ADF1EC /* Floating Menu */ = {
+			isa = PBXGroup;
+			children = (
+				49995DE8296ACF3600ADF1EC /* Models */,
+				49995DE7296ACF3100ADF1EC /* Views */,
+			);
+			path = "Floating Menu";
+			sourceTree = "<group>";
+		};
+		49995DE7296ACF3100ADF1EC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				49995DE5296ACF2E00ADF1EC /* FloatingContextMenu.swift */,
+				49995DEB296AD71B00ADF1EC /* FloatingContextMenuRowView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		49995DE8296ACF3600ADF1EC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				49995DE9296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		499E12132954B409004C61CE /* Code */ = {
 			isa = PBXGroup;
 			children = (
@@ -704,7 +752,6 @@
 				499E12492954C40F004C61CE /* Common */,
 				499E12232954B571004C61CE /* Resources */,
 				499E12182954B497004C61CE /* Core-Sauron */,
-				499E12472954C293004C61CE /* ContentView.swift */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -1301,6 +1348,7 @@
 		499E12EA2954D6F8004C61CE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				49995DE3296ACEDC00ADF1EC /* Context Menus */,
 				499E12EB2954D6F8004C61CE /* Buttons */,
 				499E12F12954D6F8004C61CE /* Tabbar */,
 				499E12F52954D6F8004C61CE /* Dividing Lines */,
@@ -1558,6 +1606,39 @@
 			path = Continuous;
 			sourceTree = "<group>";
 		};
+		49A0B57E296B8CEF003324A3 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				49A0B580296B8CFB003324A3 /* Models */,
+				49A0B57F296B8CF6003324A3 /* Views */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		49A0B57F296B8CF6003324A3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				49A0B583296B8D30003324A3 /* PreferenceBottomSheet.swift */,
+				49A0B587296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		49A0B580296B8CFB003324A3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				49A0B581296B8D1D003324A3 /* PreferenceBottomSheetViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		49A0B589296BF84F003324A3 /* Language Manager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Language Manager";
+			sourceTree = "<group>";
+		};
 		49A518772966763400258F80 /* Portfolio Manager */ = {
 			isa = PBXGroup;
 			children = (
@@ -1652,6 +1733,7 @@
 		49B22B8429566DB1009C3F4F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				49A0B589296BF84F003324A3 /* Language Manager */,
 				49A518772966763400258F80 /* Portfolio Manager */,
 				4925C898295B6488006E1A80 /* Currency Manager */,
 				49B22B8729566DB1009C3F4F /* Launch Screen Manager */,
@@ -1863,6 +1945,7 @@
 				49B22B7529561F8B009C3F4F /* LaunchScreenCoordinatorView.swift in Sources */,
 				499E127D2954C40F004C61CE /* PreferenceKeys.swift in Sources */,
 				49B22B7729561FD1009C3F4F /* LaunchScreenRouter.swift in Sources */,
+				49995DE6296ACF2E00ADF1EC /* FloatingContextMenu.swift in Sources */,
 				499E12712954C40F004C61CE /* ObservableArray.swift in Sources */,
 				4925C89A295B64D8006E1A80 /* FiatCurrencyManager.swift in Sources */,
 				4925C8B8295C6D7A006E1A80 /* CoinDataProvider.swift in Sources */,
@@ -1898,9 +1981,11 @@
 				492169F5295FAE670078CCC3 /* CoinImageView.swift in Sources */,
 				499E12792954C40F004C61CE /* StringExtensions.swift in Sources */,
 				49A518762964CE7500258F80 /* CoinImageFetcher.swift in Sources */,
+				49A0B586296BA066003324A3 /* BottomSheetDispatcher.swift in Sources */,
 				4925C888295A34F6006E1A80 /* BinaryDecisionTree.swift in Sources */,
 				499E12752954C40F004C61CE /* ViewExtensions.swift in Sources */,
 				499E12AA2954D3E8004C61CE /* Coordinator+RootCoordinator.swift in Sources */,
+				49995DEC296AD71B00ADF1EC /* FloatingContextMenuRowView.swift in Sources */,
 				4925C87E2958FE8F006E1A80 /* UserDefaultsService.swift in Sources */,
 				49B22B962957AA74009C3F4F /* SafariView.swift in Sources */,
 				4925C88C295A38F8006E1A80 /* UserDefaults+SubscriptExtensions.swift in Sources */,
@@ -1914,7 +1999,6 @@
 				4925C8B5295C6BEF006E1A80 /* DataProviderProtocol.swift in Sources */,
 				499E12702954C40F004C61CE /* GradientModifiers.swift in Sources */,
 				49216A01296031460078CCC3 /* LocalFileDirector.swift in Sources */,
-				499E12482954C293004C61CE /* ContentView.swift in Sources */,
 				499E13102954D6F8004C61CE /* FloatingTabbar.swift in Sources */,
 				49216A06296040840078CCC3 /* PCCoinRowView.swift in Sources */,
 				4925C8BE295D78ED006E1A80 /* MockableProtocol.swift in Sources */,
@@ -1927,6 +2011,8 @@
 				4986C3092960FBF5003CFF84 /* InformationSectionView.swift in Sources */,
 				49A5188F2967F02E00258F80 /* CircularUtilityButton.swift in Sources */,
 				49B22B92295784BF009C3F4F /* HomeScreenViewModel.swift in Sources */,
+				49995DEA296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift in Sources */,
+				49A0B588296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift in Sources */,
 				499E13152954D6F8004C61CE /* TextFieldProtocols.swift in Sources */,
 				4925C8C5295D7C67006E1A80 /* PortfolioCurationView.swift in Sources */,
 				4925C8CB295F918F006E1A80 /* ImageDownloaderService.swift in Sources */,
@@ -1948,8 +2034,10 @@
 				491429B3294D05540083CC9D /* Sauron.xcdatamodeld in Sources */,
 				499E12762954C40F004C61CE /* NumberDataTypeExtensions.swift in Sources */,
 				49B22B8C29566DB1009C3F4F /* LaunchScreenManager.swift in Sources */,
+				49A0B584296B8D30003324A3 /* PreferenceBottomSheet.swift in Sources */,
 				4953E5AE2968A7A100513560 /* CounterRectangularButton.swift in Sources */,
 				49B22B8B29566DB1009C3F4F /* PasswordValidationService.swift in Sources */,
+				49A0B582296B8D1D003324A3 /* PreferenceBottomSheetViewModel.swift in Sources */,
 				499E134129552550004C61CE /* LoopingVideoPlayerUIView.swift in Sources */,
 				499E13302955251E004C61CE /* VOCView.swift in Sources */,
 				49B22B7A2956200D009C3F4F /* LaunchScreenCoordinator.swift in Sources */,
@@ -2137,11 +2225,14 @@
 				DEVELOPMENT_TEAM = 2JMR3SJGS4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Sauron;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2168,11 +2259,14 @@
 				DEVELOPMENT_TEAM = 2JMR3SJGS4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Sauron;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -10,7 +10,7 @@ import Combine
 
 /** Singleton centralized service that stands as the reference point for this application*/
 open class AppService: ObservableObject {
-    static let shared = AppService()
+    static let shared: AppService = .init()
     
     // MARK: - Deep Linking
     let deepLinkManager = DeepLinkManager()
@@ -70,7 +70,7 @@ open class AppService: ObservableObject {
     private init() { setup() }
     
     func setup() {
-        let store = dataStores.coinDataStore
+        //let store = dataStores.coinDataStore
         
         //        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
         //            print(store.coins)
