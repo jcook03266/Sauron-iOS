@@ -31,7 +31,9 @@ Keep your eye in the sky with this modern, robust, and responsive crypto tracker
 ## Project Summary:
 Sauron is a project I set out to create in order to showcase my iOS development skillset and growth potential. This application was designed by me in the span of 2 days using Figma to create design resource templates, mockup screens, and placeholder assets. Sauron spans many different scenes that are uniquely displayed in their own way, and to satisfy this dynamic and ready when needed view hierarchy I relied on the coordinator pattern mixed with the router pattern to abstract control away from the view logic. I'm a firm believer of simplifying applications through separation of powers, your views are not supposed to present themselves, and your view models should not be responsible for creating views either, thus, by dividing up all of these responsibilities through the MVVM pattern I'm able to make the app both maintainable and testable due to each screen having zero dependencies on each other.
 
-## Patterns Used:
+<details>
+<summary> Patterns Used: </summary> 
+
 -> Coordinator
 -> Router
 -> MVVM
@@ -42,6 +44,8 @@ Sauron is a project I set out to create in order to showcase my iOS development 
 -> Data Store
 -> Manager
 -> Singleton
+
+</details>
 
 ## Frameworks Used:
 -> SwiftUI
