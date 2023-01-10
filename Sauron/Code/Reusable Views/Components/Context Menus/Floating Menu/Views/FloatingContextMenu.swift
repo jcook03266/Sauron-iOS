@@ -57,7 +57,7 @@ shadowOffset: CGSize = .init(width: 0, height: 1)
     var body: some View {
         ZStack {
             backdrop
-            
+        
             contextMenuBody
                 .position(anchorPoint)
         }

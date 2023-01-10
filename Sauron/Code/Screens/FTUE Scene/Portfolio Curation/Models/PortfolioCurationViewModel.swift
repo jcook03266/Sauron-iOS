@@ -98,6 +98,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
         let fiatCurrencyManager: FiatCurrencyManager = inject()
+        let languageManager: LocalizedLanguageManager = inject()
         let ftueService: FTUEService = inject()
     }
     let dependencies = Dependencies()
@@ -195,16 +196,20 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     }
     
     var currencyPreferenceAction: (() -> Void) {
-        return {
+        return {[weak self] in
+            guard let self = self else { return }
+            
             HapticFeedbackDispatcher.bottomSheetPresented()
             self.coordinator.presentSheet(with: .currencyPreferenceBottomSheet)
         }
     }
     
     var languagePreferenceAction: (() -> Void) {
-        return {
-            HapticFeedbackDispatcher.bottomSheetPresented()
-            self.coordinator.presentSheet(with: .languagePreferenceBottomSheet)
+        return { [weak self] in
+            guard let self = self else { return }
+            
+            HapticFeedbackDispatcher.genericButtonPress()
+            self.dependencies.languageManager.goToAppSettings()
         }
     }
     

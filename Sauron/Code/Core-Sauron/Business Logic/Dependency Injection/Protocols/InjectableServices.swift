@@ -37,6 +37,11 @@ extension InjectableServices {
     static func inject() -> FiatCurrencyManager {
         return .shared
     }
+    
+    // MARK: - Localized LanguageManager Manager
+    static func inject() -> LocalizedLanguageManager {
+        return .shared
+    }
 
     // MARK: - Networking Service / Monitor
     static func inject() -> NetworkingService {

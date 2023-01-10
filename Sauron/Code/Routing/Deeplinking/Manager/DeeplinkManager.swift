@@ -1,13 +1,20 @@
 //
 //  DeeplinkManager.swift
-//  Inspec
+//  Sauron
 //
-//  Created by Justin Cook on 11/13/22.
+//  Created by Justin Cook on 12/22/22.
 //
 
 import Foundation
 
-class DeepLinkManager {
+class DeepLinkManager: ObservableObject {
+    // MARK: - Singleton
+    static let shared: DeepLinkManager = .init()
+    
+    // MARK: - Dependencies
+    let systemLinker: SystemLinker = .shared
+    
+    private init() {}
     
     func manage(url: URL) -> DeepLinkTarget {
         guard url.scheme == DeepLinkConstants.scheme,
@@ -23,6 +30,11 @@ class DeepLinkManager {
         
         guard let id = query[DeepLinkConstants.query] else { return .builds }
         return .details(reference: id)
+    }
+    
+    // MARK: - System Linker Interface
+    func open(systemLink: SystemLinker.Links) {
+        systemLinker.open(link: systemLink)
     }
 }
 

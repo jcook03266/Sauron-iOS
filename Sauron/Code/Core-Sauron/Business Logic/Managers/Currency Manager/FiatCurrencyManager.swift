@@ -43,6 +43,21 @@ class FiatCurrencyManager: ObservableObject {
     
     enum SupportedFiatCurrencies: String, CaseIterable, Hashable {
         case USD, EUR, JPY, GBP, AUD, CAD, CHF, CNY, HKD, NZD
+        
+        func getSymbol() -> FiatSymbols {
+            switch self {
+            case .USD, .CAD, .AUD, .HKD, .NZD:
+                return .dollar
+            case .EUR:
+                return .euro
+            case .JPY, .CNY:
+                return .yen_yuan
+            case .GBP:
+                return .pound
+            case .CHF:
+                return .franc
+            }
+        }
     }
     
     /// Currency symbols for all supported fiat currencies
@@ -75,7 +90,7 @@ class FiatCurrencyManager: ObservableObject {
     }
     private let maxTrailingSigFigs: Int = 2,
                 minTrailingSigFigs: Int = 2,
-                defaultCurrency: String = "$0.00" // Fall back on this copy in case the currency converter fails
+                defaultMonetaryAmount: String = "$0.00" // Fall back on this copy in case the currency converter fails
     
     private init() { setup() }
     
@@ -85,7 +100,7 @@ class FiatCurrencyManager: ObservableObject {
     
     // MARK: - Conversion and factory methods
     func convertToCurrencyFormat(number: NSNumber) -> String {
-        return currencyFormatter.string(from: number) ?? defaultCurrency
+        return currencyFormatter.string(from: number) ?? defaultMonetaryAmount
     }
     
     // MARK: - Return data relevant to the current currency used by the application

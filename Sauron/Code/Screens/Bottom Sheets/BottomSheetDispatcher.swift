@@ -20,7 +20,7 @@ struct BottomSheetDispatcher {
         var selectionChips: [PreferenceBottomSheetViewModel<T>.PreferenceBottomSheetSelectionChipViewModel] = []
         
         for currency in FiatCurrencyManager.SupportedFiatCurrencies.allCases {
-            let label = "\(dependencies.fiatCurrencyManager.getCountryCode(for: currency, uppercased: true)) | \(dependencies.fiatCurrencyManager.getSymbol(for: currency).rawValue)"
+            let label = "\(dependencies.fiatCurrencyManager.getCountryCode(for: currency, uppercased: true)) | \(currency.getSymbol().rawValue)"
             
             let action = { dependencies.fiatCurrencyManager.changePreferredCurrency(to: currency) }
             let isSelected = dependencies.fiatCurrencyManager.isCurrentCurrency(currency: currency)
@@ -33,10 +33,10 @@ struct BottomSheetDispatcher {
         
         let model = PreferenceBottomSheetViewModel(coordinator: coordinator,
                                                    selectionChips: selectionChips,
-                                                   defaultChip: selectionChips.first!)
+                                                   defaultChip: selectionChips.first!,
+                                                   searchBarPlaceholder: LocalizedStrings.getLocalizedString(for: .BOTTOM_SHEET_SEARCHBAR_PLACEHOLDER_CURRENCY_PREFERENCE))
         model.title = LocalizedStrings.getLocalizedString(for: .BOTTOM_SHEET_TITLE_CURRENCY_PREFERENCE_NEWLINE)
         model.optionalAdvisoryText = LocalizedStrings.getLocalizedString(for: .BOTTOM_SHEET_ADVISORY_CURRENCY_PREFERENCE)
-        model.searchBarPlaceholder = LocalizedStrings.getLocalizedString(for: .BOTTOM_SHEET_SEARCHBAR_PLACEHOLDER_CURRENCY_PREFERENCE)
         model.previewContent = { return dependencies.fiatCurrencyManager.getSampleFormattedNumber() }
         
         return model

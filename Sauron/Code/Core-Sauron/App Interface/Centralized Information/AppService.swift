@@ -12,8 +12,8 @@ import Combine
 open class AppService: ObservableObject {
     static let shared: AppService = .init()
     
-    // MARK: - Deep Linking
-    let deepLinkManager = DeepLinkManager()
+    // MARK: - Deep Linker
+    let deepLinkManager: DeepLinkManager = .shared
     
     // MARK: - Published
     @Published var deepLinkTarget: DeepLinkManager.DeepLinkTarget?

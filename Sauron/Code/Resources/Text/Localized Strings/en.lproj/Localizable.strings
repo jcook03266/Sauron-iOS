@@ -79,13 +79,6 @@
 "BOTTOM_SHEET_SEARCHBAR_PLACEHOLDER_CURRENCY_PREFERENCE" = "Search currencies";
 "BOTTOM_SHEET_ADVISORY_CURRENCY_PREFERENCE" = "Advisory: Only the top 10 major world currencies are supported at this time";
 
-// Language Perference Selector Bottom Sheet
-"BOTTOM_SHEET_TITLE_LANGUAGE_PREFERENCE" = "Language Preference";
-"BOTTOM_SHEET_TITLE_LANGUAGE_PREFERENCE_NEWLINE" = "Language \nPreference";
-"BOTTOM_SHEET_PREVIEW_TEXT_LANGUAGE_PREFERENCE" = "Hello";
-"BOTTOM_SHEET_SEARCHBAR_PLACEHOLDER_LANGUAGE_PREFERENCE" = "Search languages";
-"BOTTOM_SHEET_ADVISORY_LANGUAGE_PREFERENCE" = "Advisory: Unfortunately, only English is properly supported at this time.";
-
 // MARK: - Networking Service Diagnostic Information
 "HUMAN_READABLE_INTERNET_NOT_AVAILABLE" = "Your internet connection is currently unavailable, please check your connection settings and try again.";
 "HUMAN_READABLE_INTERNET_CELLULAR_DENIED" = "Please enable your cellular data in order to access the internet.";
