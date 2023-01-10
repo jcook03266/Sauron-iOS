@@ -18,7 +18,7 @@ Keep your eye in the sky with this modern, robust, and responsive crypto tracker
 <div align="center">
 
 <details>
-<summary> Quick Navigation </summary> 
+<summary> ## Quick Navigation </summary> 
 
 * [Project Summary ▶︎](#Project-Summary)
 * [FTUE Onboarding Demo ▶︎](#FTUE-Onboarding-Demo)
