@@ -21,8 +21,8 @@
 <details>
 <summary> Quick Navigation </summary> 
 
-* [Project Summary ▶︎](#Project-Summary)
-* [FTUE Onboarding Demo ▶︎](#FTUE-Onboarding-Demo)
+[Project Summary ▶︎ ](#Project-Summary)
+[FTUE Onboarding Demo ▶︎](#FTUE-Onboarding-Demo)
 
 </details>
 </div>
