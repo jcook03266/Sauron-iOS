@@ -17,11 +17,14 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     @Published var coins: [CoinModel] = []
     
     // MARK: - Data Sources
-    var allCoinsEndpoint: URL = GetRequestEndpoints.allCoins().getAssociatedValue()
+    var allCoinsEndpoint: URL {
+        return self.dependencies.endpointManager.getURL(for: .allCoins())
+    }
     
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
         let networkingService: NetworkingService = inject()
+        let endpointManager: EndpointManager = inject()
     }
     let dependencies = Dependencies()
     
@@ -79,21 +82,6 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
                 }
             }
             catch { throw error }
-        }
-    }
-    
-    /// Truth table for all valid endpoints
-    enum GetRequestEndpoints: AssociatedEnum, CaseIterable {
-        static var allCases: [GetRequestEndpoints] = [.allCoins()]
-        typealias associatedValue = URL
-        
-        case allCoins(URL = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true")!)
-        
-        func getAssociatedValue() -> URL {
-            switch self {
-            case .allCoins(let endpoint):
-                return endpoint
-            }
         }
     }
 }

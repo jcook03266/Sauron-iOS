@@ -192,5 +192,6 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          aqi_medium = "aqi.medium",
          rectangle_3_group_fill = "rectangle.3.group.fill",
          line_3_horizontal_decrease_circle_fill = "line.3.horizontal.decrease.circle.fill",
-         info_circle_fill = "info.circle.fill"
+         info_circle_fill = "info.circle.fill",
+         list_number = "list.number"
 }

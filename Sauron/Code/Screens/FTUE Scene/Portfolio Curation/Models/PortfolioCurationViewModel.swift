@@ -20,6 +20,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     @Published var searchBarTextFieldModel: SatelliteTextFieldModel!
     @Published var coins: [CoinModel] = []
     @Published var portfolioCoins: [PortfolioCoinEntity] = []
+    @Published var currentCurrency = Dependencies().fiatCurrencyManager.displayedCurrency
     
     // MARK: - States
     var filterPortfolioCoins: Bool = false
@@ -28,7 +29,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Models
-    var contextMenuModel: FloatingContextMenuViewModel = .init()
+    var contextMenuModel: FloatingContextMenuViewModel!
     
     private var builtSearchBarTextFieldModel: SatelliteTextFieldModel {
         let searchBarTextFieldModel: SatelliteTextFieldModel = .init()
@@ -156,9 +157,8 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.sort(ascending: self.contextMenuModel.sortInAscendingOrder,
-                                           sortKey: .name,
-                                           sortKeyType: String.self)
+            self.dataStores.coinStore.updateSortingCriteria(sortKey: .name,
+                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -167,9 +167,8 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.sort(ascending: self.contextMenuModel.sortInAscendingOrder,
-                                           sortKey: .id,
-                                           sortKeyType: String.self)
+            self.dataStores.coinStore.updateSortingCriteria(sortKey: .id,
+                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -178,9 +177,18 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.sort(ascending: self.contextMenuModel.sortInAscendingOrder,
-                                           sortKey: .price,
-                                           sortKeyType: Double.self)
+            self.dataStores.coinStore.updateSortingCriteria(sortKey: .price,
+                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
+        }
+    }
+    
+    var sortByRankAction: (() -> Void) {
+        return { [weak self] in
+            HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
+            self.dataStores.coinStore.updateSortingCriteria(sortKey: .rank,
+                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -343,9 +351,9 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     init(coordinator: OnboardingCoordinator) {
         self.coordinator = coordinator
         self.searchBarTextFieldModel = builtSearchBarTextFieldModel
+        self.contextMenuModel = buildContextMenuModel()
         
         addSubscribers()
-        buildContextMenuModel()
     }
     
     // MARK: - Model Building
@@ -353,28 +361,42 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         contextMenuModel.anchorPoint = anchor
     }
     
-    func buildContextMenuModel() {
+    func buildContextMenuModel() -> FloatingContextMenuViewModel {
+        let contextMenuViewModel: FloatingContextMenuViewModel = .init()
+        let coinStore = dataStores.coinStore
+        
         let contextMenuRows: [FloatingContextMenuViewModel.FloatingContextMenuRow] = [
             .init(action: self.sortByNameAction,
                   label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_NAME_OPTION),
                   sideBarIcon: Icons.getIconImage(named: .textformat_abc),
-                  isSelected: false),
+                  isSelected: coinStore.isCurrenSortKey(sortKey: .name)),
+            
             .init(action: self.sortByIDAction,
                   label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_ID_OPTION),
                   sideBarIcon: Icons.getIconImage(named: .tag_fill),
-                  isSelected: false),
+                  isSelected: coinStore.isCurrenSortKey(sortKey: .id)),
+            
             .init(action: self.sortByPriceAction,
                   label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_PRICE_OPTION),
                   sideBarIcon: Icons.getIconImage(named: .dollarsign_square_fill),
-                  isSelected: false),
+                  isSelected: coinStore.isCurrenSortKey(sortKey: .price)),
+            
+            .init(action: self.sortByRankAction,
+                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_RANK_OPTION),
+                  sideBarIcon: Icons.getIconImage(named: .list_number),
+                  isSelected: coinStore.isCurrenSortKey(sortKey: .rank))
         ]
         
-        contextMenuModel.rows = contextMenuRows
-        contextMenuModel.menuTitle = LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_TITLE)
+        contextMenuViewModel.selectedRow = contextMenuRows.first(where: { $0.isSelected })
+        contextMenuViewModel.sortInAscendingOrder = coinStore.isSortOrderAscending
+        contextMenuViewModel.rows = contextMenuRows
+        contextMenuViewModel.menuTitle = LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_TITLE)
+        
+        return contextMenuViewModel
     }
     
     // MARK: - Subscriptions
-    func addSubscribers() {
+    private func addSubscribers() {
         dataStores.coinStore
             .$coins
             .assign(to: &$coins)
@@ -383,10 +405,14 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             .$coinEntities
             .assign(to: &$portfolioCoins)
         
-        // Update the coin store's search query whenever the text entry's publisher emits a new value (note: A debounce interval is active)
+        // Updates the coin store's search query whenever the text entry's publisher emits a new value (note: A debounce interval is active)
         searchBarTextFieldModel
             .$textEntry
             .assign(to: &dataStores.coinStore.$activeSearchQuery)
+        
+        contextMenuModel
+            .$sortInAscendingOrder
+            .assign(to: &dataStores.coinStore.$isSortOrderAscending)
     }
     
     // MARK: - Convenience Methods

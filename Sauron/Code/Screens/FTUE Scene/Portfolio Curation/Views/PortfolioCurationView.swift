@@ -471,8 +471,6 @@ struct PortfolioCurationView: View {
                     
                     assetsListView
                 }
-                .trackScrollViewOffset(coordinateSpaceName: "scroll",
-                                       bindingOffset: $scrollViewContentOffset)
                 
                 Spacer(minLength: scrollViewBottomPadding)
             }
@@ -552,6 +550,7 @@ struct PortfolioCurationView: View {
         }
         .animation(.spring(),
                    value: model.contextPropertiesHasChanged)
+        .animation(.spring(), value: model.dependencies.fiatCurrencyManager.displayedCurrency)
         .onAppear {
             performOnAppearTasks()
         }

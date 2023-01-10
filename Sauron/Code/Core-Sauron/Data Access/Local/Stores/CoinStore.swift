@@ -30,6 +30,10 @@ debounceInterval: Double = 0.25,
     @Published var activeSearchQuery: String = ""
     @Published var displayPortfolioCoinsOnly: Bool = false
     
+    // MARK: - Sorting
+    @Published var sortKey: SortKeys = .rank
+    @Published var isSortOrderAscending: Bool = true
+    
     // MARK: - Convenience variables
     var searchResultCount: Int = 0
     
@@ -55,8 +59,11 @@ debounceInterval: Double = 0.25,
             .debounce(for: .seconds(debounceInterval),
                       scheduler: scheduler)
             .map(filter)
-            .combineLatest($displayPortfolioCoinsOnly, dataStores.portfolioManager.$coinEntities)
+            .combineLatest($displayPortfolioCoinsOnly,
+                           dataStores.portfolioManager.$coinEntities)
             .map(filterPortfolioCoins)
+            .combineLatest($sortKey)
+            .map(sortCoins)
             .assign(to: &$coins)
         
         /// Subscribe directly to the data provider and use this to build up the store for all coin theme colors
@@ -71,6 +78,7 @@ debounceInterval: Double = 0.25,
     // MARK: - Store mutation and accessor methods
     func refresh() {
         dataProvider.reload()
+        sortCoins(sortKey: sortKey)
     }
     
     func add(_ coin: CoinModel) {
@@ -238,24 +246,68 @@ debounceInterval: Double = 0.25,
     }
     
     // MARK: - Sorting
-    func sort<T: Comparable>(ascending: Bool = true,
+    func isCurrenSortKey(sortKey: SortKeys) -> Bool { return self.sortKey == sortKey }
+    
+    func updateSortingCriteria(sortKey: SortKeys,
+                               ascendingOrder: Bool) {
+        self.sortKey = sortKey
+        self.isSortOrderAscending = ascendingOrder
+    }
+    
+    @discardableResult
+    func sortCoins(coins: [CoinModel] = [],
+                   sortKey: SortKeys) -> [CoinModel]
+    {
+        switch sortKey {
+        case .name:
+            return sort(coins: coins,
+                        ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getNameType())
+        case .id:
+            return sort(coins: coins,
+                        ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getIDType())
+        case .price:
+            return sort(coins: coins,
+                        ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getPriceType())
+        case .rank:
+            return sort(coins: coins,
+                 ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getRankType())
+        }
+    }
+    
+    func sort<T: Comparable>(coins: [CoinModel],
+                             ascending: Bool = true,
                              sortKey: SortKeys = .name,
-                             sortKeyType: T.Type) {
-        coins = coins.sorted { coin1, coin2 in
+                             sortKeyType: T.Type) -> [CoinModel]
+    {
+        return coins.sorted { coin1, coin2 in
             var value1, value2: T
             
             switch sortKey {
             case .name:
                 value1 = coin1.name as! T
                 value2 = coin2.name as! T
+                
             case .id:
                 value1 = coin1.id as! T
                 value2 = coin2.id as! T
+                
             case .price:
                 value1 = coin1.currentPrice as! T
                 value2 = coin2.currentPrice as! T
+                
+            case .rank:
+                value1 = coin1.marketCapRank as! T
+                value2 = coin2.marketCapRank as! T
             }
-            
+        
             return ascending ? (value1 < value2) : (value1 > value2)
         }
     }
@@ -270,8 +322,17 @@ debounceInterval: Double = 0.25,
     }
     
     enum SortKeys: CaseIterable, Hashable, Codable {
-        case name
-        case id
-        case price
+        case name,
+             id,
+             price,
+             rank
+        
+        func getNameType() -> String.Type { return String.self }
+        
+        func getIDType() -> String.Type { return String.self }
+        
+        func getRankType() -> Int.Type { return Int.self }
+        
+        func getPriceType() -> Double.Type { return Double.self }
     }
 }
