@@ -21,10 +21,13 @@
 <details>
 <summary> Quick Navigation </summary> 
 
- <ul>
-  <li>[Project Summary ▶︎ ](#Project-Summary)</li>
-  <li>[FTUE Onboarding Demo ▶︎](#FTUE-Onboarding-Demo)</li>
- </ul>
+* [Project Summary ⇲ ](#Project-Summary)
+* [Design Patterns ⇲ ](#Design-Patterns-Used)
+* [Frameworks ⇲ ](#Frameworks-Used)
+* [Libraries ⇲ ](#Libraries-Used)
+* [Internal iOS APIs ⇲ ](#Internal-iOS-APIs-In-Use)
+* [External APIs ⇲ ](#External-APIs-In-Use)
+* [FTUE Onboarding Demo ⇲](#FTUE-Onboarding-Demo)
   
 </details>
 </div>
@@ -34,7 +37,7 @@
 ## Project Summary:
 Sauron is a project I set out to create in order to showcase my iOS development skillset and growth potential. This application was designed by me in the span of 2 days using Figma to create design resource templates, mockup screens, and placeholder assets. Built completely in SwiftUI, from the application delegate, to the view navigation logic, this app uses the latest technologies enabled by the powerful declarative programming SwiftUI framework to bring to life a truly responsive experience. Sauron spans many different scenes that are uniquely displayed in their own way, and to satisfy this dynamic and ready when needed view hierarchy I relied on the coordinator pattern mixed with the router pattern to abstract control away from the view logic. I'm a firm believer of simplifying applications through separation of powers, your views are not supposed to present themselves, and your view models should not be responsible for creating views either, thus, by dividing up all of these responsibilities through the MVVM pattern I'm able to make the app both maintainable and testable due to each screen having zero dependencies on each other.
 
-## Patterns Used:
+## Design Patterns Used:
 * Coordinator
 * Router
 * MVVM
