@@ -81,5 +81,5 @@ https://user-images.githubusercontent.com/63657230/211432621-c670414b-313d-4a10-
 
 </div>
 
-### Notice: 
-- This repository is not licensed, and is not available for commercial use.
+### Important Advisory: 
+*This repository is not licensed, and is not available for commercial use.*
