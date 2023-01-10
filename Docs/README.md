@@ -42,25 +42,28 @@ Sauron is a project I set out to create in order to showcase my iOS development 
 * Data Store
 * Manager
 * Singleton
+* Protocol
 
 ## Frameworks Used:
--> SwiftUI
--> UIKit
--> Combine
--> Concurrency
--> Protocol
--> Coredata
+* SwiftUI / UI and screen navigational logic
+* UIKit / SwiftUI View wrapping and design resources
+* Combine / publishers/subscribers/cancellables/maps
+* Concurrency / async/await/futures 
+* CoreData / Data Persistence
+* Network / Internet Connection Monitoring
 
-## Libraries:
--> Lottie-iOS
--> swift-collections
--> SwiftUI-Shimmer
+## Libraries Used:
+* Lottie-iOS
+* swift-collections
+* SwiftUI-Shimmer
 
 ## Internal iOS APIs In Use:
--> UserDefaults
--> Localization
+* UserDefaults
+* Localization
 
 ## External APIs In Use:
+* CoinGecko's Cryptocurrency Coin API
+* Exchangerate.host Global Exchange Rate API
 
 </div>
 
