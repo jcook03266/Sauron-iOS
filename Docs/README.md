@@ -35,7 +35,7 @@
 <div align="left">
  
 ## Project Summary:
-Sauron is a project I set out to create in order to showcase my iOS development skillset and growth potential. This application was designed by me in the span of 2 days using Figma to create design resource templates, mockup screens, and placeholder assets. Built completely in SwiftUI, from the application delegate, to the view navigation logic, this app uses the latest technologies enabled by the powerful declarative programming SwiftUI framework to bring to life a truly responsive experience. Sauron spans many different scenes that are uniquely displayed in their own way, and to satisfy this dynamic and ready when needed view hierarchy I relied on the coordinator pattern mixed with the router pattern to abstract control away from the view logic. I'm a firm believer of simplifying applications through separation of powers, your views are not supposed to present themselves, and your view models should not be responsible for creating views either, thus, by dividing up all of these responsibilities through the MVVM pattern I'm able to make the app both maintainable and testable due to each screen having zero dependencies on each other.
+Sauron is a project I set out to create in order to showcase my iOS development skillset and growth potential. This application was designed by me in the span of 2 days using Figma to create design resource templates, mockup screens, and placeholder assets. Built completely in SwiftUI, from the application delegate, to the view navigation logic, this app uses the latest technologies enabled by the powerful declarative programming SwiftUI framework to bring to life a truly responsive experience. Sauron spans many different scenes that are uniquely displayed in their own way, and to satisfy this dynamic and ready when needed view hierarchy I relied on the coordinator pattern mixed with the router pattern to abstract control away from the view logic. I'm a firm believer of simplifying applications through separation of powers, your views are not supposed to present themselves, and your view models should not be responsible for creating views either. By dividing up all of these responsibilities through the MVVM pattern I'm able to make the app both maintainable and testable due to each screen having zero dependencies on one another. A common pattern 
 
 ## Design Patterns Used:
 * Coordinator
@@ -80,3 +80,6 @@ Sauron is a project I set out to create in order to showcase my iOS development 
 https://user-images.githubusercontent.com/63657230/211432621-c670414b-313d-4a10-a6fd-9f56ccb3a570.mp4
 
 </div>
+
+### Notice: 
+- This repository is not licensed, and is not available for commercial use.
