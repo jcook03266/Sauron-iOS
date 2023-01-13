@@ -8,16 +8,12 @@
 import Foundation
 
 /// Dispatches root coordinators
-struct RootCoordinatorDispatcher {
+class RootCoordinatorDispatcher {
     var delegate: RootCoordinatorDelegate
     
-    var launchScreenCoordinator: LaunchScreenCoordinator {
-        return LaunchScreenCoordinator(rootCoordinatorDelegate: delegate)
-    }
-
-    var onboardingCoordinator: OnboardingCoordinator {
-        return OnboardingCoordinator(rootCoordinatorDelegate: delegate)
-    }
+    var launchScreenCoordinator: LaunchScreenCoordinator!
+    var onboardingCoordinator: OnboardingCoordinator!
+    
 //
 //    var mainCoordinator: MainCoordinator {
 //        return MainCoordinator(rootCoordinatorDelegate: delegate)
@@ -25,6 +21,13 @@ struct RootCoordinatorDispatcher {
     
     init(delegate: RootCoordinatorDelegate) {
         self.delegate = delegate
+        
+        initCoordinators()
+    }
+    
+    func initCoordinators() {
+        launchScreenCoordinator = .init(rootCoordinatorDelegate: delegate)
+        onboardingCoordinator = .init(rootCoordinatorDelegate: delegate)
     }
     
     func getRootCoordinatorFor(root: RootCoordinators) -> any RootCoordinator {

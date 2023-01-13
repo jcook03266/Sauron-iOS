@@ -19,6 +19,7 @@ public protocol Coordinator: ObservableObject {
     var rootView: AnyView! { get set } // View at the bottom of the navigation state corresponding to this coordinator
     var dispatcher: CoordinatorDispatcher { get }
     var deferredDismissalActionStore: [Router.Route : (() -> Void)?] { get set } // Stores closures to be executed when a view is dismissed later on after being presented
+    var currentRoute: Router.Route { get }
     
     // MARK: - Published instance variables
     var router: Router! { get set }
@@ -29,6 +30,10 @@ public protocol Coordinator: ObservableObject {
     
     @ViewBuilder
     func start() -> Void // Any abstract logic to be executed when the coordinator is first initialized
+}
+
+extension Coordinator {
+    var currentRoute: Router.Route { return navigationPath.last ?? rootRoute }
 }
 
 /// Custom view used to hold the states of items currently being presented by the embedded coordinator
@@ -320,10 +325,50 @@ extension Coordinator {
 protocol RootCoordinator: Coordinator {
     var rootCoordinatorDelegate: RootCoordinatorDelegate { get set }
     
+    func navigateTo(targetRoute: Router.Route)
+    
     @ViewBuilder
     func coordinatorView() -> AnyView // A view that displays the coordinator's rootView, responsible for reflecting changes in the rootview hierarchy
     
     func coordinatedView() -> any CoordinatedView // View to be used to access the specific properties of each coordinator view
+}
+
+extension RootCoordinator {
+    func navigateTo(targetRoute: Router.Route) {
+        let path = router.getPath(to: targetRoute)
+        
+        guard let currentRouteIndex = path.firstIndex(of: currentRoute),
+              let targetRouteIndex = path.firstIndex(of: targetRoute)
+        else {
+            if targetRoute == rootRoute {
+                popToRootView()
+            }
+            
+            ErrorCodeDispatcher.DeeplinkingErrors
+                .printErrorCode(for: .routeUnreachableFromCurrentRoute)
+            
+            // The target route is unreachable from the current route
+            return
+        }
+        
+        let isRouteBeforeCurrentRoute = currentRouteIndex >= targetRouteIndex
+        
+        if isRouteBeforeCurrentRoute {
+            // Traverse Backwards in the navigation stack
+            popToView(with: targetRoute)
+        }
+        else {
+            // Traverse Forwards in the navigation stack
+            // Remove the routes already traversed, aka the ones at and before the current route, only the routes after the current route need to be added to the view hierarchy
+            let pathToTraverse = path.enumerated().filter { (index, route) in
+                index > currentRouteIndex
+            }
+            
+            for route in pathToTraverse {
+                self.pushView(with: route.element)
+            }
+        }
+    }
 }
 
 protocol TabbarCoordinator: RootCoordinator {

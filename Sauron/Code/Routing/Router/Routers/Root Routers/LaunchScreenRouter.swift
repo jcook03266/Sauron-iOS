@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OrderedCollections
 
 class LaunchScreenRouter: Routable {
     typealias Route = LaunchScreenRoutes
@@ -22,6 +23,9 @@ class LaunchScreenRouter: Routable {
     
     func initViewModels() {
     }
+    
+    func getPath(to route: LaunchScreenRoutes) -> OrderedCollections.OrderedSet<LaunchScreenRoutes>
+    { return [] }
     
     func view(for route: LaunchScreenRoutes) -> AnyView {
         switch route {

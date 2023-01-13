@@ -1,11 +1,12 @@
 //
 //  Router.swift
-//  Inspec
+//  Sauron
 //
-//  Created by Justin Cook on 11/15/22.
+//  Created by Justin Cook on 12/22/22.
 //
 
 import SwiftUI
+import OrderedCollections
 
 /// Responsibilities: Knows how to create views, create views, presents views, and dismisses views
 public protocol Routable: ObservableObject {
@@ -20,6 +21,8 @@ public protocol Routable: ObservableObject {
     
     /// Optional func for abstracting the intialization of any retained view models by the router
     func initViewModels() -> Void
+    
+    func getPath(to route: Route) -> OrderedSet<Route>
 }
 
 extension Routable {

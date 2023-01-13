@@ -31,8 +31,51 @@ debounceInterval: Double = 0.25,
     @Published var displayPortfolioCoinsOnly: Bool = false
     
     // MARK: - Sorting
-    @Published var sortKey: SortKeys = .rank
-    @Published var isSortOrderAscending: Bool = true
+    @Published private(set) var sortKey: SortKeys = .rank
+    @Published private(set) var isSortOrderAscending: Bool = true
+    
+    // MARK: - Defaults
+    static let defaultSortKey: SortKeys = .rank,
+     defaultAscendingSortOrder: Bool = true
+    
+    /// Use these variables to save sort properties to user defaults
+    private var userPreferredSortKey: SortKeys {
+        get {
+            let rawValue = dependencies
+                .userDefaultsService
+                .getValueFor(type: SortKeys.RawValue.self,
+                             key: .portfolioCoinSortKey())
+            
+            return SortKeys(rawValue: rawValue) ?? CoinStore.defaultSortKey
+        }
+        set {
+            dependencies
+                .userDefaultsService
+                .setValueFor(type: SortKeys.RawValue.self,
+                             key: .portfolioCoinSortKey(),
+                             value: newValue.rawValue)
+            
+            sortKey = userPreferredSortKey
+        }
+    }
+    
+    private var userPreferredSortOrderAscending: Bool {
+        get {
+            return dependencies
+                .userDefaultsService
+                .getValueFor(type: Bool.self,
+                             key: .portfolioCoinAscendingSortOrder())
+        }
+        set {
+            dependencies
+                .userDefaultsService
+                .setValueFor(type: Bool.self,
+                             key: .portfolioCoinAscendingSortOrder(),
+                             value: newValue)
+            
+            isSortOrderAscending = userPreferredSortOrderAscending
+        }
+    }
     
     // MARK: - Convenience variables
     var searchResultCount: Int = 0
@@ -43,15 +86,33 @@ debounceInterval: Double = 0.25,
     }
     let dataStores = DataStores()
     
+    // MARK: - Dependencies
+    struct Dependencies: InjectableServices {
+        let userDefaultsService: UserDefaultsService = inject()
+    }
+    let dependencies = Dependencies()
+    
     init() {
         setup()
     }
     
     func setup() {
+        sortKey = userPreferredSortKey
+        isSortOrderAscending = userPreferredSortOrderAscending
+        
         !mockEnvironment ? subscribeToProvider() : subscribeToMockProvider()
     }
     
-    /// Recieve all updates from the given subscription and store the received coins while cancelling any type erased cancellable instances
+    // MARK: - Sort Key Mutation
+    func changeSortKey(to sortKey: SortKeys) {
+        userPreferredSortKey = sortKey
+    }
+    
+    func changeAscendingSortOrder(to isAscending: Bool) {
+        userPreferredSortOrderAscending = isAscending
+    }
+    
+    /// Receive all updates from the given subscription and store the received coins while cancelling any type erased cancellable instances
     func subscribeToProvider() {
         /// The publishers for the search query and data provider are combined to form a tuple that's updated with new data whenever either publisher recieves an update. This combination is then filtered with a subscriber being attached to receive the data passing through the filter.
         $activeSearchQuery
@@ -250,8 +311,8 @@ debounceInterval: Double = 0.25,
     
     func updateSortingCriteria(sortKey: SortKeys,
                                ascendingOrder: Bool) {
-        self.sortKey = sortKey
-        self.isSortOrderAscending = ascendingOrder
+        changeSortKey(to: sortKey)
+        changeAscendingSortOrder(to: ascendingOrder)
     }
     
     @discardableResult
@@ -279,6 +340,12 @@ debounceInterval: Double = 0.25,
                  ascending: isSortOrderAscending,
                                            sortKey: sortKey,
                  sortKeyType: sortKey.getRankType())
+            
+        case .volume:
+            return sort(coins: coins,
+                 ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getVolumeType())
         }
     }
     
@@ -306,6 +373,10 @@ debounceInterval: Double = 0.25,
             case .rank:
                 value1 = coin1.marketCapRank as! T
                 value2 = coin2.marketCapRank as! T
+                
+            case .volume:
+                value1 = coin1.totalVolume as! T
+                value2 = coin2.totalVolume as! T
             }
         
             return ascending ? (value1 < value2) : (value1 > value2)
@@ -321,18 +392,21 @@ debounceInterval: Double = 0.25,
             .assign(to: &$coins)
     }
     
-    enum SortKeys: CaseIterable, Hashable, Codable {
+    enum SortKeys: String, CaseIterable, Hashable, Codable {
         case name,
              id,
              price,
-             rank
+             rank,
+        volume
         
         func getNameType() -> String.Type { return String.self }
         
         func getIDType() -> String.Type { return String.self }
         
+        func getPriceType() -> Double.Type { return Double.self }
+        
         func getRankType() -> Int.Type { return Int.self }
         
-        func getPriceType() -> Double.Type { return Double.self }
+        func getVolumeType() -> Double.Type { return Double.self }
     }
 }

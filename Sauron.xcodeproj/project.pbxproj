@@ -126,7 +126,6 @@
 		49A0B584296B8D30003324A3 /* PreferenceBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B583296B8D30003324A3 /* PreferenceBottomSheet.swift */; };
 		49A0B586296BA066003324A3 /* BottomSheetDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B585296BA066003324A3 /* BottomSheetDispatcher.swift */; };
 		49A0B588296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B587296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift */; };
-		49A0B58C296D1467003324A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49A0B58E296D1467003324A3 /* Localizable.strings */; };
 		49A0B594296D3DE9003324A3 /* EndpointManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B593296D3DE9003324A3 /* EndpointManager.swift */; };
 		49A0B599296D3E84003324A3 /* SystemLinker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B598296D3E84003324A3 /* SystemLinker.swift */; };
 		49A0B59C296D444C003324A3 /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B59B296D444C003324A3 /* GlobalFunctions.swift */; };
@@ -152,6 +151,11 @@
 		49B22B92295784BF009C3F4F /* HomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B22B8F295784BE009C3F4F /* HomeScreenViewModel.swift */; };
 		49B22B93295784BF009C3F4F /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B22B91295784BE009C3F4F /* HomeScreen.swift */; };
 		49B22B962957AA74009C3F4F /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B22B952957AA74009C3F4F /* SafariView.swift */; };
+		49C13971296E596A00BFC5B4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49C13970296E596A00BFC5B4 /* Localizable.strings */; };
+		49C13973296F674900BFC5B4 /* CustomContextMenuModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C13972296F674900BFC5B4 /* CustomContextMenuModifiers.swift */; };
+		49FF49852970BAD300533F1E /* DeeplinkHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF49842970BAD300533F1E /* DeeplinkHandlerProtocol.swift */; };
+		49FF49872970BADF00533F1E /* DeeplinkHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF49862970BADF00533F1E /* DeeplinkHandlers.swift */; };
+		49FF49892970BB7E00533F1E /* DeeplinkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF49882970BB7E00533F1E /* DeeplinkManagerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -292,7 +296,6 @@
 		49A0B583296B8D30003324A3 /* PreferenceBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceBottomSheet.swift; sourceTree = "<group>"; };
 		49A0B585296BA066003324A3 /* BottomSheetDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetDispatcher.swift; sourceTree = "<group>"; };
 		49A0B587296BBD04003324A3 /* PreferenceBottomSheetSelectionChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceBottomSheetSelectionChipView.swift; sourceTree = "<group>"; };
-		49A0B58D296D1467003324A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49A0B593296D3DE9003324A3 /* EndpointManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointManager.swift; sourceTree = "<group>"; };
 		49A0B598296D3E84003324A3 /* SystemLinker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemLinker.swift; sourceTree = "<group>"; };
 		49A0B59B296D444C003324A3 /* GlobalFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
@@ -317,6 +320,12 @@
 		49B22B8F295784BE009C3F4F /* HomeScreenViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreenViewModel.swift; sourceTree = "<group>"; };
 		49B22B91295784BE009C3F4F /* HomeScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		49B22B952957AA74009C3F4F /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+		49C13970296E596A00BFC5B4 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		49C13972296F674900BFC5B4 /* CustomContextMenuModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenuModifiers.swift; sourceTree = "<group>"; };
+		49C13974296F716500BFC5B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		49FF49842970BAD300533F1E /* DeeplinkHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkHandlerProtocol.swift; sourceTree = "<group>"; };
+		49FF49862970BADF00533F1E /* DeeplinkHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkHandlers.swift; sourceTree = "<group>"; };
+		49FF49882970BB7E00533F1E /* DeeplinkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkManagerProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -368,6 +377,7 @@
 		491429A5294D05540083CC9D /* Sauron */ = {
 			isa = PBXGroup;
 			children = (
+				49C13974296F716500BFC5B4 /* Info.plist */,
 				499E12152954B41B004C61CE /* Testing */,
 				499E12142954B411004C61CE /* Supporting Files */,
 				499E12132954B409004C61CE /* Code */,
@@ -952,8 +962,8 @@
 		499E122E2954B59D004C61CE /* Localized Strings */ = {
 			isa = PBXGroup;
 			children = (
-				49A0B58E296D1467003324A3 /* Localizable.strings */,
 				499E12322954B59D004C61CE /* LocalizedStrings.swift */,
+				49C13970296E596A00BFC5B4 /* Localizable.strings */,
 			);
 			path = "Localized Strings";
 			sourceTree = "<group>";
@@ -1007,6 +1017,7 @@
 				499E124C2954C40F004C61CE /* ShapeModifiers.swift */,
 				499E124D2954C40F004C61CE /* ScrollViewModifier.swift */,
 				499E124E2954C40F004C61CE /* GradientModifiers.swift */,
+				49C13972296F674900BFC5B4 /* CustomContextMenuModifiers.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -1186,6 +1197,7 @@
 		499E128B2954D3C2004C61CE /* Deeplinking */ = {
 			isa = PBXGroup;
 			children = (
+				49FF49832970BAC400533F1E /* Handlers */,
 				49A0B597296D3E75003324A3 /* System Linker */,
 				499E12BC2954D42D004C61CE /* Manager */,
 			);
@@ -1261,6 +1273,7 @@
 			isa = PBXGroup;
 			children = (
 				499E12BD2954D42D004C61CE /* DeeplinkManager.swift */,
+				49FF49882970BB7E00533F1E /* DeeplinkManagerProtocol.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -1826,6 +1839,15 @@
 			path = SafariView;
 			sourceTree = "<group>";
 		};
+		49FF49832970BAC400533F1E /* Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				49FF49842970BAD300533F1E /* DeeplinkHandlerProtocol.swift */,
+				49FF49862970BADF00533F1E /* DeeplinkHandlers.swift */,
+			);
+			path = Handlers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1917,7 +1939,6 @@
 			knownRegions = (
 				en,
 				Base,
-				es,
 			);
 			mainGroup = 4914299A294D05540083CC9D;
 			packageReferences = (
@@ -1941,9 +1962,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49C13971296E596A00BFC5B4 /* Localizable.strings in Resources */,
 				49B22B8329562350009C3F4F /* Launch Screen.storyboard in Resources */,
 				499E12432954B59E004C61CE /* Images.xcassets in Resources */,
-				49A0B58C296D1467003324A3 /* Localizable.strings in Resources */,
 				499E12452954B59E004C61CE /* Colors.xcassets in Resources */,
 				499E123C2954B59E004C61CE /* Animations.xcassets in Resources */,
 			);
@@ -2046,6 +2067,7 @@
 				499E13132954D6F8004C61CE /* SheathedTextFieldModel.swift in Sources */,
 				49A0B599296D3E84003324A3 /* SystemLinker.swift in Sources */,
 				499E130F2954D6F8004C61CE /* TabbarSelector.swift in Sources */,
+				49FF49872970BADF00533F1E /* DeeplinkHandlers.swift in Sources */,
 				49A51884296786C800258F80 /* PortfolioContainer.xcdatamodeld in Sources */,
 				499E13192954D6F8004C61CE /* BorderedTextSection.swift in Sources */,
 				4986C3092960FBF5003CFF84 /* InformationSectionView.swift in Sources */,
@@ -2086,13 +2108,16 @@
 				4925C88129590069006E1A80 /* ErrorCodeDispatcher.swift in Sources */,
 				499E12802954C40F004C61CE /* AssociatedEnum.swift in Sources */,
 				492169F3295FAE5A0078CCC3 /* CoinImageViewModel.swift in Sources */,
+				49FF49892970BB7E00533F1E /* DeeplinkManagerProtocol.swift in Sources */,
 				499E12DF2954D586004C61CE /* RootCoordinatorDispatcher.swift in Sources */,
 				499E131C2955204F004C61CE /* OnboardingCoordinator.swift in Sources */,
 				499E1346295525CB004C61CE /* AppInformation.swift in Sources */,
+				49C13973296F674900BFC5B4 /* CustomContextMenuModifiers.swift in Sources */,
 				499E133F29552550004C61CE /* HapticFeedback.swift in Sources */,
 				499E126D2954C40F004C61CE /* RouterViewModifiers.swift in Sources */,
 				499E12E62954D65D004C61CE /* VOCPageViewModel.swift in Sources */,
 				499E131E29552097004C61CE /* OnboardingRouter.swift in Sources */,
+				49FF49852970BAD300533F1E /* DeeplinkHandlerProtocol.swift in Sources */,
 				499E12DA2954D50B004C61CE /* RootCoordinatorDelegate.swift in Sources */,
 				49B22B80295620CF009C3F4F /* LaunchScreenBridgeViewModel.swift in Sources */,
 				499E127A2954C40F004C61CE /* SwiftUIAnimationTransitions.swift in Sources */,
@@ -2138,17 +2163,6 @@
 			targetProxy = 491429C3294D05540083CC9D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		49A0B58E296D1467003324A3 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				49A0B58D296D1467003324A3 /* en */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		491429CA294D05540083CC9D /* Debug */ = {
@@ -2277,6 +2291,7 @@
 				DEVELOPMENT_TEAM = 2JMR3SJGS4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sauron/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Sauron;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -2311,6 +2326,7 @@
 				DEVELOPMENT_TEAM = 2JMR3SJGS4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sauron/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Sauron;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

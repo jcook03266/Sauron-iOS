@@ -12,16 +12,14 @@ class RootCoordinatorDelegate: ObservableObject {
     @Published var activeRoot: RootCoordinatorDispatcher.RootCoordinators!
     
     // MARK: - Root Coordinator management
-    private var dispatcher: RootCoordinatorDispatcher!
-    var activeRootCoordinator: any RootCoordinator {
-        return dispatcher.getRootCoordinatorFor(root: activeRoot)
-    }
+    var dispatcher: RootCoordinatorDispatcher!
+    var activeRootCoordinator: (any RootCoordinator)!
     
     // MARK: - Singleton Instance to prevent reinstantiation at runtime
-    static var shared: RootCoordinatorDelegate = .init()
+    static let shared: RootCoordinatorDelegate = .init()
     
     // MARK: - Launch Screen Manager
-    private var launchScreenManager: LaunchScreenManager = .init()
+    private var launchScreenManager: LaunchScreenManager = .shared
     
     // MARK: - Reference values to be used whenever needed
     static var rootSwitchAnimationBlendDuration: CGFloat = 0.75
@@ -48,7 +46,7 @@ class RootCoordinatorDelegate: ObservableObject {
     var launchScreenRootRoute: LaunchScreenRoutes = .main
     var mainRootRoute: OnboardingRoutes = .onboarding
     
-    init() {
+    private init() {
         self.dispatcher = .init(delegate: self)
         
         performOnLoadTasks()
@@ -99,7 +97,8 @@ class RootCoordinatorDelegate: ObservableObject {
     func switchActiveRoot(to root: RootCoordinatorDispatcher.RootCoordinators) {
         guard root != self.activeRoot else { return }
         
-        self.activeRoot = root
+        activeRoot = root
+        activeRootCoordinator = dispatcher.getRootCoordinatorFor(root: root)
     }
     
     // MARK: - Convenience functions

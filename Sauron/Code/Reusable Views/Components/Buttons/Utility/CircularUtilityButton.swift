@@ -85,7 +85,7 @@ struct CircularUtilityButton: View {
     // MARK: - View Combinations
     var mainBody: some View {
             Button(action: {
-                HapticFeedbackDispatcher.arrowButtonPress()
+                HapticFeedbackDispatcher.genericButtonPress()
                 action()
             }){
                 Circle()

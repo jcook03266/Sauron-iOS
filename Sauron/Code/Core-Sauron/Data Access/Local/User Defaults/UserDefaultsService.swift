@@ -46,13 +46,24 @@ class UserDefaultsService {
         case userPreferredFiatCurrency(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userPreferredFiatCurrency",
                                                                                              defaultReturnValue: FiatCurrencyManager.defaultCurrency.rawValue))
         
-        func getAssociatedValue() -> UserDefaultsValueKey<Any>  {
+        // MARK: - Portfolio Coin Sorting
+        case portfolioCoinSortKey(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("portfolioCoinSortKey",
+                                                                                        defaultReturnValue: CoinStore.defaultSortKey.rawValue))
+        
+        case portfolioCoinAscendingSortOrder(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("portfolioAscendingSortOrder",
+                                                                                        defaultReturnValue: CoinStore.defaultAscendingSortOrder))
+        
+        func getAssociatedValue() -> UserDefaultsValueKey<Any> {
             switch self {
             case .didCompleteFTUE(let value):
                 return value
             case .didCompleteOnboarding(let value):
                 return value
             case .userPreferredFiatCurrency(let value):
+                return value
+            case .portfolioCoinSortKey(let value):
+                return value
+            case .portfolioCoinAscendingSortOrder(let value):
                 return value
             }
         }

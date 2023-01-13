@@ -12,22 +12,13 @@ import Combine
 open class AppService: ObservableObject {
     static let shared: AppService = .init()
     
-    // MARK: - Deep Linker
-    let deepLinkManager: DeepLinkManager = .shared
-    
     // MARK: - Published
-    @Published var deepLinkTarget: DeepLinkManager.DeepLinkTarget?
+    // Deep Linking
+    @Published var deepLinkManager: DeepLinkManager = .shared
     
     // MARK: - Debug Environment Properties
     static let isDebug: Bool = false
     static let useMockData: Bool = false /// Determines whether or not to use mock data when running the application or real data pulled from valid endpoints
-    
-    // MARK: -  Observed
-    @ObservedObject var rootCoordinatorDelegate: RootCoordinatorDelegate = .shared
-    
-    var activeRootCoordinator: any RootCoordinator {
-        return rootCoordinatorDelegate.activeRootCoordinator
-    }
     
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
@@ -67,7 +58,9 @@ open class AppService: ObservableObject {
     }
     let environment = Environment()
     
-    private init() { setup() }
+    private init() {
+        setup()
+    }
     
     func setup() {
         //let store = dataStores.coinDataStore

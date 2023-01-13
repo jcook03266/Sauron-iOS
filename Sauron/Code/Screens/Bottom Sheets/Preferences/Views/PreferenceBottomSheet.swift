@@ -46,7 +46,7 @@ searchBarLeadingPadding: CGFloat = 15,
                 searchBarTopPadding: CGFloat = 5,
                 horizontalDividerBottomPadding: CGFloat = 10,
                 informationSectionTopPadding: CGFloat = 10,
-                informationSectionBottomPadding: CGFloat = 0,
+                informationSectionBottomPadding: CGFloat = 15,
                 informationSectionLeadingPadding: CGFloat = 20,
                 informationSectionTrailingPadding: CGFloat = 45,
                 selectionChipsItemSpacing: CGFloat = 10
@@ -97,6 +97,8 @@ extension PreferenceBottomSheet {
                 dismissButton
                 Spacer()
             }
+            
+            Spacer()
         }
     }
     

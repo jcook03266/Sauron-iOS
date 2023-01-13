@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OrderedCollections
 
 class OnboardingRouter: Routable {
     typealias Route = OnboardingRoutes
@@ -19,8 +20,17 @@ class OnboardingRouter: Routable {
     // MARK: - URLs
     @Published var webURL: URL!
     
+    // MARK: - Deeplink Queries
+    @Published var portfolioCurationSearchQuery: String = ""
+    
     // MARK: - Observed
     @ObservedObject var coordinator: OnboardingCoordinator
+    
+    // MARK: - Dependencies
+    struct Dependencies: InjectableServices {
+        var ftueService: FTUEService = inject()
+    }
+    internal var dependencies = Dependencies()
     
     init(coordinator: OnboardingCoordinator) {
         self.coordinator = coordinator
@@ -31,7 +41,32 @@ class OnboardingRouter: Routable {
     func initViewModels() {
         self.onboardingViewModel = VOCViewModel(coordinator: self.coordinator)
         self.homeScreenViewModel = HomeScreenViewModel(coordinator: self.coordinator)
-        self.portfolioCurationViewModel = PortfolioCurationViewModel(coordinator: self.coordinator)
+        self.portfolioCurationViewModel = PortfolioCurationViewModel(coordinator: self.coordinator,
+                                                                     router: self)
+    }
+    
+    func getPath(to route: OnboardingRoutes) -> OrderedSet<OnboardingRoutes> {
+        var path: OrderedSet<OnboardingRoutes> = []
+        
+        switch route {
+        case .onboarding:
+            path = [.onboarding]
+        case .home:
+            path = [.onboarding, .home]
+        case .portfolioCuration:
+            path = [.onboarding, .home, .portfolioCuration]
+        case .web:
+            path = [.onboarding, .home, .web]
+        case .currencyPreferenceBottomSheet:
+            path = [.onboarding, .home, .portfolioCuration, .currencyPreferenceBottomSheet]
+        }
+        
+        /// If the user has completed onboarding then this view will never be in the navigation stack
+        if dependencies.ftueService.didCompleteOnboarding {
+            path.remove(.onboarding)
+        }
+        
+        return path
     }
     
     func view(for route: OnboardingRoutes) -> AnyView {
@@ -58,18 +93,14 @@ class OnboardingRouter: Routable {
             view = PortfolioCurationView(model: self.portfolioCurationViewModel)
                 .navigationBarBackButtonHidden(true)
             
-            statusBarHidden = false
+            statusBarHidden = true
         case .web:
             view = SafariView(url: webURL)
-            
-            statusBarHidden = false
             
         case .currencyPreferenceBottomSheet:
             view = PreferenceBottomSheet(model: BottomSheetDispatcher.getCurrencyPreferenceModel(using: self.coordinator))
             
-        case .languagePreferenceBottomSheet:
-            view = PreferenceBottomSheet(model: BottomSheetDispatcher.getCurrencyPreferenceModel(using: self.coordinator))
-            
+            statusBarHidden = self.coordinator.statusBarHidden
         }
         
         return AnyView(view

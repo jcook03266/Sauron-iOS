@@ -20,6 +20,9 @@ class FiatCurrencyManager: ObservableObject {
     // MARK: - Data Persistence and storage
     /// Used to display the user's preferred currency
     @Published var displayedCurrency: SupportedFiatCurrencies = defaultCurrency
+    
+    static let defaultCurrency: SupportedFiatCurrencies = .USD
+    
     /// Used to fetch, store, and or mutate and save the user's preferred currency from user defaults
     private var userPreferredCurrency: SupportedFiatCurrencies {
         get { let rawValue = dependencies
@@ -28,7 +31,7 @@ class FiatCurrencyManager: ObservableObject {
                          key: .userPreferredFiatCurrency())
             
             // The raw value of the enum is fetched from the store and coerced into a specific enum value
-            return FiatCurrencyManager.SupportedFiatCurrencies(rawValue: rawValue) ?? FiatCurrencyManager.defaultCurrency
+            return SupportedFiatCurrencies(rawValue: rawValue) ?? FiatCurrencyManager.defaultCurrency
         }
         set { dependencies
             .userDefaultsService
@@ -39,7 +42,6 @@ class FiatCurrencyManager: ObservableObject {
             displayedCurrency = userPreferredCurrency
         }
     }
-    static let defaultCurrency: SupportedFiatCurrencies = .USD
     
     enum SupportedFiatCurrencies: String, CaseIterable, Hashable {
         case USD, EUR, JPY, GBP, AUD, CAD, CHF, CNY, HKD, NZD

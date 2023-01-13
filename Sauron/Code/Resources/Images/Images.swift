@@ -176,6 +176,8 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          bolt_badge_a_fill = "bolt.badge.a.fill",
          stop_circle = "stop.circle",
          rays = "rays",
+         arrow_counterclockwise = "arrow.counterclockwise",
+         arrow_clockwise = "arrow.clockwise",
          arrow_triangle_2_circlepath = "arrow.triangle.2.circlepath",
          arrow_2_squarepath = "arrow.2.squarepath",
          rectangle_portrait_and_arrow_right = "rectangle.portrait.and.arrow.right",
@@ -193,5 +195,6 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          rectangle_3_group_fill = "rectangle.3.group.fill",
          line_3_horizontal_decrease_circle_fill = "line.3.horizontal.decrease.circle.fill",
          info_circle_fill = "info.circle.fill",
-         list_number = "list.number"
+         list_number = "list.number",
+         flame_fill = "flame.fill"
 }

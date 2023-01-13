@@ -13,6 +13,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     
     // MARK: - Observed
     @ObservedObject var coordinator: OnboardingCoordinator
+    @ObservedObject var router: OnboardingRouter
     
     // MARK: - Published
     @Published var assetIdentifierDisplayType: AssetIdentifierDisplayType = .Name
@@ -192,6 +193,16 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         }
     }
     
+    var sortByVolumeAction: (() -> Void) {
+        return { [weak self] in
+            HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
+            self.dataStores.coinStore.updateSortingCriteria(sortKey: .volume,
+                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
+        }
+    }
+    
     var sortButtonPressedAction: (() -> Void) {
         return { [weak self] in
             HapticFeedbackDispatcher.genericButtonPress()
@@ -348,8 +359,11 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         contextPropertiesHeaderFont: FontRepository = .body_S,
         contextPropertiesHeaderFontWeight: Font.Weight = .regular
     
-    init(coordinator: OnboardingCoordinator) {
+    init(coordinator: OnboardingCoordinator,
+         router: OnboardingRouter)
+    {
         self.coordinator = coordinator
+        self.router = router
         self.searchBarTextFieldModel = builtSearchBarTextFieldModel
         self.contextMenuModel = buildContextMenuModel()
         
@@ -384,7 +398,12 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             .init(action: self.sortByRankAction,
                   label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_RANK_OPTION),
                   sideBarIcon: Icons.getIconImage(named: .list_number),
-                  isSelected: coinStore.isCurrenSortKey(sortKey: .rank))
+                  isSelected: coinStore.isCurrenSortKey(sortKey: .rank)),
+            
+            .init(action: self.sortByVolumeAction,
+                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_VOLUME_OPTION),
+                  sideBarIcon: Icons.getIconImage(named: .flame_fill),
+                  isSelected: coinStore.isCurrenSortKey(sortKey: .volume))
         ]
         
         contextMenuViewModel.selectedRow = contextMenuRows.first(where: { $0.isSelected })
@@ -410,9 +429,19 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             .$textEntry
             .assign(to: &dataStores.coinStore.$activeSearchQuery)
         
+        // Pass in external search queries from the deeplinker here
+        self.router
+            .$portfolioCurationSearchQuery
+            .assign(to: &searchBarTextFieldModel.$textEntry)
+        
         contextMenuModel
             .$sortInAscendingOrder
-            .assign(to: &dataStores.coinStore.$isSortOrderAscending)
+            .sink { [weak self] in
+                guard let self = self else { return }
+                
+                self.dataStores.coinStore.changeAscendingSortOrder(to: $0)
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Convenience Methods

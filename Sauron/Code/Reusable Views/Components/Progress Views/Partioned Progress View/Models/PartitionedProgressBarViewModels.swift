@@ -1,8 +1,8 @@
 //
 //  PartitionedProgressBarViewModels.swift
-//  Inspec
+//  Sauron
 //
-//  Created by Justin Cook on 11/5/22.
+//  Created by Justin Cook on 12/22/22.
 //
 
 import SwiftUI
@@ -10,7 +10,7 @@ import Combine
 
 // MARK: - Partitioned Progress Bar View Model
 class PartitionedProgressBarViewModel: UncoordinatedNavigableGenericViewModel {
-    // Observed
+    // MARK: - Observed
     /// Observes changes in the published array in this observable object and notifies the publisher of changes
     @ObservedObject private var observedArray: ObservableArray = ObservableArray<ProgressBarModel>()
     var progressBarModels: [ProgressBarModel] {
@@ -22,7 +22,7 @@ class PartitionedProgressBarViewModel: UncoordinatedNavigableGenericViewModel {
         }
     }
     
-    // Published
+    // MARK: - Published
     /// Corresponding 'page' the progress bar is on, used when embedded in a view with paging capabilities
     @Published var currentPage: Int = 0 // 1-indexed
     /// Joins all bars together to form one single bar when all bars are completed

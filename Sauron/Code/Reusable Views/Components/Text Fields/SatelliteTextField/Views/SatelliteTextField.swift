@@ -15,6 +15,8 @@ struct SatelliteTextField: View {
     
     // MARK: - States
     @FocusState var textFieldFocused: Bool
+    @State var clearTextFieldButtonPressed: Bool = false
+    @State var clearTextFieldButtonRotationAmount: CGFloat = 0
     
     // MARK: - View Properties
     var animationDuration: CGFloat = 0.3
@@ -24,14 +26,26 @@ struct SatelliteTextField: View {
     
     // MARK: - Dimensions
     var textFieldContainerSize: CGSize = CGSize(width: 325, height: 50)
+    
     var textFieldSize: CGSize {
         return CGSize(width: textFieldContainerSize.width * 0.8,
                       height: textFieldContainerSize.height)
     }
+    
     var satelliteButtonSize: CGSize {
         return CGSize(width: textFieldContainerSize.height,
                       height: textFieldContainerSize.height)
     }
+    
+    var clearTextFieldButtonSize: CGSize {
+        return CGSize(width: 30, height: 30)
+    }
+    
+    var clearTextFieldButtonOffset: CGSize {
+        return CGSize(width: clearTextFieldButtonSize.width/4,
+                      height: -clearTextFieldButtonSize.height/2)
+    }
+    
     var cornerRadius: CGFloat = 10,
         textFieldBorderWidth: CGFloat = 1.5
     
@@ -40,6 +54,34 @@ struct SatelliteTextField: View {
         textFieldInteriorPadding: CGFloat = 15
     
     // MARK: - Subviews
+    var clearTextFieldButton: some View {
+        Group {
+            if model.clearButtonEnabled
+                && model.focused {
+                CircularUtilityButton(action: {
+                    clearTextFieldButtonPressed.toggle()
+                    changeClearTextFieldButtonRotation()
+                    
+                    model.clearTextFieldButtonAction()
+                },
+                                      icon: model.clearTextFieldButtonIcon,
+                                      backgroundColor: model.clearTextFieldButtonBackgroundColor,
+                                      backgroundGradient: model.clearTextFieldButtonGradient,
+                                      foregroundColor: model.clearTextFieldButtonIconTintColor,
+                                      shadowColor: model.clearTextFieldButtonShadowColor,
+                                      size: clearTextFieldButtonSize,
+                                      isEnabled: .constant(!model.isEmpty()),
+                                      animate: $model.focused)
+                .zIndex(1)
+                .transition(.scale.animation(.spring()))
+                .rotationEffect(.degrees(clearTextFieldButtonRotationAmount))
+                .animation(.spring(),
+                           value: clearTextFieldButtonPressed)
+                .offset(clearTextFieldButtonOffset)
+            }
+        }
+    }
+    
     var satelliteButton: some View {
         CircularUtilityButton(action: model.satelliteButtonAction,
                               icon: model.activeIcon,
@@ -94,6 +136,16 @@ struct SatelliteTextField: View {
                 .background(
                     textFieldContainerInterior
                 )
+                .overlay {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
+                            clearTextFieldButton
+                        }
+                     Spacer()
+                    }
+                }
             
             textField
         }
@@ -128,6 +180,16 @@ struct SatelliteTextField: View {
     
     var body: some View {
         mainContainer
+    }
+    
+    /// Rotates the clear button ccw 360 degrees continuously without reversing
+    private func changeClearTextFieldButtonRotation() {
+        let debounceInterval: CGFloat = 0.1
+        clearTextFieldButtonRotationAmount = -360
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + debounceInterval) {
+            clearTextFieldButtonRotationAmount = 0
+        }
     }
     
     private func triggerFocusAction() {

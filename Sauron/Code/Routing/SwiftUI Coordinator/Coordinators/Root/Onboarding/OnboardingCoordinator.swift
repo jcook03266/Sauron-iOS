@@ -26,21 +26,22 @@ class OnboardingCoordinator: RootCoordinator {
     @Published var sheetItem: OnboardingRoutes?
     @Published var fullCoverItem: OnboardingRoutes?
     @Published var rootView: AnyView!
-    @Published var rootRoute: OnboardingRoutes! = RootCoordinatorDelegate.shared.onboardingRootRoute
+    @Published var rootRoute: OnboardingRoutes!
     
     // MARK: - Observed
     @ObservedObject var rootCoordinatorDelegate: RootCoordinatorDelegate
     
-    init (rootCoordinatorDelegate: RootCoordinatorDelegate = .init()) {
+    init(rootCoordinatorDelegate: RootCoordinatorDelegate = .shared) {
         self.rootCoordinatorDelegate = rootCoordinatorDelegate
         self.router = OnboardingRouter(coordinator: self)
+        self.rootRoute = rootCoordinatorDelegate.onboardingRootRoute
         self.rootView = router.view(for: rootRoute)
         
         UINavigationBar.changeAppearance(clear: true)
     }
     
     func coordinatorView() -> AnyView {
-        return AnyView(OnboardingCoordinatorView(coordinator: self))
+        AnyView(OnboardingCoordinatorView(coordinator: self))
     }
     
     func coordinatedView() -> any CoordinatedView {

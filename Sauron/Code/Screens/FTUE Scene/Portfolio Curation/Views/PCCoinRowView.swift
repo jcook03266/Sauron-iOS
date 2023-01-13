@@ -222,7 +222,8 @@ struct PCCoinRowView_Previews: PreviewProvider {
         let coin = env.testCoinModel!
         
         PCCoinRowView(model: .init(parentViewModel:
-                .init(coordinator: .init()),
+                .init(coordinator: .init(),
+                      router: .init(coordinator: .init())),
                                    coinModel: coin))
     }
 }

@@ -13,13 +13,15 @@ struct PortfolioCurationView: View {
     
     // MARK: - States
     @State var didAppear: Bool = false
-    @State var didScrollDown: Bool = false
+    @State var displayBottomSection: Bool = true
     @State var scrollViewContentOffset: CGPoint = .zero
     @State var lastScrollViewContentOffset: CGPoint = .zero
     
     // MARK: - Dimensions + Padding
     private let backButtonTrailingPadding: CGFloat = 20,
                 backButtonLeadingPadding: CGFloat = 7,
+                bottomSectionToggleButtonTrailingPadding: CGFloat = 10,
+                bottomSectionToggleButtonBottomPadding: CGFloat = 10,
                 titleViewLeadingPadding: CGFloat = 90,
                 titleViewTrailingPadding: CGFloat = 20,
                 titleViewHeight: CGFloat = 100,
@@ -121,6 +123,19 @@ struct PortfolioCurationView: View {
                     isEnabled: .constant(true))
         .padding(.leading, backButtonLeadingPadding)
         .padding(.trailing, backButtonTrailingPadding)
+    }
+    
+    var bottomSectionToggleButton: some View {
+        ArrowButton(action: {
+            HapticFeedbackDispatcher.genericButtonPress()
+            toggleBottomSection()
+        },
+                    backgroundColor: model.backButtonBackgroundColor,
+                    arrowDirection: displayBottomSection ? .down : .up,
+                    buttonType: .next,
+                    isEnabled: .constant(true))
+        .padding(.trailing, bottomSectionToggleButtonTrailingPadding)
+        .padding(.bottom, bottomSectionToggleButtonBottomPadding)
     }
     
     var sideVerticalDivider: some View {
@@ -478,10 +493,6 @@ struct PortfolioCurationView: View {
             .refreshable(action: {
                 model.refresh()
             })
-            .coordinateSpace(name: "scroll")
-            .onChange(of: scrollViewContentOffset) {
-                displayBottomSection(newValue: $0)
-            }
             
             VStack {
                 HStack(alignment: .top, spacing: 0) {
@@ -497,9 +508,14 @@ struct PortfolioCurationView: View {
     
     var bottomSection: some View {
         VStack(spacing: 0) {
-            if !didScrollDown {
+            Spacer()
+            
+            HStack {
                 Spacer()
+                bottomSectionToggleButton
+            }
                 
+            if displayBottomSection {
                 preferenceButtons
                 
                 VStack(spacing: 0) {
@@ -522,20 +538,16 @@ struct PortfolioCurationView: View {
             }
         }
         .ignoresSafeArea(.keyboard)
-        .id(didScrollDown)
+        .id(displayBottomSection)
         .zIndex(1)
         .transition(.offset(y: bottomSectionHideVerticalOffset))
         .animation(.spring()
             .speed(0.75),
-                   value: didScrollDown)
+                   value: displayBottomSection)
         .animation(.spring(),
                    value: model.canContinue)
     }
-    
-    var floatingContextMenuView: some View {
-        FloatingContextMenu(model: model.contextMenuModel)
-    }
-    
+
     var body: some View {
         GeometryReader { geom in
             ZStack {
@@ -544,10 +556,9 @@ struct PortfolioCurationView: View {
                 topSection
                 
                 bottomSection
-                
-                floatingContextMenuView
             }
         }
+        .presentContextMenu(with: model.contextMenuModel)
         .animation(.spring(),
                    value: model.contextPropertiesHasChanged)
         .animation(.spring(), value: model.dependencies.fiatCurrencyManager.displayedCurrency)
@@ -559,18 +570,15 @@ struct PortfolioCurationView: View {
     /// Refresh data whenever this view reappears
     private func performOnAppearTasks() {
         model.refresh()
+        model.contextMenuModel.shouldDisplay = false
     }
 }
 
 // MARK: - Functions
 extension PortfolioCurationView {
-    /// Conditionally hides the bottom section given the user scrolls up or down beyond a certain margin of vertical offset
-    func displayBottomSection(newValue: CGPoint) {
-        let upperBoundaryCondition = newValue.y < 0
-        let lowerBoundaryCondition = newValue.y < lastScrollViewContentOffset.y
-        
-        lastScrollViewContentOffset = newValue
-        didScrollDown = lowerBoundaryCondition && upperBoundaryCondition
+    /// Hides and reveals the bottom section unconditionally
+    private func toggleBottomSection() {
+        displayBottomSection.toggle()
     }
 }
 
@@ -634,6 +642,7 @@ extension PortfolioCurationView {
 
 struct PortfolioCurationView_Previews: PreviewProvider {
     static var previews: some View {
-        PortfolioCurationView(model: .init(coordinator: .init()))
+        PortfolioCurationView(model: .init(coordinator: .init(),
+                                           router: .init(coordinator: .init())))
     }
 }

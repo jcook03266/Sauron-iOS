@@ -26,13 +26,14 @@ class LaunchScreenCoordinator: RootCoordinator {
     @Published var sheetItem: LaunchScreenRoutes?
     @Published var fullCoverItem: LaunchScreenRoutes?
     @Published var rootView: AnyView!
-    @Published var rootRoute: LaunchScreenRoutes! = RootCoordinatorDelegate.shared.launchScreenRootRoute
+    @Published var rootRoute: LaunchScreenRoutes!
     
     // MARK: - Observed
     @ObservedObject var rootCoordinatorDelegate: RootCoordinatorDelegate
     
-    init (rootCoordinatorDelegate: RootCoordinatorDelegate = .init()) {
+    init(rootCoordinatorDelegate: RootCoordinatorDelegate = .shared) {
         self.rootCoordinatorDelegate = rootCoordinatorDelegate
+        self.rootRoute = rootCoordinatorDelegate.launchScreenRootRoute
         self.router = LaunchScreenRouter(coordinator: self)
         self.rootView = router.view(for: rootRoute)
         

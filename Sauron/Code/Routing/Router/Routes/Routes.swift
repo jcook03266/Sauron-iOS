@@ -25,13 +25,12 @@ enum OnboardingRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProto
     var id: String {
         UUID().uuidString
     }
-    
+
     case onboarding
     case home
     case portfolioCuration
     case web
     case currencyPreferenceBottomSheet
-    case languagePreferenceBottomSheet
 }
 
 // MARK: - Main / Tabbar Router
@@ -95,9 +94,8 @@ enum RouteDirectories: String, CaseIterable, Hashable, Identifiable, RoutesProto
         UUID().uuidString
     }
     
-    case TabbarRoutes
-    case OnboardingRoutes
-    case BuildsRoutes
+    case OnboardingRoutes = "Onboarding"
+    case BuildsRoutes = "Builds"
 }
 
 // MARK: - Generic protocol for all routes to conform to

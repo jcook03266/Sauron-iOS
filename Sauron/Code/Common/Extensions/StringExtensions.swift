@@ -98,9 +98,13 @@ extension String {
     }
 }
 
-// MARK: - Convenience Extension
+// MARK: - Convenience Extensions
 extension String {
     var asURL: URL? {
         return URL(string: self)
+    }
+    
+    mutating func clear() {
+        self = ""
     }
 }
