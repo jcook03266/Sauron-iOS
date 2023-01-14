@@ -580,8 +580,7 @@
 		4925C89E295C2B7E006E1A80 /* FTUE Scene */ = {
 			isa = PBXGroup;
 			children = (
-				4925C8BF295D7BCF006E1A80 /* Portfolio Curation */,
-				49B22B8D295784BE009C3F4F /* Home */,
+				49B22B8D295784BE009C3F4F /* Get Started */,
 				499E12852954D33D004C61CE /* Onboarding */,
 			);
 			path = "FTUE Scene";
@@ -590,6 +589,12 @@
 		4925C8A0295C2B94006E1A80 /* Main Scene */ = {
 			isa = PBXGroup;
 			children = (
+				49AB9D5A2972D7670044EC8D /* Alerts Screen */,
+				49AB9D592972D7620044EC8D /* Settings Screen */,
+				49AB9D582972D75B0044EC8D /* Wallet Screen */,
+				49AB9D572972D7450044EC8D /* Home Screen */,
+				49AB9D562972D73A0044EC8D /* Auth Screen */,
+				49B22B7B295620CF009C3F4F /* Cover Screen */,
 			);
 			path = "Main Scene";
 			sourceTree = "<group>";
@@ -1178,8 +1183,8 @@
 			isa = PBXGroup;
 			children = (
 				4925C8C6295D7EA8006E1A80 /* Bottom Sheets */,
+				4925C8BF295D7BCF006E1A80 /* Portfolio Curation */,
 				4925C8A0295C2B94006E1A80 /* Main Scene */,
-				49B22B7B295620CF009C3F4F /* Cover Screen */,
 				4925C89E295C2B7E006E1A80 /* FTUE Scene */,
 			);
 			path = Screens;
@@ -1798,6 +1803,41 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
+		49AB9D562972D73A0044EC8D /* Auth Screen */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Auth Screen";
+			sourceTree = "<group>";
+		};
+		49AB9D572972D7450044EC8D /* Home Screen */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Home Screen";
+			sourceTree = "<group>";
+		};
+		49AB9D582972D75B0044EC8D /* Wallet Screen */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Wallet Screen";
+			sourceTree = "<group>";
+		};
+		49AB9D592972D7620044EC8D /* Settings Screen */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Settings Screen";
+			sourceTree = "<group>";
+		};
+		49AB9D5A2972D7670044EC8D /* Alerts Screen */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Alerts Screen";
+			sourceTree = "<group>";
+		};
 		49B22B782956200D009C3F4F /* Launch Screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -1859,13 +1899,13 @@
 			path = "Launch Screen Manager";
 			sourceTree = "<group>";
 		};
-		49B22B8D295784BE009C3F4F /* Home */ = {
+		49B22B8D295784BE009C3F4F /* Get Started */ = {
 			isa = PBXGroup;
 			children = (
 				49B22B8E295784BE009C3F4F /* Models */,
 				49B22B90295784BE009C3F4F /* Views */,
 			);
-			path = Home;
+			path = "Get Started";
 			sourceTree = "<group>";
 		};
 		49B22B8E295784BE009C3F4F /* Models */ = {

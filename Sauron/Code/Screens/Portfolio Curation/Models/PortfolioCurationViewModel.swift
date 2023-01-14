@@ -289,6 +289,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     }
     
     let symbolHeader = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_SYMBOL_HEADER),
+        rankHeader = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_RANK),
         currencyPreferencesButtonText = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_CURRENCY_PREFERENCES_BUTTON),
         languagePreferencesButtonText = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_LANGUAGE_PREFERENCES_BUTTON),
         continueButtonText = LocalizedStrings.getLocalizedStringKey(for: .CONTINUE),
@@ -339,7 +340,8 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         searchResultsCountNumberGradient: LinearGradient = Colors.gradient_1,
         searchResultsCountCopyTextColor: Color = Colors.black.0,
         noSearchResultsTextGradient: LinearGradient = Colors.gradient_1,
-        bottomSectionBackgroundColor: Color = Colors.neutral_100.0
+        bottomSectionBackgroundColor: Color = Colors.neutral_100.0,
+        rankHeaderTextColor: Color = Colors.neutral_400.0
     
     // Fonts
     let assetPropertiesHeaderFont: FontRepository = .special_heading_2,
@@ -356,7 +358,9 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         noSearchResultsTextFont: FontRepository = .heading_3,
         noSearchResultsTextFontWeight: Font.Weight = .semibold,
         contextPropertiesHeaderFont: FontRepository = .body_S,
-        contextPropertiesHeaderFontWeight: Font.Weight = .regular
+        contextPropertiesHeaderFontWeight: Font.Weight = .regular,
+        rankHeaderFont: FontRepository = .body_S,
+        rankHeaderFontWeight: Font.Weight = .medium
     
     init(coordinator: OnboardingCoordinator,
          router: OnboardingRouter)

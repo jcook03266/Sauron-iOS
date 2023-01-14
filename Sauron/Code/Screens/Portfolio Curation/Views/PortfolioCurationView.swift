@@ -76,7 +76,8 @@ struct PortfolioCurationView: View {
                 noSearchResultsTextTrailingPadding: CGFloat = 40,
                 sortButtonIconSize: CGSize = .init(width: 30,
                                                    height: 30),
-                sortButtonLeadingPadding: CGFloat = 10
+                sortButtonLeadingPadding: CGFloat = 10,
+                rankHeaderLeadingPadding: CGFloat = -5
     
     var assetsListViewLeadingPadding: CGFloat {
         return DeviceConstants.isDeviceSmallFormFactor() ? 0 : -8
@@ -208,6 +209,18 @@ struct PortfolioCurationView: View {
         .frame(width: assetPropertiesHeaderDividerWidth)
     }
     
+    var rankHeader: some View {
+        Text(model.rankHeader)
+            .withFont(model.rankHeaderFont)
+            .fontWeight(model.rankHeaderFontWeight)
+            .multilineTextAlignment(.center)
+            .foregroundColor(model.rankHeaderTextColor)
+            .lineLimit(1)
+            .minimumScaleFactor(0.1)
+            .rotationEffect(.degrees(-90))
+            .padding(.leading, rankHeaderLeadingPadding)
+    }
+    
     var assetPropertiesHeader: some View {
         HStack {
             Spacer()
@@ -262,6 +275,12 @@ struct PortfolioCurationView: View {
         .padding(.trailing, assetPropertiesHeaderTrailingPadding)
         .animation(.spring(), value:
                     model.assetIdentifierDisplayType)
+        .overlay {
+            HStack {
+                rankHeader
+                Spacer()
+            }
+        }
     }
     
     var sortCoinsButton: some View {
