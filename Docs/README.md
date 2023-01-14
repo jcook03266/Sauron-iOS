@@ -82,7 +82,7 @@ All in all I highly recommend using SwiftUI for your next personal project or co
 
 ## FTUE Onboarding Demo:
 
-https://user-images.githubusercontent.com/63657230/211432621-c670414b-313d-4a10-a6fd-9f56ccb3a570.mp4
+https://user-images.githubusercontent.com/63657230/212473279-acb62b56-8b78-457f-8593-99eb56780c4a.mp4
 
 </div>
 
