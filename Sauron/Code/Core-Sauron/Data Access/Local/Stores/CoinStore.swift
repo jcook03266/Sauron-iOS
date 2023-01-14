@@ -30,6 +30,53 @@ debounceInterval: Double = 0.25,
     @Published var activeSearchQuery: String = ""
     @Published var displayPortfolioCoinsOnly: Bool = false
     
+    // MARK: - Sorting
+    @Published private(set) var sortKey: SortKeys = .rank
+    @Published private(set) var isSortOrderAscending: Bool = true
+    
+    // MARK: - Defaults
+    static let defaultSortKey: SortKeys = .rank,
+     defaultAscendingSortOrder: Bool = true
+    
+    /// Use these variables to save sort properties to user defaults
+    private var userPreferredSortKey: SortKeys {
+        get {
+            let rawValue = dependencies
+                .userDefaultsService
+                .getValueFor(type: SortKeys.RawValue.self,
+                             key: .portfolioCoinSortKey())
+            
+            return SortKeys(rawValue: rawValue) ?? CoinStore.defaultSortKey
+        }
+        set {
+            dependencies
+                .userDefaultsService
+                .setValueFor(type: SortKeys.RawValue.self,
+                             key: .portfolioCoinSortKey(),
+                             value: newValue.rawValue)
+            
+            sortKey = userPreferredSortKey
+        }
+    }
+    
+    private var userPreferredSortOrderAscending: Bool {
+        get {
+            return dependencies
+                .userDefaultsService
+                .getValueFor(type: Bool.self,
+                             key: .portfolioCoinAscendingSortOrder())
+        }
+        set {
+            dependencies
+                .userDefaultsService
+                .setValueFor(type: Bool.self,
+                             key: .portfolioCoinAscendingSortOrder(),
+                             value: newValue)
+            
+            isSortOrderAscending = userPreferredSortOrderAscending
+        }
+    }
+    
     // MARK: - Convenience variables
     var searchResultCount: Int = 0
     
@@ -39,15 +86,33 @@ debounceInterval: Double = 0.25,
     }
     let dataStores = DataStores()
     
+    // MARK: - Dependencies
+    struct Dependencies: InjectableServices {
+        let userDefaultsService: UserDefaultsService = inject()
+    }
+    let dependencies = Dependencies()
+    
     init() {
         setup()
     }
     
     func setup() {
+        sortKey = userPreferredSortKey
+        isSortOrderAscending = userPreferredSortOrderAscending
+        
         !mockEnvironment ? subscribeToProvider() : subscribeToMockProvider()
     }
     
-    /// Recieve all updates from the given subscription and store the received coins while cancelling any type erased cancellable instances
+    // MARK: - Sort Key Mutation
+    func changeSortKey(to sortKey: SortKeys) {
+        userPreferredSortKey = sortKey
+    }
+    
+    func changeAscendingSortOrder(to isAscending: Bool) {
+        userPreferredSortOrderAscending = isAscending
+    }
+    
+    /// Receive all updates from the given subscription and store the received coins while cancelling any type erased cancellable instances
     func subscribeToProvider() {
         /// The publishers for the search query and data provider are combined to form a tuple that's updated with new data whenever either publisher recieves an update. This combination is then filtered with a subscriber being attached to receive the data passing through the filter.
         $activeSearchQuery
@@ -55,8 +120,11 @@ debounceInterval: Double = 0.25,
             .debounce(for: .seconds(debounceInterval),
                       scheduler: scheduler)
             .map(filter)
-            .combineLatest($displayPortfolioCoinsOnly, dataStores.portfolioManager.$coinEntities)
+            .combineLatest($displayPortfolioCoinsOnly,
+                           dataStores.portfolioManager.$coinEntities)
             .map(filterPortfolioCoins)
+            .combineLatest($sortKey)
+            .map(sortCoins)
             .assign(to: &$coins)
         
         /// Subscribe directly to the data provider and use this to build up the store for all coin theme colors
@@ -71,6 +139,7 @@ debounceInterval: Double = 0.25,
     // MARK: - Store mutation and accessor methods
     func refresh() {
         dataProvider.reload()
+        sortCoins(sortKey: sortKey)
     }
     
     func add(_ coin: CoinModel) {
@@ -238,24 +307,78 @@ debounceInterval: Double = 0.25,
     }
     
     // MARK: - Sorting
-    func sort<T: Comparable>(ascending: Bool = true,
+    func isCurrenSortKey(sortKey: SortKeys) -> Bool { return self.sortKey == sortKey }
+    
+    func updateSortingCriteria(sortKey: SortKeys,
+                               ascendingOrder: Bool) {
+        changeSortKey(to: sortKey)
+        changeAscendingSortOrder(to: ascendingOrder)
+    }
+    
+    @discardableResult
+    func sortCoins(coins: [CoinModel] = [],
+                   sortKey: SortKeys) -> [CoinModel]
+    {
+        switch sortKey {
+        case .name:
+            return sort(coins: coins,
+                        ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getNameType())
+        case .id:
+            return sort(coins: coins,
+                        ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getIDType())
+        case .price:
+            return sort(coins: coins,
+                        ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getPriceType())
+        case .rank:
+            return sort(coins: coins,
+                 ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getRankType())
+            
+        case .volume:
+            return sort(coins: coins,
+                 ascending: isSortOrderAscending,
+                                           sortKey: sortKey,
+                 sortKeyType: sortKey.getVolumeType())
+        }
+    }
+    
+    func sort<T: Comparable>(coins: [CoinModel],
+                             ascending: Bool = true,
                              sortKey: SortKeys = .name,
-                             sortKeyType: T.Type) {
-        coins = coins.sorted { coin1, coin2 in
+                             sortKeyType: T.Type) -> [CoinModel]
+    {
+        return coins.sorted { coin1, coin2 in
             var value1, value2: T
             
             switch sortKey {
             case .name:
                 value1 = coin1.name as! T
                 value2 = coin2.name as! T
+                
             case .id:
                 value1 = coin1.id as! T
                 value2 = coin2.id as! T
+                
             case .price:
                 value1 = coin1.currentPrice as! T
                 value2 = coin2.currentPrice as! T
+                
+            case .rank:
+                value1 = coin1.marketCapRank as! T
+                value2 = coin2.marketCapRank as! T
+                
+            case .volume:
+                value1 = coin1.totalVolume as! T
+                value2 = coin2.totalVolume as! T
             }
-            
+        
             return ascending ? (value1 < value2) : (value1 > value2)
         }
     }
@@ -269,9 +392,21 @@ debounceInterval: Double = 0.25,
             .assign(to: &$coins)
     }
     
-    enum SortKeys: CaseIterable, Hashable, Codable {
-        case name
-        case id
-        case price
+    enum SortKeys: String, CaseIterable, Hashable, Codable {
+        case name,
+             id,
+             price,
+             rank,
+        volume
+        
+        func getNameType() -> String.Type { return String.self }
+        
+        func getIDType() -> String.Type { return String.self }
+        
+        func getPriceType() -> Double.Type { return Double.self }
+        
+        func getRankType() -> Int.Type { return Int.self }
+        
+        func getVolumeType() -> Double.Type { return Double.self }
     }
 }

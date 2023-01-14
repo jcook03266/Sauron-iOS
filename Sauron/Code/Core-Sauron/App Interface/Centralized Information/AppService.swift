@@ -12,22 +12,13 @@ import Combine
 open class AppService: ObservableObject {
     static let shared: AppService = .init()
     
-    // MARK: - Deep Linking
-    let deepLinkManager = DeepLinkManager()
-    
     // MARK: - Published
-    @Published var deepLinkTarget: DeepLinkManager.DeepLinkTarget?
+    // Deep Linking
+    @Published var deepLinkManager: DeepLinkManager = .shared
     
     // MARK: - Debug Environment Properties
     static let isDebug: Bool = false
     static let useMockData: Bool = false /// Determines whether or not to use mock data when running the application or real data pulled from valid endpoints
-    
-    // MARK: -  Observed
-    @ObservedObject var rootCoordinatorDelegate: RootCoordinatorDelegate = .shared
-    
-    var activeRootCoordinator: any RootCoordinator {
-        return rootCoordinatorDelegate.activeRootCoordinator
-    }
     
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
@@ -52,14 +43,15 @@ open class AppService: ObservableObject {
     // MARK: - Data Providers
     struct DataProviders: InjectableDataProviders {
         let coinDataProvider: CoinDataProvider = inject()
+        let exchangeRateDataProvider: ExchangeRateDataProvider = inject()
     }
-    let dataProviders = DataStores()
+    var dataProviders = DataStores()
     
     // MARK: - Data Stores
     struct DataStores: InjectableStores {
         let coinDataStore: CoinStore = inject()
     }
-    let dataStores = DataStores()
+    var dataStores = DataStores()
     
     // MARK: - Environments
     struct Environment: Environments {
@@ -67,7 +59,10 @@ open class AppService: ObservableObject {
     }
     let environment = Environment()
     
-    private init() { setup() }
+    private init() {
+        setup()
+        load()
+    }
     
     func setup() {
         //let store = dataStores.coinDataStore
@@ -76,4 +71,6 @@ open class AppService: ObservableObject {
         //            print(store.coins)
         //        }
     }
+    
+    func load() {}
 }

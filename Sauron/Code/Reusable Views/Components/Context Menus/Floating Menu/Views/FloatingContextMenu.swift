@@ -34,7 +34,7 @@ shadowOffset: CGSize = .init(width: 0, height: 1)
     /// Where the top right corner of the context menu's content will sit
     private var anchorPoint: CGPoint {
         return CGPoint(x: model.anchorPoint.x - (menuBodySize.width/4 + 10),
-                       y: model.anchorPoint.y + (menuBodySize.height/5))
+                       y: model.anchorPoint.y + (menuBodySize.height/2.5))
     }
     
     // MARK: - View Combinations
@@ -57,14 +57,12 @@ shadowOffset: CGSize = .init(width: 0, height: 1)
     var body: some View {
         ZStack {
             backdrop
-            
+        
             contextMenuBody
                 .position(anchorPoint)
         }
         .zIndex(10)
         .opacity(model.shouldDisplay ? 1 : 0)
-        .animation(.easeIn,
-                   value: model.shouldDisplay)
         .animation(.easeInOut,
                    value: model.selectedRow)
     }
@@ -170,6 +168,9 @@ extension FloatingContextMenu {
         .onTapGesture {
             model.dismissOnTapOutside()
         }
+        .opacity(model.shouldDisplay ? 1 : 0)
+        .animation(.easeIn,
+                   value: model.shouldDisplay)
     }
 }
 

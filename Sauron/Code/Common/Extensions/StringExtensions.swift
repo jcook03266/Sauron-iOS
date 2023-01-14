@@ -98,9 +98,27 @@ extension String {
     }
 }
 
-// MARK: - Convenience Extension
+// MARK: - Convenience Extensions
 extension String {
     var asURL: URL? {
         return URL(string: self)
+    }
+    
+    /// Use this when building or comparing URLs specific to these page / route names
+    func getURLSafeString() -> String {
+        return self
+            .replacingOccurrences(of: " ", with: "_")
+            .lowercased()
+    }
+    
+    /// Reverses the changes done to URL safe strings
+    func convertFromURLSafeString() -> String {
+        return self
+            .replacingOccurrences(of: "_", with: " ")
+    }
+    
+    /// Sets string to null space
+    mutating func clear() {
+        self = ""
     }
 }

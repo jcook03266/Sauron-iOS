@@ -37,9 +37,10 @@ class SatelliteTextFieldModel: SatelliteTextFieldModelProtocol {
     @Published var textEntry: String
     @Published var enabled: Bool = true
     @Published var focused: Bool = false
+    @Published var clearButtonEnabled: Bool = true
     
-        // MARK: - General Properties
-        // Interior
+    // MARK: - General Properties
+    // Interior
     var fieldBackgroundColor: Color = Colors.white.0,
         textFieldTextColor: Color = Colors.black.0,
         textColor: Color = Colors.permanent_white.0,
@@ -65,6 +66,21 @@ satelliteButtonIconTint: Color = Colors.white.0,
 satelliteButtonBackgroundColor: Color = Colors.black.0,
 satelliteButtonShadowColor: Color = Colors.shadow_1.0
     
+    // MARK: - Clear textfield button properties
+    var clearTextFieldButtonIcon: Image = Icons.getIconImage(named: .arrow_clockwise),
+clearTextFieldButtonGradient: LinearGradient? = Colors.gradient_1,
+clearTextFieldButtonIconTintColor: Color = Colors.permanent_white.0,
+clearTextFieldButtonBackgroundColor: Color = Colors.permanent_black.0,
+clearTextFieldButtonShadowColor: Color = Colors.shadow_1.0
+    
+    /// Clears the textfield's current text entry
+    var clearTextFieldButtonAction: (() -> Void) {
+        return { [weak self] in
+            guard let self = self else { return }
+            self.textEntry.clear()
+        }
+    }
+    
     var activeIcon: Image {
         return focused ? satelliteButtonActiveIcon : satelliteButtonInActiveIcon
     }
@@ -76,6 +92,10 @@ satelliteButtonShadowColor: Color = Colors.shadow_1.0
         self.title = title
         self.placeholderText = placeholderText
         self.textEntry = textEntry
+    }
+    
+    func isEmpty() -> Bool {
+        return self.textEntry.isEmpty
     }
     
     func configurator(configuration: @escaping ((SatelliteTextFieldModel)-> Void)) {

@@ -62,6 +62,7 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
     struct NetworkingErrors {}
     struct FileManagerErrors {}
     struct CoreDataErrors {}
+    struct DeeplinkingErrors {}
     
     // MARK: - Global state management
     fileprivate static var fatalErrorsEnabled: Bool {
@@ -95,6 +96,48 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
             return { preconditionFailure() }}
         
         fatalError(code.rawValue + " , " + vestigialMessage)
+    }
+}
+
+extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherProtocol {
+    typealias ErrorCodes = codes
+    
+    enum codes: Hashable, LocalizedError {
+        case urlDoesNotConformToScheme(url: URL)
+        case noHandlerFoundFor(url: URL)
+        case routeCouldNotBeInitialized(routeRawValue: String, url: URL)
+        case routeUnreachableFromCurrentRoute
+ 
+        var errorDescription: String? {
+            switch self {
+            case .urlDoesNotConformToScheme(url: let url):
+                return "The given url \(url) doesn't conform to the expected URL scheme supported by the application."
+                
+            case .noHandlerFoundFor(url: let url):
+                return "No handler could be found to open the given URL \(url)"
+                
+            case .routeCouldNotBeInitialized(routeRawValue: let routeRawValue,
+                                             url: let url):
+                return "A route could not be resolved be from the Raw Value \(routeRawValue), for url: \(url)"
+                
+            case .routeUnreachableFromCurrentRoute:
+                let currentURL: String = DeepLinkManager.shared.activeDeepLinkTarget?.absoluteString ?? "ACTIVE_URL_NOT_STORED_PLEASE_CHECK"
+                
+                return "The route parsed from the url: \(currentURL), could not be reached from the current context"
+            }
+        }
+    }
+    
+    static func printErrorCode(for code: ErrorCodes) {
+        print(code.errorDescription ?? "")
+    }
+    
+    static func getErrorCodeFor(code: ErrorCodes) -> String {
+        return code.localizedDescription
+    }
+    
+    static func throwError(for code: codes) -> Error {
+        return code
     }
 }
 

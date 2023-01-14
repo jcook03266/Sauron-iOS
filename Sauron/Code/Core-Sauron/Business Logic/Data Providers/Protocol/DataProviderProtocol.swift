@@ -23,12 +23,18 @@ protocol InjectableDataProviders {}
 
 /// Allows easy access of data providers from a single source of truth
 extension InjectableDataProviders {
-    // MARK: - Coin Data Provider
+    // MARK: - Remote: Coin Data Provider
     static func inject() -> CoinDataProvider {
         return .shared
     }
     
+    // MARK: - Local: Portfolio Core Data Entity Provider
     static func inject() -> PortfolioDataProvider {
+        return .shared
+    }
+    
+    // MARK: - Remote: Currency Exchange rate conversion Data Provider
+    static func inject() -> ExchangeRateDataProvider {
         return .shared
     }
 }

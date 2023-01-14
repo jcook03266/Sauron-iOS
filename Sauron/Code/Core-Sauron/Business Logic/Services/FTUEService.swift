@@ -34,7 +34,8 @@ class FTUEService: FTUEServiceProtocol {
         }
         set {
             dependencies.userDefaultsService.setValueFor(type: Bool.self,
-                                                         key: .didCompleteFTUE(), value: newValue)
+                                                         key: .didCompleteFTUE(),
+                                                         value: newValue)
         }
     }
     

@@ -24,24 +24,25 @@ struct SauronApp: App {
     
     // MARK: - Convenience variables
     var activeRootCoordinator: any RootCoordinator {
-        return appService.rootCoordinatorDelegate.activeRootCoordinator
+        return rootCoordinatorDelegate.activeRootCoordinator!
     }
+    
     var deepLinkManager: DeepLinkManager {
         return appService.deepLinkManager
     }
-
+    
     var body: some Scene {
         WindowGroup {
             Group {
                 if AppService.isDebug {
-                    OnboardingCoordinator(rootCoordinatorDelegate: .init()).view(for: .home)
+                    OnboardingCoordinator().view(for: .getStarted)
                 }
                 else {
-                    appService.activeRootCoordinator.coordinatorView()
+                    activeRootCoordinator.coordinatorView()
                 }
             }
             .onOpenURL { url in
-                appService.deepLinkTarget = deepLinkManager.manage(url: url)
+                deepLinkManager.manage(url)
             }
             .onAppear {}
         }

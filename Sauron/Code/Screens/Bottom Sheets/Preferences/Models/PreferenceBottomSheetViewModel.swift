@@ -16,7 +16,7 @@ class PreferenceBottomSheetViewModel<T: Coordinator>: CoordinatedGenericViewMode
     @ObservedObject var coordinator: T
     
     // MARK: - Published
-    @Published var previewContent: (() -> String) = { return LocalizedStrings.getLocalizedString(for: .BOTTOM_SHEET_PREVIEW_TEXT_LANGUAGE_PREFERENCE) }
+    @Published var previewContent: (() -> String) = { return "" }
     @Published var searchBarTextFieldModel: SatelliteTextFieldModel!
     @Published var currentlySelectedChip: PreferenceBottomSheetSelectionChipViewModel!
     
@@ -97,11 +97,13 @@ class PreferenceBottomSheetViewModel<T: Coordinator>: CoordinatedGenericViewMode
     
     init(coordinator: T,
          selectionChips: [PreferenceBottomSheetSelectionChipViewModel],
-         defaultChip: PreferenceBottomSheetSelectionChipViewModel)
+         defaultChip: PreferenceBottomSheetSelectionChipViewModel,
+         searchBarPlaceholder: String = LocalizedStrings.getLocalizedString(for: .SEARCH))
     {
         self.coordinator = coordinator
         self.selectionChips = selectionChips
         self.defaultChip = defaultChip
+        self.searchBarPlaceholder = searchBarPlaceholder
         self.searchBarTextFieldModel = builtSearchBarTextFieldModel
         self.selectionChipsDataProvider = selectionChips
         self.currentlySelectedChip = getSelectedChip()

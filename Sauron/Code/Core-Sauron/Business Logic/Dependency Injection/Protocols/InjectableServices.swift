@@ -10,8 +10,7 @@ import Foundation
 /// Protocol that allows the deployment of case specific services within any instance that calls this protocol and selectively injects the necessary services to use within that scope
 protocol InjectableServices {}
 
-/// All dependency injectable services are listed below, from these implementations these services can be injected into any
-/// Instance without the host scope knowing how to instantiate them
+/// All dependency injectable services are listed below, from these implementations these services can be injected into any Instance without the host scope knowing how to instantiate them
 extension InjectableServices {
     // MARK: - App Service
     static func inject() -> AppService {
@@ -37,6 +36,11 @@ extension InjectableServices {
     static func inject() -> FiatCurrencyManager {
         return .shared
     }
+    
+    // MARK: - Localized Language Manager
+    static func inject() -> LocalizedLanguageManager {
+        return .shared
+    }
 
     // MARK: - Networking Service / Monitor
     static func inject() -> NetworkingService {
@@ -46,6 +50,11 @@ extension InjectableServices {
     // MARK: - Image Downloader Service
     static func inject() -> ImageDownloaderService {
         return .init()
+    }
+    
+    // MARK: - Endpoint Manager
+    static func inject() -> EndpointManager {
+        return .shared
     }
 }
 
@@ -62,9 +71,21 @@ extension InjectableDevelopmentServices {
 
 // MARK: - Managers
 protocol InjectableManagers {}
+
+/// Scope specific to only manager oriented services
 extension InjectableManagers {
     // MARK: - Fiat Currency Manager
     static func inject() -> FiatCurrencyManager {
+        return .shared
+    }
+    
+    // MARK: - Localized Language Manager
+    static func inject() -> LocalizedLanguageManager {
+        return .shared
+    }
+    
+    // MARK: - Endpoint Manager
+    static func inject() -> EndpointManager {
         return .shared
     }
 }

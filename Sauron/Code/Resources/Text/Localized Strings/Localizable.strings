@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Sauron
 
@@ -38,11 +38,11 @@
 "DISMISS" = "Dismiss";
 "NO_SEARCH_RESULTS" = "No Search Results";
 
-// MARK: - Home Screen
-"HOME_SCREEN_CURATE_BUTTON" = "Curate your own Portfolio";
-"HOME_SCREEN_AUTO_GEN_BUTTON" = "Make one for me";
-"HOME_SCREEN_GET_STARTED_PROMPT" = "Get started";
-"HOME_SCREEN_LEARN_MORE_BUTTON" = "Learn more about crypto";
+// MARK: - Get Started Screen
+"GET_STARTED_SCREEN_CURATE_BUTTON" = "Curate your own Portfolio";
+"GET_STARTED_SCREEN_AUTO_GEN_BUTTON" = "Make one for me";
+"GET_STARTED_SCREEN_GET_STARTED_PROMPT" = "Get started";
+"GET_STARTED_SCREEN_LEARN_MORE_BUTTON" = "Learn more about crypto";
 
 // MARK: - Login Screen
 "PORTFOLIO_CURATION_SCREEN_TITLE_FTUE_NEWLINE" = "Personalize your \nportfolio";
@@ -54,6 +54,7 @@
 "PORTFOLIO_CURATION_SCREEN_ASSET_ID_HEADER" = "Asset ID";
 "PORTFOLIO_CURATION_SCREEN_ASSET_NAME_HEADER" = "Asset name";
 "PORTFOLIO_CURATION_SCREEN_PRICE_HEADER" = "Latest Price";
+"PORTFOLIO_CURATION_SCREEN_RANK" = "Rank";
 "PORTFOLIO_CURATION_SCREEN_CURRENCY_PREFERENCES_BUTTON" = "Currency preferences";
 "PORTFOLIO_CURATION_SCREEN_LANGUAGE_PREFERENCES_BUTTON" = "Language preferences";
 "PORTFOLIO_CURATION_SCREEN_MAKE_CHANGES_LATER_PROMPT" = "You can always come back and change these settings later";
@@ -70,7 +71,8 @@
 "SORT_FILTER_CONTEXT_MENU_NAME_OPTION" = "Name";
 "SORT_FILTER_CONTEXT_MENU_ID_OPTION" = "ID";
 "SORT_FILTER_CONTEXT_MENU_PRICE_OPTION" = "Price";
-"SORT_FILTER_CONTEXT_MENU_VOLUME_OPTION" = "Volume";
+"SORT_FILTER_CONTEXT_MENU_RANK_OPTION" = "Market Cap Rank";
+"SORT_FILTER_CONTEXT_MENU_VOLUME_OPTION" = "Popularity";
 
 // MARK: - Bottom Sheets
 // Currency Perference Selector Bottom Sheet
@@ -78,13 +80,6 @@
 "BOTTOM_SHEET_TITLE_CURRENCY_PREFERENCE_NEWLINE" = "Currency \nPreference";
 "BOTTOM_SHEET_SEARCHBAR_PLACEHOLDER_CURRENCY_PREFERENCE" = "Search currencies";
 "BOTTOM_SHEET_ADVISORY_CURRENCY_PREFERENCE" = "Advisory: Only the top 10 major world currencies are supported at this time";
-
-// Language Perference Selector Bottom Sheet
-"BOTTOM_SHEET_TITLE_LANGUAGE_PREFERENCE" = "Language Preference";
-"BOTTOM_SHEET_TITLE_LANGUAGE_PREFERENCE_NEWLINE" = "Language \nPreference";
-"BOTTOM_SHEET_PREVIEW_TEXT_LANGUAGE_PREFERENCE" = "Hello";
-"BOTTOM_SHEET_SEARCHBAR_PLACEHOLDER_LANGUAGE_PREFERENCE" = "Search languages";
-"BOTTOM_SHEET_ADVISORY_LANGUAGE_PREFERENCE" = "Advisory: Unfortunately, only English is properly supported at this time.";
 
 // MARK: - Networking Service Diagnostic Information
 "HUMAN_READABLE_INTERNET_NOT_AVAILABLE" = "Your internet connection is currently unavailable, please check your connection settings and try again.";

@@ -1,0 +1,86 @@
+/* 
+  Localizable.strings
+  Sauron
+
+  Created by Justin Cook on 12/22/22.
+  
+*/
+
+// MARK: - App Specific:
+"APP_NAME" = "Sauron";
+
+// MARK: - Tabbar:
+"TABBAR_BUTTON_HOME" = "Home";
+"TABBAR_BUTTON_WALLET" = "Wallet";
+"TABBAR_BUTTON_SETTINGS" = "Settings";
+"TABBAR_BUTTON_ALERTS" = "Alerts";
+
+// MARK: - Generic Navigation Button Descriptions
+"NAVIGATION_BUTTON_SKIP" = "Skip";
+
+// MARK: - Onboarding
+// Page 1:
+"ONBOARDING_PAGE_1_TITLE" = "Track crypto prices without skipping a beat";
+
+// Page 2:
+"ONBOARDING_PAGE_2_TITLE" = "Real-time predictions and custom cloud triggers";
+
+// Page 3:
+"ONBOARDING_PAGE_3_TITLE" = "No prying eyes allowed, you’re anonymous here.";
+"ONBOARDING_PAGE_3_CTA" = "Get Decentralized";
+
+// MARK: - General
+"TOS" = "Terms of Service";
+"PP" = "Privacy Policy";
+"OR_FORK_PROMPT" = "Or";
+"CONTINUE" = "Continue";
+"SEARCH" = "Search";
+"DISMISS" = "Dismiss";
+"NO_SEARCH_RESULTS" = "No Search Results";
+
+// MARK: - Home Screen
+"HOME_SCREEN_CURATE_BUTTON" = "Curate your own Portfolio";
+"HOME_SCREEN_AUTO_GEN_BUTTON" = "Make one for me";
+"HOME_SCREEN_GET_STARTED_PROMPT" = "Get started";
+"HOME_SCREEN_LEARN_MORE_BUTTON" = "Learn more about crypto";
+
+// MARK: - Login Screen
+"PORTFOLIO_CURATION_SCREEN_TITLE_FTUE_NEWLINE" = "Personalize your \nportfolio";
+"PORTFOLIO_CURATION_SCREEN_TITLE_FTUE" = "Personalize your portfolio";
+"PORTFOLIO_CURATION_SCREEN_TITLE" = "Edit Portfolio";
+"PORTFOLIO_CURATION_SCREEN_SEARCHBAR_PLACEHOLDER" = "Search for assets";
+"PORTFOLIO_CURATION_SCREEN_SYMBOL_HEADER" = "Symbol";
+"PORTFOLIO_CURATION_SCREEN_VOLUME_HEADER" = "Volume";
+"PORTFOLIO_CURATION_SCREEN_ASSET_ID_HEADER" = "Asset ID";
+"PORTFOLIO_CURATION_SCREEN_ASSET_NAME_HEADER" = "Asset name";
+"PORTFOLIO_CURATION_SCREEN_PRICE_HEADER" = "Latest Price";
+"PORTFOLIO_CURATION_SCREEN_CURRENCY_PREFERENCES_BUTTON" = "Currency preferences";
+"PORTFOLIO_CURATION_SCREEN_LANGUAGE_PREFERENCES_BUTTON" = "Language preferences";
+"PORTFOLIO_CURATION_SCREEN_MAKE_CHANGES_LATER_PROMPT" = "You can always come back and change these settings later";
+"PORTFOLIO_CURATION_SCREEN_SEARCH_RESULT_COUNT_SINGULAR" = "Search Result";
+"PORTFOLIO_CURATION_SCREEN_SEARCH_RESULT_COUNT_PLURAL" = "Search Results";
+"PORTFOLIO_CURATION_SCREEN_SEARCH_RESULT_COUNT_NONE" = "No Search Results";
+"PORTFOLIO_CURATION_SCREEN_NO_SEARCH_RESULTS_NEWLINE" = "Never heard of that \ncoin before.";
+"PORTFOLIO_CURATION_SCREEN_NO_SEARCH_RESULTS" = "Never heard of that coin before.";
+"PORTFOLIO_CURATION_SCREEN_PORTFOLIO_COIN_COUNT_SINGULAR" = "Coin Selected";
+"PORTFOLIO_CURATION_SCREEN_PORTFOLIO_COIN_COUNT_PLURAL" = "Coins Selected";
+
+// MARK: - Sort Filter Context Menu
+"SORT_FILTER_CONTEXT_MENU_TITLE" = "Sort by:";
+"SORT_FILTER_CONTEXT_MENU_NAME_OPTION" = "Name";
+"SORT_FILTER_CONTEXT_MENU_ID_OPTION" = "ID";
+"SORT_FILTER_CONTEXT_MENU_PRICE_OPTION" = "Price";
+"SORT_FILTER_CONTEXT_MENU_VOLUME_OPTION" = "Volume";
+
+// MARK: - Bottom Sheets
+// Currency Perference Selector Bottom Sheet
+"BOTTOM_SHEET_TITLE_CURRENCY_PREFERENCE" = "Currency Preference";
+"BOTTOM_SHEET_TITLE_CURRENCY_PREFERENCE_NEWLINE" = "Currency \nPreference";
+"BOTTOM_SHEET_SEARCHBAR_PLACEHOLDER_CURRENCY_PREFERENCE" = "Search currencies";
+"BOTTOM_SHEET_ADVISORY_CURRENCY_PREFERENCE" = "Advisory: Only the top 10 major world currencies are supported at this time";
+
+// MARK: - Networking Service Diagnostic Information
+"HUMAN_READABLE_INTERNET_NOT_AVAILABLE" = "Your internet connection is currently unavailable, please check your connection settings and try again.";
+"HUMAN_READABLE_INTERNET_CELLULAR_DENIED" = "Please enable your cellular data in order to access the internet.";
+"HUMAN_READABLE_INTERNET_WIFI_DENIED" = "Your wifi is disabled, please enable it in order to access the internet.";
+"HUMAN_READABLE_INTERNET_LOCAL_NETWORK_DENIED" = "Access to your local network is not possible at this time, please check your connection settings and try again.";
