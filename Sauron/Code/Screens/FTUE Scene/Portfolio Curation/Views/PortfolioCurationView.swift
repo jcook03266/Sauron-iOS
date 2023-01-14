@@ -444,11 +444,15 @@ struct PortfolioCurationView: View {
     }
     
     var informationSection: some View {
-        InformationSectionView(informationCopy:
-                                (nil, model.makeChangesLaterPrompt))
-        .padding(.leading, infoSectionLeadingPadding)
-        .padding(.trailing, infoSectionTrailingPadding)
-        .padding(.top, infoSectionTopPadding)
+        Group {
+            if !model.dependencies.ftueService.isComplete {
+                InformationSectionView(informationCopy:
+                                        (nil, model.makeChangesLaterPrompt))
+                .padding(.leading, infoSectionLeadingPadding)
+                .padding(.trailing, infoSectionTrailingPadding)
+                .padding(.top, infoSectionTopPadding)
+            }
+        }
     }
     
     // MARK: - Subview Combinations

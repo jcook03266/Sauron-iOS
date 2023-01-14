@@ -54,7 +54,7 @@ class VOCViewModel: NavigableGenericViewModel {
         return {
             self.dependencies.ftueService.completeOnboardingFTUE()
             
-            self.coordinator.pushView(with: .home)
+            self.coordinator.pushView(with: .getStarted)
         }
     }
     

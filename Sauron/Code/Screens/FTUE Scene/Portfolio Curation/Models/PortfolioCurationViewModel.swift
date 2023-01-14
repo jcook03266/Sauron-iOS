@@ -29,6 +29,21 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     let scheduler: DispatchQueue = DispatchQueue.main
     let coinDataRefreshInterval: CGFloat = 60 // 1 minute auto refresh interval
     
+    // MARK: - Dependencies
+    struct Dependencies: InjectableServices {
+        let fiatCurrencyManager: FiatCurrencyManager = inject()
+        let languageManager: LocalizedLanguageManager = inject()
+        let ftueService: FTUEService = inject()
+    }
+    let dependencies = Dependencies()
+    
+    // MARK: - Data Store Dependencies
+    struct DataStores: InjectableStores {
+        let coinStore: CoinStore = inject()
+        let portfolioManager: PortfolioManager = inject()
+    }
+    let dataStores = DataStores()
+    
     // MARK: - Models
     var contextMenuModel: FloatingContextMenuViewModel!
     
@@ -96,21 +111,6 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
                                    !isSearchBarActive,
                                    userHasSelectedCoins])
     }
-    
-    // MARK: - Dependencies
-    struct Dependencies: InjectableServices {
-        let fiatCurrencyManager: FiatCurrencyManager = inject()
-        let languageManager: LocalizedLanguageManager = inject()
-        let ftueService: FTUEService = inject()
-    }
-    let dependencies = Dependencies()
-    
-    // MARK: - Data Store Dependencies
-    struct DataStores: InjectableStores {
-        let coinStore: CoinStore = inject()
-        let portfolioManager: PortfolioManager = inject()
-    }
-    let dataStores = DataStores()
     
     // MARK: - Actions
     var toggleFilterPortfolioCoins: (() -> Void) {
@@ -415,10 +415,12 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     
     // MARK: - Subscriptions
     private func addSubscribers() {
+        // Updates the local coin store with data from the external coin store
         dataStores.coinStore
             .$coins
             .assign(to: &$coins)
         
+        // Updates the local portfolio coins store with data from the external manager
         dataStores.portfolioManager
             .$coinEntities
             .assign(to: &$portfolioCoins)
@@ -433,6 +435,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             .$portfolioCurationSearchQuery
             .assign(to: &searchBarTextFieldModel.$textEntry)
         
+        // Triggers the portfolio coins only filter from an external source
         self.router
             .$filterPortfolioCoinsOnly
             .sink(receiveValue: { [weak self] in
@@ -443,6 +446,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             })
             .store(in: &cancellables)
         
+        // Sorting order publisher for changing the sort order of coin data
         contextMenuModel
             .$sortInAscendingOrder
             .sink { [weak self] in
@@ -452,6 +456,7 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             }
             .store(in: &cancellables)
         
+        // Auto refresh publisher for refreshing coin data
         Timer.publish(every: coinDataRefreshInterval,
                       on: .main,
                       in: .default)

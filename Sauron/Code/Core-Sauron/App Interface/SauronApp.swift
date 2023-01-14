@@ -35,7 +35,7 @@ struct SauronApp: App {
         WindowGroup {
             Group {
                 if AppService.isDebug {
-                    OnboardingCoordinator().view(for: .home)
+                    OnboardingCoordinator().view(for: .getStarted)
                 }
                 else {
                     activeRootCoordinator.coordinatorView()

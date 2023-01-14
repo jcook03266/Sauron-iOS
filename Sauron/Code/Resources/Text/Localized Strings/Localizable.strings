@@ -38,11 +38,11 @@
 "DISMISS" = "Dismiss";
 "NO_SEARCH_RESULTS" = "No Search Results";
 
-// MARK: - Home Screen
-"HOME_SCREEN_CURATE_BUTTON" = "Curate your own Portfolio";
-"HOME_SCREEN_AUTO_GEN_BUTTON" = "Make one for me";
-"HOME_SCREEN_GET_STARTED_PROMPT" = "Get started";
-"HOME_SCREEN_LEARN_MORE_BUTTON" = "Learn more about crypto";
+// MARK: - Get Started Screen
+"GET_STARTED_SCREEN_CURATE_BUTTON" = "Curate your own Portfolio";
+"GET_STARTED_SCREEN_AUTO_GEN_BUTTON" = "Make one for me";
+"GET_STARTED_SCREEN_GET_STARTED_PROMPT" = "Get started";
+"GET_STARTED_SCREEN_LEARN_MORE_BUTTON" = "Learn more about crypto";
 
 // MARK: - Login Screen
 "PORTFOLIO_CURATION_SCREEN_TITLE_FTUE_NEWLINE" = "Personalize your \nportfolio";

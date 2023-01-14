@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Manages the currency local to the user's current region, or their preferred currency if available
 class FiatCurrencyManager: ObservableObject {
     // MARK: - Singleton instance for distributing the same manager instance across the application
     static let shared: FiatCurrencyManager = .init()
@@ -41,7 +42,8 @@ class FiatCurrencyManager: ObservableObject {
     
     /// Used to fetch, store, and or mutate and save the user's preferred currency from user defaults
     private var userPreferredCurrency: SupportedFiatCurrencies {
-        get { let rawValue = dependencies
+        get {
+            let rawValue = dependencies
             .userDefaultsService
             .getValueFor(type: SupportedFiatCurrencies.RawValue.self,
                          key: .userPreferredFiatCurrency())
@@ -49,7 +51,8 @@ class FiatCurrencyManager: ObservableObject {
             // The raw value of the enum is fetched from the store and coerced into a specific enum value
             return SupportedFiatCurrencies(rawValue: rawValue) ?? FiatCurrencyManager.defaultCurrency
         }
-        set { dependencies
+        set {
+            dependencies
             .userDefaultsService
             .setValueFor(type: SupportedFiatCurrencies.RawValue.self,
                          key: .userPreferredFiatCurrency(),
