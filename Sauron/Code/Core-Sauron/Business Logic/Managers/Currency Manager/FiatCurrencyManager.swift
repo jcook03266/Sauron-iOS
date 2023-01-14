@@ -17,11 +17,27 @@ class FiatCurrencyManager: ObservableObject {
     }
     let dependencies = Dependencies()
     
+    // MARK: - Data Providers
+    struct DataProviders: InjectableDataProviders {
+        let exchangeRateDataProvider: ExchangeRateDataProvider = inject()
+    }
+    
     // MARK: - Data Persistence and storage
     /// Used to display the user's preferred currency
     @Published var displayedCurrency: SupportedFiatCurrencies = defaultCurrency
     
     static let defaultCurrency: SupportedFiatCurrencies = .USD
+    
+    /// Returns the conversion rate from USD [Base] to the current currency
+    var currentCurrencyConversionRate: Double {
+        guard let exchangeRates =  DataProviders().exchangeRateDataProvider.latestExchangeRates,
+                let conversionRate =  exchangeRates.rates[displayedCurrency.rawValue]
+        else {
+            return 1
+        }
+        
+        return conversionRate
+    }
     
     /// Used to fetch, store, and or mutate and save the user's preferred currency from user defaults
     private var userPreferredCurrency: SupportedFiatCurrencies {
@@ -101,8 +117,15 @@ class FiatCurrencyManager: ObservableObject {
     }
     
     // MARK: - Conversion and factory methods
+    /// Converts from the base USD currency to the current currency
+    private func convertFromBaseToCurrent(number: Double) -> Double {
+        return currentCurrencyConversionRate * number
+    }
+    
     func convertToCurrencyFormat(number: NSNumber) -> String {
-        return currencyFormatter.string(from: number) ?? defaultMonetaryAmount
+        let convertedNumber = convertFromBaseToCurrent(number: Double(truncating: number))
+        
+        return currencyFormatter.string(from: convertedNumber as NSNumber) ?? defaultMonetaryAmount
     }
     
     // MARK: - Return data relevant to the current currency used by the application
@@ -164,10 +187,4 @@ class FiatCurrencyManager: ObservableObject {
     func getSampleFormattedNumber(number: NSNumber = 12345.67) -> String {
         return convertToCurrencyFormat(number: number)
     }
-}
-
-struct FiatCurrency: Identifiable, Hashable {
-    let id: UUID = UUID()
-    let currencyCode,
-        currencySymbol: String
 }

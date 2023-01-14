@@ -12,7 +12,7 @@ import Combine
 /// Manager that manages the lifecycle of the user's portfolio as well as interfacing directly with the data provider to ensure the latest data is accumulated and persisted
 class PortfolioManager: ObservableObject {
     // MARK: - Published
-    @Published var currentPortfolio: Portfolio = .init()
+    @Published var currentPortfolio: Portfolio
     @Published var coinEntities: [PortfolioCoinEntity] = []
     
     // MARK: - Singleton
@@ -21,6 +21,7 @@ class PortfolioManager: ObservableObject {
     // MARK: - Data Provider Dependencies
     struct DataProviders: InjectableDataProviders {
         let portfolioDataProvider: PortfolioDataProvider = inject()
+        let coinDataProvider: CoinDataProvider = inject()
     }
     let dataProviders = DataProviders()
     
@@ -32,7 +33,18 @@ class PortfolioManager: ObservableObject {
         return coinEntities.isEmpty
     }
     
+    // MARK: - Coin Randomization
+    /// The hard limit of calls that can be stored on the stack to prevent overflow in the case where a random coin not already present in the portfolio cannot be sourced
+    private let randomCoinRecursiveStackLimit: Int = 10
+    private var currentRandomCoinCallStackSize: Int = 0
+    
     private init() {
+        self.currentPortfolio = .init()
+        
+        setup()
+    }
+    
+    private func setup() {
         syncWithDataProvider()
         addSubscribers()
     }
@@ -66,11 +78,44 @@ class PortfolioManager: ObservableObject {
         syncWithDataProvider()
     }
     
-    /// Wipes all data
-    func clearAllData(resetMetaData: Bool = true) {
-        dataProviders.portfolioDataProvider.removeAllCoins()
+    /// Randomize the user's portfolio
+    func randomize() {
+        clearAllData()
         
-        if resetMetaData { resetPortfolioMetaData() }
+        let portfolioSize: Int = (2...12).randomElement() ?? 2,
+            portfolioSizeRange: ClosedRange<Int> = 1...portfolioSize
+        
+        for _ in portfolioSizeRange {
+            addRandomCoin()
+        }
+        
+        reload()
+    }
+    
+    /// A protected recursive function that adds a random coin not already found in the user's portfolio
+    private func addRandomCoin() {
+        guard let randomCoin = dataProviders.coinDataProvider.coins.randomElement(),
+                !doesCoinExistInPortfolio(coin: randomCoin)
+        else {
+            if currentRandomCoinCallStackSize <= randomCoinRecursiveStackLimit {
+                currentRandomCoinCallStackSize += 1
+                
+                addRandomCoin()
+            }
+            
+            currentRandomCoinCallStackSize = 0
+            return
+        }
+        
+        addCoin(coin: randomCoin)
+    }
+    
+    /// Wipes all data
+    func clearAllData() {
+        dataProviders.portfolioDataProvider.removeAllCoins()
+        currentPortfolio = .init()
+        
+        addSubscribers()
     }
     
     /// Clears all statistics relating to the portfolio, but keeps the saved coins
@@ -79,6 +124,8 @@ class PortfolioManager: ObservableObject {
         
         currentPortfolio = .init()
         currentPortfolio.coins = entitiesCopy
+        
+        addSubscribers()
     }
     
     /// Use this whenever the manager has been initialized and or has sent updates to the provider and becomes out of sync

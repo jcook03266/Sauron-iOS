@@ -14,7 +14,8 @@ import Foundation
 /// - Home: Sauron://Onboarding/home
 /// - Portfolio Curation Screen: Sauron://Onboarding/portfolioCuration
 /// - Onboarding Screen: [Should fail if completed already] Sauron://Onboarding/onboarding
-/// [Query] - Portfolio Curation Screen Search: Sauron://Onboarding/portfolioCuration?q =bitcoin
+/// [Query] - Portfolio Curation Screen Search: Sauron://Onboarding/portfolioCuration?q=bitcoin
+/// [Query] - Portfolio Curation Screen Search: Sauron://Onboarding/portfolioCuration?q=&pcf=true /// Sets the portfolio coin only filter to true
 final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
     typealias Router = OnboardingRouter
     typealias Route = OnboardingRoutes
@@ -71,6 +72,13 @@ final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
             case .currencyPreferenceBottomSheet:
                 break
             }
+        }
+        
+        /// Filters
+        if let portfolioCoinsOnlyFilter = queries[DeepLinkManager.DeepLinkConstants.portfolioCoinsOnlyFilterTag],
+            let bool = Bool(portfolioCoinsOnlyFilter)
+        {
+            router.filterPortfolioCoinsOnly = bool
         }
         
         manager.setActiveDeepLinkTarget(to: url)

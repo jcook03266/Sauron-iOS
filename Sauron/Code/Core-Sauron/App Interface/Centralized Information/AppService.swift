@@ -43,14 +43,15 @@ open class AppService: ObservableObject {
     // MARK: - Data Providers
     struct DataProviders: InjectableDataProviders {
         let coinDataProvider: CoinDataProvider = inject()
+        let exchangeRateDataProvider: ExchangeRateDataProvider = inject()
     }
-    let dataProviders = DataStores()
+    var dataProviders = DataStores()
     
     // MARK: - Data Stores
     struct DataStores: InjectableStores {
         let coinDataStore: CoinStore = inject()
     }
-    let dataStores = DataStores()
+    var dataStores = DataStores()
     
     // MARK: - Environments
     struct Environment: Environments {
@@ -60,6 +61,7 @@ open class AppService: ObservableObject {
     
     private init() {
         setup()
+        load()
     }
     
     func setup() {
@@ -69,4 +71,6 @@ open class AppService: ObservableObject {
         //            print(store.coins)
         //        }
     }
+    
+    func load() {}
 }

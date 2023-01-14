@@ -290,7 +290,7 @@ struct HomeScreen: View {
         HStack {
             // Terms of Service
             Button(action: {
-                model.learnMoreAboutCryptoAction()
+                model.termsOfServiceAction()
             }) {
                 Text(model.termsOfServicePortalText)
                     .withFont(model.tosPPPortalFont)
@@ -312,7 +312,7 @@ struct HomeScreen: View {
             
             // Privacy Policy
             Button(action: {
-                model.learnMoreAboutCryptoAction()
+                model.privacyPolicyAction()
             }) {
                 Text(model.privacyPolicyPortalText)
                     .withFont(model.tosPPPortalFont)

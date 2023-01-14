@@ -40,5 +40,6 @@ extension DeepLinkManager {
         static let suffix = "://"
         static let identifier = "com.Sauron.deeplinker"
         static let queryTag = "q"
+        static let portfolioCoinsOnlyFilterTag = "pcf"
     }
 }

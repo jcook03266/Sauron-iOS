@@ -49,7 +49,7 @@ struct CircularUtilityButton: View {
             .stroke(animatedCircleViewColor,
                     lineWidth: animatedCircleStrokeWidth)
             .frame(width: size.width * 1.5, height: size.height * 1.5)
-            .scaleEffect(animate ? 1 : 0)
+            .scaleEffect(animate ? 1 : 0.0001)
             .opacity(animate ? 0 : 1)
             .animation(animate ? .spring().speed(0.8) : nil,
                        value: animate)

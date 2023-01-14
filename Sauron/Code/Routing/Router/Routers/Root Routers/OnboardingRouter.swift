@@ -21,7 +21,9 @@ class OnboardingRouter: Routable {
     @Published var webURL: URL!
     
     // MARK: - Deeplink Queries
+    /// Portfolio Curation Screen
     @Published var portfolioCurationSearchQuery: String = ""
+    @Published var filterPortfolioCoinsOnly: Bool = false
     
     // MARK: - Observed
     @ObservedObject var coordinator: OnboardingCoordinator

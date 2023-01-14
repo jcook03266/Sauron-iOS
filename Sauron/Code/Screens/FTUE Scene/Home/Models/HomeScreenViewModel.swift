@@ -20,6 +20,12 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         return URL(string: linkCopy)
     }
     
+    // MARK: - Data Store Dependencies
+    struct DataStores: InjectableStores {
+        let portfolioManager: PortfolioManager = inject()
+    }
+    let dataStores = DataStores()
+    
     // MARK: - Assets
     let lottieAnimation: LottieAnimationRepository = .radial_grid,
         appIcon: Image = Icons.getIconImage(named: .app_icon_transparent)
@@ -66,21 +72,29 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     
     // MARK: - Actions
     var curatePortfolioAction: (() -> Void) {
-        return {
+        return { [weak self] in
             HapticFeedbackDispatcher.interstitialCTAButtonPress()
+            guard let self = self else { return }
+            
             self.coordinator.pushView(with: .portfolioCuration)
         }
     }
+    
     var autoGeneratePortfolioAction: (() -> Void) {
-        return {
+        return { [weak self] in
             HapticFeedbackDispatcher.interstitialCTAButtonPress()
-            //self.coordinator.pushView(with: .signUp)
+            guard let self = self else { return }
+            
+            self.dataStores.portfolioManager.randomize()
+            
+            /// Show the selected coins to the user automatically
+            self.coordinator.router.filterPortfolioCoinsOnly = true
+            self.coordinator.pushView(with: .portfolioCuration)
         }
     }
     var learnMoreAboutCryptoAction: (() -> Void) {
         return { [weak self] in
             HapticFeedbackDispatcher.interstitialCTAButtonPress()
-            
             guard let self = self else { return }
             
             // Present a safari view controller with the given link
@@ -91,14 +105,18 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         }
     }
     var termsOfServiceAction: (() -> Void) {
-        return {
-            HapticFeedbackDispatcher.interstitialCTAButtonPress()
+        return { [weak self] in
+            HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
             //self.coordinator.pushView(with: .signUp)
         }
     }
     var privacyPolicyAction: (() -> Void) {
-        return {
-            HapticFeedbackDispatcher.interstitialCTAButtonPress()
+        return { [weak self] in
+            HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
+            
             //self.coordinator.pushView(with: .signUp)
         }
     }

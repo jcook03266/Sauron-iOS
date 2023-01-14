@@ -22,12 +22,12 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     @Published var coins: [CoinModel] = []
     @Published var portfolioCoins: [PortfolioCoinEntity] = []
     @Published var currentCurrency = Dependencies().fiatCurrencyManager.displayedCurrency
-    
-    // MARK: - States
-    var filterPortfolioCoins: Bool = false
+    @Published var filterPortfolioCoins: Bool = false
     
     // MARK: - Subscriptions
     var cancellables: Set<AnyCancellable> = []
+    let scheduler: DispatchQueue = DispatchQueue.main
+    let coinDataRefreshInterval: CGFloat = 60 // 1 minute auto refresh interval
     
     // MARK: - Models
     var contextMenuModel: FloatingContextMenuViewModel!
@@ -235,7 +235,6 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     var assetIdentifierHeaderTappedAction: (() -> Void) {
         return { [weak self] in
             guard let self = self else { return }
-            
             HapticFeedbackDispatcher.genericButtonPress()
             
             self.assetIdentifierDisplayType = self.assetIdentifierDisplayType == .Name ? .Symbol : .Name
@@ -429,10 +428,20 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             .$textEntry
             .assign(to: &dataStores.coinStore.$activeSearchQuery)
         
-        // Pass in external search queries from the deeplinker here
+        // Pass in external search queries and properties from the deeplinker here
         self.router
             .$portfolioCurationSearchQuery
             .assign(to: &searchBarTextFieldModel.$textEntry)
+        
+        self.router
+            .$filterPortfolioCoinsOnly
+            .sink(receiveValue: { [weak self] in
+                guard let self = self else { return }
+                
+                self.dataStores.coinStore.displayPortfolioCoinsOnly = $0
+                self.filterPortfolioCoins = $0
+            })
+            .store(in: &cancellables)
         
         contextMenuModel
             .$sortInAscendingOrder
@@ -442,6 +451,20 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
                 self.dataStores.coinStore.changeAscendingSortOrder(to: $0)
             }
             .store(in: &cancellables)
+        
+        Timer.publish(every: coinDataRefreshInterval,
+                      on: .main,
+                      in: .default)
+        .autoconnect()
+        .receive(on: scheduler)
+        .sink { [weak self] _ in
+            guard let self = self
+            else { return }
+            
+            self.refresh()
+        }
+        .store(in: &cancellables)
+    
     }
     
     // MARK: - Convenience Methods

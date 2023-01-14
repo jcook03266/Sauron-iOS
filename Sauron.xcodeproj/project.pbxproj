@@ -47,6 +47,9 @@
 		4953E5B02968C2C400513560 /* Bool+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4953E5AF2968C2C400513560 /* Bool+Extensions.swift */; };
 		4986C3092960FBF5003CFF84 /* InformationSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4986C3082960FBF5003CFF84 /* InformationSectionView.swift */; };
 		498781C42964A858008F8A9A /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498781C32964A858008F8A9A /* UIImage+Extension.swift */; };
+		49975A7129726BCB00C29090 /* ExchangeRateDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A7029726BCB00C29090 /* ExchangeRateDataProvider.swift */; };
+		49975A742972712600C29090 /* LatestExchangeRateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A732972712600C29090 /* LatestExchangeRateModel.swift */; };
+		49975A7829727DD200C29090 /* FiatCurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A7729727DD200C29090 /* FiatCurrencyModel.swift */; };
 		49995DE6296ACF2E00ADF1EC /* FloatingContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49995DE5296ACF2E00ADF1EC /* FloatingContextMenu.swift */; };
 		49995DEA296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49995DE9296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift */; };
 		49995DEC296AD71B00ADF1EC /* FloatingContextMenuRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49995DEB296AD71B00ADF1EC /* FloatingContextMenuRowView.swift */; };
@@ -218,6 +221,9 @@
 		4953E5AF2968C2C400513560 /* Bool+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+Extensions.swift"; sourceTree = "<group>"; };
 		4986C3082960FBF5003CFF84 /* InformationSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationSectionView.swift; sourceTree = "<group>"; };
 		498781C32964A858008F8A9A /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		49975A7029726BCB00C29090 /* ExchangeRateDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateDataProvider.swift; sourceTree = "<group>"; };
+		49975A732972712600C29090 /* LatestExchangeRateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestExchangeRateModel.swift; sourceTree = "<group>"; };
+		49975A7729727DD200C29090 /* FiatCurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatCurrencyModel.swift; sourceTree = "<group>"; };
 		49995DE5296ACF2E00ADF1EC /* FloatingContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingContextMenu.swift; sourceTree = "<group>"; };
 		49995DE9296ACF5000ADF1EC /* FloatingContextMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingContextMenuViewModel.swift; sourceTree = "<group>"; };
 		49995DEB296AD71B00ADF1EC /* FloatingContextMenuRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingContextMenuRowView.swift; sourceTree = "<group>"; };
@@ -524,6 +530,7 @@
 		4925C88F295B5D7D006E1A80 /* Data Models */ = {
 			isa = PBXGroup;
 			children = (
+				49975A7529727DB300C29090 /* Currencies */,
 				49A5187F29677A2800258F80 /* Portfolio */,
 				4925C891295B5D91006E1A80 /* Markets */,
 				4925C890295B5D8B006E1A80 /* Coins */,
@@ -626,6 +633,7 @@
 				4925C8B3295C6BDC006E1A80 /* Protocol */,
 				4925C8B7295C6D7A006E1A80 /* CoinDataProvider.swift */,
 				49A5187D296779D400258F80 /* PortfolioDataProvider.swift */,
+				49975A7029726BCB00C29090 /* ExchangeRateDataProvider.swift */,
 			);
 			path = "Data Providers";
 			sourceTree = "<group>";
@@ -721,6 +729,31 @@
 				4986C3082960FBF5003CFF84 /* InformationSectionView.swift */,
 			);
 			path = "Information Section";
+			sourceTree = "<group>";
+		};
+		49975A722972710700C29090 /* Exchange Rates */ = {
+			isa = PBXGroup;
+			children = (
+				49975A732972712600C29090 /* LatestExchangeRateModel.swift */,
+			);
+			path = "Exchange Rates";
+			sourceTree = "<group>";
+		};
+		49975A7529727DB300C29090 /* Currencies */ = {
+			isa = PBXGroup;
+			children = (
+				49975A7629727DBE00C29090 /* Fiat */,
+				49975A722972710700C29090 /* Exchange Rates */,
+			);
+			path = Currencies;
+			sourceTree = "<group>";
+		};
+		49975A7629727DBE00C29090 /* Fiat */ = {
+			isa = PBXGroup;
+			children = (
+				49975A7729727DD200C29090 /* FiatCurrencyModel.swift */,
+			);
+			path = Fiat;
 			sourceTree = "<group>";
 		};
 		49995DE3296ACEDC00ADF1EC /* Context Menus */ = {
@@ -2001,6 +2034,7 @@
 				499E12462954B59E004C61CE /* Colors.swift in Sources */,
 				499E132C295524CE004C61CE /* OnboardingPageModels.swift in Sources */,
 				49B22B7529561F8B009C3F4F /* LaunchScreenCoordinatorView.swift in Sources */,
+				49975A742972712600C29090 /* LatestExchangeRateModel.swift in Sources */,
 				499E127D2954C40F004C61CE /* PreferenceKeys.swift in Sources */,
 				49B22B7729561FD1009C3F4F /* LaunchScreenRouter.swift in Sources */,
 				49995DE6296ACF2E00ADF1EC /* FloatingContextMenu.swift in Sources */,
@@ -2020,6 +2054,7 @@
 				492169FC295FD1B20078CCC3 /* ImageFileManager.swift in Sources */,
 				499E130C2954D6F8004C61CE /* RoundedRectangularCTA.swift in Sources */,
 				4925C8772958F840006E1A80 /* FTUEService.swift in Sources */,
+				49975A7829727DD200C29090 /* FiatCurrencyModel.swift in Sources */,
 				499E123B2954B59E004C61CE /* Animations.swift in Sources */,
 				49A0B59C296D444C003324A3 /* GlobalFunctions.swift in Sources */,
 				499E126F2954C40F004C61CE /* ScrollViewModifier.swift in Sources */,
@@ -2099,6 +2134,7 @@
 				49B22B8C29566DB1009C3F4F /* LaunchScreenManager.swift in Sources */,
 				49A0B584296B8D30003324A3 /* PreferenceBottomSheet.swift in Sources */,
 				4953E5AE2968A7A100513560 /* CounterRectangularButton.swift in Sources */,
+				49975A7129726BCB00C29090 /* ExchangeRateDataProvider.swift in Sources */,
 				49B22B8B29566DB1009C3F4F /* PasswordValidationService.swift in Sources */,
 				49A0B582296B8D1D003324A3 /* PreferenceBottomSheetViewModel.swift in Sources */,
 				499E134129552550004C61CE /* LoopingVideoPlayerUIView.swift in Sources */,
