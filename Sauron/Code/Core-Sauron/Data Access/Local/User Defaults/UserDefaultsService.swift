@@ -8,7 +8,7 @@
 import Foundation
 
 /// Service used for interfacing with the UserDefaults API in order to store small as-needed data neccessary for customizing the application's UX. This data can be user progression dependent feature flags, and user preferences
-class UserDefaultsService {
+final class UserDefaultsService {
     /// Shared userdefaults database
     var shared: UserDefaults {
         guard let userDefaultsDatabase = UserDefaults(suiteName: self.databaseName)

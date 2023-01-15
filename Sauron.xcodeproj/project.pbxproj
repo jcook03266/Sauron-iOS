@@ -160,6 +160,7 @@
 		49B22B962957AA74009C3F4F /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B22B952957AA74009C3F4F /* SafariView.swift */; };
 		49C13971296E596A00BFC5B4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49C13970296E596A00BFC5B4 /* Localizable.strings */; };
 		49C13973296F674900BFC5B4 /* CustomContextMenuModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C13972296F674900BFC5B4 /* CustomContextMenuModifiers.swift */; };
+		49F4B7062973736300319E39 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F4B7052973736300319E39 /* KeychainManager.swift */; };
 		49FF49852970BAD300533F1E /* DeeplinkHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF49842970BAD300533F1E /* DeeplinkHandlerProtocol.swift */; };
 		49FF49872970BADF00533F1E /* DeeplinkHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF49862970BADF00533F1E /* DeeplinkHandlers.swift */; };
 		49FF49892970BB7E00533F1E /* DeeplinkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF49882970BB7E00533F1E /* DeeplinkManagerProtocol.swift */; };
@@ -337,6 +338,7 @@
 		49C13970296E596A00BFC5B4 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		49C13972296F674900BFC5B4 /* CustomContextMenuModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenuModifiers.swift; sourceTree = "<group>"; };
 		49C13974296F716500BFC5B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		49F4B7052973736300319E39 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		49FF49842970BAD300533F1E /* DeeplinkHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkHandlerProtocol.swift; sourceTree = "<group>"; };
 		49FF49862970BADF00533F1E /* DeeplinkHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkHandlers.swift; sourceTree = "<group>"; };
 		49FF49882970BB7E00533F1E /* DeeplinkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkManagerProtocol.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 		4925C87B2958FE06006E1A80 /* Local */ = {
 			isa = PBXGroup;
 			children = (
+				49F4B7042973731100319E39 /* Keychain */,
 				499E12172954B48E004C61CE /* Core Data */,
 				499E121E2954B4F1004C61CE /* User Defaults */,
 				499E121F2954B4F7004C61CE /* Cache */,
@@ -1932,6 +1935,14 @@
 			path = SafariView;
 			sourceTree = "<group>";
 		};
+		49F4B7042973731100319E39 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				49F4B7052973736300319E39 /* KeychainManager.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
 		49FF49832970BAC400533F1E /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2097,6 +2108,7 @@
 				49975A742972712600C29090 /* LatestExchangeRateModel.swift in Sources */,
 				499E127D2954C40F004C61CE /* PreferenceKeys.swift in Sources */,
 				49B22B7729561FD1009C3F4F /* LaunchScreenRouter.swift in Sources */,
+				49F4B7062973736300319E39 /* KeychainManager.swift in Sources */,
 				49995DE6296ACF2E00ADF1EC /* FloatingContextMenu.swift in Sources */,
 				499E12712954C40F004C61CE /* ObservableArray.swift in Sources */,
 				4925C89A295B64D8006E1A80 /* FiatCurrencyManager.swift in Sources */,

@@ -63,6 +63,7 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
     struct FileManagerErrors {}
     struct CoreDataErrors {}
     struct DeeplinkingErrors {}
+    struct KeychainErrors {}
     
     // MARK: - Global state management
     fileprivate static var fatalErrorsEnabled: Bool {
@@ -99,6 +100,47 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
     }
 }
 
+// MARK: - Error Codes for Keychain
+extension ErrorCodeDispatcher.KeychainErrors: ThrowableErrorCodeDispatcherProtocol {
+    typealias ErrorCodes = codes
+    
+    enum codes: Hashable, LocalizedError {
+        case saveFailed(key: String, value: String)
+        case deletionFailed(key: String)
+        case loadFailed(key: String)
+        case updateFailed(key: String, value: String)
+ 
+        var errorDescription: String? {
+            switch self {
+            case .saveFailed(key: let key, value: let value):
+                return "The value \(value) for the key: \(key) could not be saved to the keychain"
+                
+            case .deletionFailed(key: let key):
+                return "The value for the given key \(key), could not be deleted from the keychain, this value might be absent from the secure store"
+                
+            case .loadFailed(key: let key):
+                return "The value for the given key \(key), could not be fetched from the keychain, this value might be absent from the secure store"
+                
+            case .updateFailed(key: let key, value: let value):
+                return "The updated value \(value) for the key: \(key) could not be saved to the keychain, please make sure this value exists prior to using this operation."
+            }
+        }
+    }
+    
+    static func printErrorCode(for code: ErrorCodes) {
+        print(code.errorDescription ?? "")
+    }
+    
+    static func getErrorCodeFor(code: ErrorCodes) -> String {
+        return code.localizedDescription
+    }
+    
+    static func throwError(for code: codes) -> Error {
+        return code
+    }
+}
+
+// MARK: - Error Codes for Deeplinking
 extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
@@ -141,6 +183,7 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
     }
 }
 
+// MARK: - Error Codes for CoreData
 extension ErrorCodeDispatcher.CoreDataErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
@@ -179,6 +222,7 @@ extension ErrorCodeDispatcher.CoreDataErrors: ThrowableErrorCodeDispatcherProtoc
     }
 }
 
+// MARK: - Error Codes for File Manager
 extension ErrorCodeDispatcher.FileManagerErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
@@ -226,6 +270,7 @@ extension ErrorCodeDispatcher.FileManagerErrors: ThrowableErrorCodeDispatcherPro
     }
 }
 
+// MARK: - Error Codes for Networking
 extension ErrorCodeDispatcher.NetworkingErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
