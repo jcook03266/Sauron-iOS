@@ -107,14 +107,16 @@ extension String {
     /// Use this when building or comparing URLs specific to these page / route names
     func getURLSafeString() -> String {
         return self
-            .replacingOccurrences(of: " ", with: "_")
+            .replacingOccurrences(of: " ", with: "-")
+            .replacingOccurrences(of: "_", with: "+")
             .lowercased()
     }
     
     /// Reverses the changes done to URL safe strings
     func convertFromURLSafeString() -> String {
         return self
-            .replacingOccurrences(of: "_", with: " ")
+            .replacingOccurrences(of: "-", with: " ")
+            .replacingOccurrences(of: "+", with: "_")
     }
     
     /// Sets string to null space

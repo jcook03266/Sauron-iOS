@@ -54,6 +54,26 @@ extension InjectableServices {
     
     // MARK: - Endpoint Manager
     static func inject() -> EndpointManager {
+        return .init()
+    }
+    
+    // MARK: - Keychain Manager
+    static func inject() -> KeychainManager {
+        return .init()
+    }
+    
+    // MARK: - Validator Manager
+    static func inject() -> ValidatorManager {
+        return .shared
+    }
+    
+    // MARK: - Authentication Service
+    static func inject() -> SRNUserAuthenticator {
+        return .shared
+    }
+    
+    // MARK: - User Manager
+    static func inject() -> UserManager {
         return .shared
     }
 }
@@ -86,6 +106,16 @@ extension InjectableManagers {
     
     // MARK: - Endpoint Manager
     static func inject() -> EndpointManager {
+        return .init()
+    }
+    
+    // MARK: - Keychain Manager
+    static func inject() -> KeychainManager {
+        return .init()
+    }
+    
+    // MARK: - Validator Manager
+    static func inject() -> ValidatorManager {
         return .shared
     }
 }

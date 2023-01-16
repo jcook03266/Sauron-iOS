@@ -64,6 +64,7 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
     struct CoreDataErrors {}
     struct DeeplinkingErrors {}
     struct KeychainErrors {}
+    struct AuthenticationErrors {}
     
     // MARK: - Global state management
     fileprivate static var fatalErrorsEnabled: Bool {
@@ -97,6 +98,59 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
             return { preconditionFailure() }}
         
         fatalError(code.rawValue + " , " + vestigialMessage)
+    }
+}
+
+// MARK: - Authentication Error Codes
+extension ErrorCodeDispatcher.AuthenticationErrors: ThrowableErrorCodeDispatcherProtocol {
+    typealias ErrorCodes = codes
+    
+    enum codes: Hashable, LocalizedError {
+        case encryptionFailed
+        case decryptionFailed
+        case userDoesNotExist
+        case userPasswordDoesNotExist
+        case lastUsedSaltNotFound
+ 
+        var errorDescription: String? {
+            switch self {
+            case .encryptionFailed:
+                return "The passcode encryption algorithm failed, please diagnose the issue immediately!"
+                
+            case .decryptionFailed:
+                return "The passcode decryption algorithm failed, please diagnose the issue immediately!"
+                
+            case .userDoesNotExist:
+                return "An active user is required to perform this operation!"
+                
+            case .userPasswordDoesNotExist:
+                return "A password could not be loaded for the current user, please diagnose the issue!"
+                
+            case .lastUsedSaltNotFound:
+                return "The last salt used for encrypting the user's passcode was not found, please diagnose the issue and fix this."
+            }
+        }
+    }
+    
+    static func printErrorCode(for code: ErrorCodes) {
+        print(code.errorDescription ?? "")
+    }
+    
+    static func getErrorCodeFor(code: ErrorCodes) -> String {
+        return code.localizedDescription
+    }
+    
+    static func throwError(for code: codes) -> Error {
+        return code
+    }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
     }
 }
 
@@ -137,6 +191,15 @@ extension ErrorCodeDispatcher.KeychainErrors: ThrowableErrorCodeDispatcherProtoc
     
     static func throwError(for code: codes) -> Error {
         return code
+    }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
     }
 }
 
@@ -181,6 +244,15 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
     static func throwError(for code: codes) -> Error {
         return code
     }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+    }
 }
 
 // MARK: - Error Codes for CoreData
@@ -219,6 +291,15 @@ extension ErrorCodeDispatcher.CoreDataErrors: ThrowableErrorCodeDispatcherProtoc
     
     static func throwError(for code: codes) -> Error {
         return code
+    }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
     }
 }
 
@@ -268,6 +349,15 @@ extension ErrorCodeDispatcher.FileManagerErrors: ThrowableErrorCodeDispatcherPro
     static func throwError(for code: codes) -> Error {
         return code
     }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+    }
 }
 
 // MARK: - Error Codes for Networking
@@ -297,6 +387,15 @@ extension ErrorCodeDispatcher.NetworkingErrors: ThrowableErrorCodeDispatcherProt
     
     static func throwError(for code: codes) -> Error {
         return code
+    }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
     }
 }
 

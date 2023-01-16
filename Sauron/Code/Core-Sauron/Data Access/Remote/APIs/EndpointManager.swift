@@ -9,11 +9,6 @@ import Foundation
 
 /// A domain responsible for encapsulating all URLs for interfacing with known API endpoints
 struct EndpointManager {
-    // MARK: - Singleton
-    static let shared: EndpointManager = .init()
-    
-    private init() {}
-    
     // MARK: - All Endpoints
     // TODO: Setup a static 404 URL resource instead of force unwrapping the link for best practice
     

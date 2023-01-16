@@ -24,11 +24,6 @@ final class UserDefaultsService {
         return "group.com.Sauron"
     }
     
-    // MARK: - Dependencies
-    struct Dependencies: InjectableServices {
-    }
-    let dependencies = Dependencies()
-    
     // MARK: - All UserDefaults Keys
     enum NonOptionalKeys: AssociatedEnum {
         static var allCases: [UserDefaultsService.NonOptionalKeys] = []
@@ -54,6 +49,12 @@ final class UserDefaultsService {
         case portfolioCoinAscendingSortOrder(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("portfolioAscendingSortOrder",
                                                                                                    defaultReturnValue: CoinStore.defaultAscendingSortOrder))
         
+        case userAuthMethodPreference(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userAuthMethodPreference",
+                                                                                            defaultReturnValue: SRNUserAuthenticator.defaultAuthMethod.rawValue))
+        
+        case userAuthTokenLifeCyclePreference(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userAuthTokenLifeCyclePreference",
+                                                                                                    defaultReturnValue: SRNUserAuthenticator.defaultAuthTokenLifeCycleDuration.rawValue))
+        
         func getAssociatedValue() -> UserDefaultsValueKey<Any> {
             switch self {
             case .didCompleteFTUE(let value):
@@ -65,6 +66,10 @@ final class UserDefaultsService {
             case .portfolioCoinSortKey(let value):
                 return value
             case .portfolioCoinAscendingSortOrder(let value):
+                return value
+            case .userAuthMethodPreference(let value):
+                return value
+            case .userAuthTokenLifeCyclePreference(let value):
                 return value
             }
         }
@@ -80,6 +85,22 @@ final class UserDefaultsService {
         
         func getAssociatedValue() -> UserDefaulsOptionalKey<Any?> {
             return .init("")
+        }
+    }
+    
+    enum OptionalDateKeys: AssociatedEnum {
+        static var allCases: [UserDefaultsService.OptionalDateKeys] = []
+        
+        typealias associatedValue = UserDefaulsOptionalKey<Date?>
+        
+        // MARK: - SRNUserAuthenticator
+        case savedRetryCoolDownExpirationDate(UserDefaulsOptionalKey<Date?> =  UserDefaulsOptionalKey<Date?>("savedRetryWaitExpirationDate"))
+        
+        func getAssociatedValue() -> UserDefaulsOptionalKey<Date?> {
+            switch self {
+            case .savedRetryCoolDownExpirationDate(let value):
+                return value
+            }
         }
     }
     
@@ -135,6 +156,23 @@ final class UserDefaultsService {
     }
     
     func removeValueFor(key: OptionalKeys){
+        let key = key.getAssociatedValue().literalValue
+        
+        shared.removeObject(forKey: key)
+    }
+    
+    // MARK: - Optional Data Keys
+    func getValueFor(key: OptionalDateKeys) -> Date? {
+        return shared[key.getAssociatedValue()]
+    }
+    
+    func setValueFor(key: OptionalDateKeys,
+                     value: Date?)
+    {
+        shared[key.getAssociatedValue()] = value
+    }
+    
+    func removeValueFor(key: OptionalDateKeys){
         let key = key.getAssociatedValue().literalValue
         
         shared.removeObject(forKey: key)

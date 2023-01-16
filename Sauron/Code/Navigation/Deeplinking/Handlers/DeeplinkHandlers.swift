@@ -59,11 +59,11 @@ final class LaunchScreenDeeplinkHandler: DeeplinkHandlerProtocol {
 
 // MARK: - Onboarding Scene Handler
 /// Test links:
-/// - Get Started: sauron://onboarding/get_started
-/// - Portfolio Curation Screen: sauron://onboarding/portfolio_curation
+/// - Get Started: sauron://onboarding/get-started
+/// - Portfolio Curation Screen: sauron://onboarding/portfolio-curation
 /// - Onboarding Screen: [Should fail if completed already] sauron://onboarding/
-/// [Query] - Portfolio Curation Screen Search: sauron://onboarding/portfolio_curation?q=bitcoin
-/// [Query] - Portfolio Curation Screen Search w/ Filter: sauron://onboarding/portfolio_curation?q=eth&pcf=true /// Sets the portfolio coin only filter to true
+/// [Query] - Portfolio Curation Screen Search: sauron://onboarding/portfolio-curation?q=bitcoin
+/// [Query] - Portfolio Curation Screen Search w/ Filter: sauron://onboarding/portfolio-curation?q=eth&pcf=true /// Sets the portfolio coin only filter to true
 final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
     typealias Router = OnboardingRouter
     typealias Route = OnboardingRoutes

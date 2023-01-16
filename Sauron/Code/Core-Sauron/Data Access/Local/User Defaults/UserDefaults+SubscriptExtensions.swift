@@ -47,6 +47,11 @@ extension UserDefaults {
         set { set(newValue, forKey: key.literalValue) }
         get { return stringArray(forKey: key.literalValue) }
     }
+    
+    subscript(key: UserDefaulsOptionalKey<Date?>) -> Date? {
+        set { set(newValue, forKey: key.literalValue) }
+        get { return object(forKey: key.literalValue) as? Date }
+    }
 
     subscript(key: UserDefaulsOptionalKey<Data?>) -> Data? {
         set { set(newValue, forKey: key.literalValue) }
@@ -144,13 +149,13 @@ extension UserDefaults {
         set { set(newValue, forKey: key.literalValue) }
         get { return object(forKey: key.literalValue) as? [String] ?? key.defaultReturnValue }
     }
-
-    subscript(key: UserDefaultsValueKey<Data>) -> Data {
+    
+    subscript(key: UserDefaultsValueKey<Date>) -> Date {
         set { set(newValue, forKey: key.literalValue) }
-        get { return object(forKey: key.literalValue) as? Data ?? key.defaultReturnValue }
+        get { return object(forKey: key.literalValue) as? Date ?? key.defaultReturnValue }
     }
 
-    subscript(key: UserDefaultsValueKey<Data?>) -> Data? {
+    subscript(key: UserDefaultsValueKey<Data>) -> Data {
         set { set(newValue, forKey: key.literalValue) }
         get { return object(forKey: key.literalValue) as? Data ?? key.defaultReturnValue }
     }

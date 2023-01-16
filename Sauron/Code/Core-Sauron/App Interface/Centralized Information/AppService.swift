@@ -27,8 +27,10 @@ open class AppService: ObservableObject {
         let userDefaultsService: UserDefaultsService = inject()
         let ftueService: FTUEService = inject()
         let featureFlagService: FeatureFlagService = inject()
+        let userManager: UserManager = inject()
+        let authenticationManager: SRNUserAuthenticator = inject()
     }
-    let dependencies = Dependencies()
+    var dependencies = Dependencies()
     
     struct DevelopmentDependencies: InjectableDevelopmentServices {
         let featureFlagService: FeatureFlagService = inject()
@@ -65,11 +67,11 @@ open class AppService: ObservableObject {
     }
     
     func setup() {
-        //let store = dataStores.coinDataStore
+        dependencies.userManager.changeUserPeferredAuthMethod(to: .passcode)
         
-        //        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-        //            print(store.coins)
-        //        }
+        Task(priority: .high) {
+        await dependencies.authenticationManager.resetPasscode(with: "1234")
+        let value = await dependencies.authenticationManager.verifyNewPasscode(with: "1234")        }
     }
     
     func load() {}
