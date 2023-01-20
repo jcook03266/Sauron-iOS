@@ -111,6 +111,7 @@ extension ErrorCodeDispatcher.AuthenticationErrors: ThrowableErrorCodeDispatcher
         case userDoesNotExist
         case userPasswordDoesNotExist
         case lastUsedSaltNotFound
+        case faceIDAuthNotPossible(error: String)
  
         var errorDescription: String? {
             switch self {
@@ -128,6 +129,9 @@ extension ErrorCodeDispatcher.AuthenticationErrors: ThrowableErrorCodeDispatcher
                 
             case .lastUsedSaltNotFound:
                 return "The last salt used for encrypting the user's passcode was not found, please diagnose the issue and fix this."
+                
+            case .faceIDAuthNotPossible(error: let error):
+                return "The user cannot use faceID to login at this present moment, the process resulted in the following error \(error)"
             }
         }
     }

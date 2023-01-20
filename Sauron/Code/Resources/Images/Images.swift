@@ -196,5 +196,7 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          line_3_horizontal_decrease_circle_fill = "line.3.horizontal.decrease.circle.fill",
          info_circle_fill = "info.circle.fill",
          list_number = "list.number",
-         flame_fill = "flame.fill"
+         flame_fill = "flame.fill",
+         faceid,
+         delete_backward_fill = "delete.backward.fill"
 }

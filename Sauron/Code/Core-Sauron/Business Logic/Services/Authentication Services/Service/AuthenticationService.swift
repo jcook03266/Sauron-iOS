@@ -9,19 +9,22 @@ import Foundation
 import CryptoSwift
 import Darwin
 import Combine
+import LocalAuthentication
 
 /// An authenticator service that provides a secure gateway into the application through whichever method the user selects
 class SRNUserAuthenticator: ObservableObject {
     // MARK: - Authenticator Life Cycle Properties
     /// To prevent abuse a set amount of passcode attempts is enumerated.
     /// The expiration date of this retry wait period is persisted so the user cannot get out of waiting by restarting the device, what they can do is uninstall the app and reinstall it but that would wipe all data anyways
-    @Published private(set) var authenticationAttempts: Int = 0
-    @Published var retryCoolDownCountDown: Timer.TimerPublisher? = nil
+    @Published private(set) var authenticationAttempts: UInt = 0
+    
     /// Restricts publically accessible methods from functioning and forces the UI to wait for the retry cool down to expire
     @Published var userMustWait: Bool = false
+    @Published var coolDownPeriodCountDown: UInt = SRNUserAuthenticator.retryCoolDownDuration
+    @Published var timeElapsed: UInt = 0
     
-    private let maxAuthAttempts: Int = 5
-    private let retryCoolDownDuration: Int = 300 // In seconds (5 mins)
+    static let maxAuthAttempts: UInt = 5
+    static let retryCoolDownDuration: UInt = 300 // In seconds (5 mins)
     private var retryCoolDownExpirationDate: Date? = nil
     
     // MARK: - Reset passcode tracking
@@ -32,8 +35,8 @@ class SRNUserAuthenticator: ObservableObject {
     @Published var newPasscodeVerification: String? = nil
     /// A temp buffer for the salt used by the new passcode to verify the second entry
     private var newPasscodeSalt: [UInt8]? = nil
-    /// Flag tells the encryptor to use the newPasscodeSalt buffer
-    private var isVerifyingNewPasscode: Bool {
+    /// Flag tells the encryptor to use the newPasscodeSalt temp buffer
+    var isVerifyingNewPasscode: Bool {
         return newPasscodeSalt != nil && userMustResetPasscode
     }
     
@@ -45,6 +48,13 @@ class SRNUserAuthenticator: ObservableObject {
     
     /// The current credential, this is needed to grant the user access to the app's main content
     @Published private(set) var currentAuthCredential: PasscodeAuthToken? = nil
+    
+    // MARK: - Hashing Algorithm Constants
+    /// These are optimized values fed to the scrypt function to ensure a fast yet secure hashing process ~ 1 Second
+    private let hashIterations: Int = 2048,
+                blocksize: Int = 4,
+                parallelismFactor: Int = 1,
+                derivedKeyLength: Int = 32
     
     // MARK: - Subscriptions
     var cancellables: Set<AnyCancellable> = []
@@ -61,8 +71,11 @@ class SRNUserAuthenticator: ObservableObject {
         return currentAuthCredential != nil
     }
     
-    var getRemainingPasscodeAttempts: Int {
-        return maxAuthAttempts - authenticationAttempts
+    var getRemainingPasscodeAttempts: UInt {
+        guard SRNUserAuthenticator.maxAuthAttempts > authenticationAttempts
+        else { return 0 }
+        
+        return SRNUserAuthenticator.maxAuthAttempts - authenticationAttempts
     }
     
     /// Use this to determine whether or not its the user's first time creating a passcode
@@ -93,32 +106,33 @@ class SRNUserAuthenticator: ObservableObject {
     private func addSubscribers() {
         // Keep track of all authentication attempts and respond accordingly
         $authenticationAttempts
-            .sink { [weak self] _ in
-                guard let self = self
+            .sink { [weak self] in
+                guard let self = self,
+                      $0 > 0
                 else { return }
                 
-                self.isUserSuspicious()
+                self.isUserSuspicious(from: $0)
             }
             .store(in: &cancellables)
         
-        // Count down to the end of the cool down period and allow the user to
-        retryCoolDownCountDown?
-            .autoconnect()
-            .scan(0) { [weak self] (timeElapsed, _ ) -> Int in
-                guard let self = self
-                else { return timeElapsed }
-                
-                return min(timeElapsed + 1, self.retryCoolDownDuration)
+        // Count down to the end of the cool down period
+        Timer.publish(every: 1,
+                      on: .main,
+                      in: .default)
+        .autoconnect()
+        .sink { [weak self] _ in
+            guard let self = self,
+                  self.userMustWait
+            else { return }
+            
+            self.timeElapsed += 1
+            self.coolDownPeriodCountDown = SRNUserAuthenticator.retryCoolDownDuration - UInt(self.timeElapsed)
+            
+            if self.timeElapsed >= SRNUserAuthenticator.retryCoolDownDuration || Date.now >= self.retryCoolDownExpirationDate ?? .distantFuture {
+                self.expireRetryCoolDownPeriod()
             }
-            .sink { [weak self]  timeElapsed in
-                guard let self = self
-                else { return }
-                
-                if timeElapsed >= self.retryCoolDownDuration || Date.now >= self.retryCoolDownExpirationDate ?? .distantFuture {
-                    self.expireRetryCoolDownPeriod()
-                }
-            }
-            .store(in: &cancellables)
+        }
+        .store(in: &cancellables)
         
         // Observe the life cycle of the current token and invalidate it when it expires
         Timer.publish(every: 1,
@@ -164,19 +178,56 @@ class SRNUserAuthenticator: ObservableObject {
         invalidateAuthToken()
     }
     
+    @discardableResult
+    /// Provides another vector of authentication for the user by allowing them to use biometrics to verify their authorization status
+    func authenticateWithFaceID() -> Future<Bool, Never> {
+        return Future { [weak self] promise in
+            guard let self = self,
+                  !self.userMustWait
+            else { return }
+            
+            let context = LAContext()
+            var error: NSError?,
+                authSuccessful: Bool = false
+            
+            if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics,
+                                         error: &error) {
+                let reason = "The user has selected FaceID biometric verification as their authentication vector for the Authentication Screen"
+                
+                context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics,
+                                       localizedReason: reason)
+                { (success, authError) in
+                    authSuccessful = success
+                    if authSuccessful { self.generateNewAuthToken() }
+                    
+                    if let authError = authError {
+                        ErrorCodeDispatcher.AuthenticationErrors.printErrorCode(for: .faceIDAuthNotPossible(error: authError.localizedDescription))
+                    }
+                    else {
+                        promise(.success(authSuccessful))
+                    }
+                    
+                    context.invalidate()
+                }
+            }
+        }
+    }
+    
+    @discardableResult
+    /// Allows new users and users with no auth method selected to get into the main app without security clearance
+    func authenticateUnsecuredUser() -> Bool {
+        generateNewAuthToken()
+        return true
+    }
+    
     /// Verify the user's authorization status with a passcode (if any)
     /// Important: To authenticate with this method, a prior passcode must be saved and loaded, to create a new passcode use the  reset passcode process
     @discardableResult
     func authenticate(with passcode: String = "") async -> Bool {
-        // Ensure the user isn't in a cool down
-        guard !userMustWait
+        // Ensure the user isn't in a cool down, and that they have an existing passcode
+        guard !userMustWait,
+              currentUser.hasPasscode
         else { return false }
-        
-        // Automatically allow methods that don't rely on the passcode
-        if currentUser.userPreferredAuthMethod != .passcode {
-            generateNewAuthToken()
-            return true
-        }
         
         // Validate that the user's input conforms to what is required by the validator
         guard dependencies.validator.passcodeValidator.validate(passcode)
@@ -193,7 +244,10 @@ class SRNUserAuthenticator: ObservableObject {
         let passcodeMatches = storedHashedPasscode == newHashedPasscode
         
         guard passcodeMatches
-        else { return passcodeMatches }
+        else {
+            self.authenticationAttempts += 1
+            return passcodeMatches
+        }
         
         generateNewAuthToken()
         dependencies.userManager.didAuthenticate()
@@ -243,6 +297,31 @@ class SRNUserAuthenticator: ObservableObject {
         userMustResetPasscode = false
     }
     
+    func resetAuthAttempts() {
+        authenticationAttempts = 0
+    }
+    
+    /// Resets all in progress processes relating to setting / resetting / verifying the user's passcode, note this method doesn't delete persistent data
+    func resetAuthenticationProccesses() {
+        resetPasscodeResetParameters()
+        expireRetryCoolDownPeriod()
+    }
+    
+    /**
+     Securely encrypts the passed passcode using salting and iterative hashing
+     
+     - Scrypt hashing algorithm parameters listed below
+     
+     - Parameters:
+        - N: iterations count (affects memory and CPU usage), e.g. 16384 or 2048
+        - r : block size (affects memory and CPU usage), e.g. 8
+        - p: parallelism factor (threads to run in parallel - affects the memory, CPU usage), usually 1
+        - password: the input password (8-10 chars minimal length is recommended)
+        - salt: securely-generated random bytes (64 bits minimum, 128 bits recommended)
+        - derived_key_length: how many bytes to generate as output, e.g. 32 bytes (256 bits)
+     
+     - Returns: A promised value of either an optional string or never
+     */
     private func encrypt(passcode: String,
                          loadLastSalt: Bool) -> Future<String?, Never>
     {
@@ -251,10 +330,9 @@ class SRNUserAuthenticator: ObservableObject {
             else { return }
             
             DispatchQueue.global().async {
-                
                 var salt = [UInt8](repeating: 0, count: 16)
-                arc4random_buf(&salt, salt.count)
                 
+                // Load the last used salt / Use the temp salt when creating a new passcode verification / create a new salt for a new passcode
                 if loadLastSalt {
                     guard let lastSalt = self.getLastUsedSalt()
                     else {
@@ -269,14 +347,17 @@ class SRNUserAuthenticator: ObservableObject {
                         let newPasscodeSalt = self.newPasscodeSalt {
                     salt = newPasscodeSalt
                 }
+                else {
+                    arc4random_buf(&salt, salt.count)
+                }
                 
                 do {
                     let hashedPasscode = try Scrypt(password: passcode.bytes,
                                                     salt: salt,
-                                                    dkLen: 8,
-                                                    N: 16384,
-                                                    r: 2,
-                                                    p: 1)
+                                                    dkLen: self.derivedKeyLength,
+                                                    N: self.hashIterations,
+                                                    r: self.blocksize,
+                                                    p: self.parallelismFactor)
                         .calculate()
                     
                     if self.userMustResetPasscode && self.newPasscodeSalt == nil {
@@ -305,45 +386,43 @@ class SRNUserAuthenticator: ObservableObject {
     }
     
     // MARK: - Retry cool down period methods
-    private func loadRetryCoolDownPeriod() {
+    @discardableResult
+    func loadRetryCoolDownPeriod() -> UInt? {
         guard let loadedRetryCoolDownExpirationDate = dependencies.userDefaultsService.getValueFor(key: .savedRetryCoolDownExpirationDate())
-        else { return }
+        else { return nil }
         
         self.userMustWait = true
         self.retryCoolDownExpirationDate = loadedRetryCoolDownExpirationDate
+        
+        // Recalculate the time left until the cool down expires and update it accordingly
+        self.timeElapsed = SRNUserAuthenticator.retryCoolDownDuration - UInt(Date.now.distance(to: loadedRetryCoolDownExpirationDate))
+        
+        return timeElapsed
     }
     
     /// If the user tries too many times to guess their passcode then they're put in a wait period
-    private func isUserSuspicious() {
-        userMustWait = authenticationAttempts >= maxAuthAttempts
+    private func isUserSuspicious(from attempts: UInt) {
+        userMustWait = attempts >= SRNUserAuthenticator.maxAuthAttempts
+        
+        if userMustWait { setRetryCoolDown() }
     }
     
     /// Set the expiration date for the wait period the suspicious user has to wait for
     private func setRetryCoolDown() {
-        retryCoolDownExpirationDate = .now.advanced(by: TimeInterval(retryCoolDownDuration))
+        retryCoolDownExpirationDate = .now.advanced(by: TimeInterval(SRNUserAuthenticator.retryCoolDownDuration))
         
         dependencies.userDefaultsService.setValueFor(key: .savedRetryCoolDownExpirationDate(),
                                                      value: retryCoolDownExpirationDate)
     }
     
-    /// Configure the timer publisher to fire every 1 second when the count down is active, this elapses the time up to the required wait duration where the expiration logic is triggered
-    private func setRetryCoolDownTimeCountDown() {
-        retryCoolDownCountDown = Timer.publish(every: 1,
-                                               on: .main,
-                                               in: .default)
-        
-        addSubscribers()
-    }
-    
     /// The user can now enter their passcode again, the wait period is over and all retry related parameters are invalidated
     private func expireRetryCoolDownPeriod() {
         userMustWait = false
+        timeElapsed = 0
+        coolDownPeriodCountDown = SRNUserAuthenticator.retryCoolDownDuration
         retryCoolDownExpirationDate = nil
         authenticationAttempts = 0
-        retryCoolDownCountDown = nil
         dependencies.userDefaultsService.removeValueFor(key: .savedRetryCoolDownExpirationDate())
-        
-        addSubscribers()
     }
     
     // MARK: - Salt persistence

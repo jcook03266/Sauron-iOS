@@ -51,7 +51,26 @@ struct HapticFeedbackDispatcher {
         Impacts.generateImpact(with: .light, intensity: 1)
     }
     
-    struct Impacts{}
+    static func keyPadButtonPressed() {
+        Impacts.generateImpact(with: .soft, intensity: 1)
+    }
+    
+    static func warningDidOccur() {
+        Notifications.generateImpact(for: .warning)
+    }
+    
+    struct Impacts {}
+    struct Notifications {}
+}
+
+private extension HapticFeedbackDispatcher.Notifications {
+    static func generateImpact(for notification: UINotificationFeedbackGenerator.FeedbackType)
+    {
+        let generator = UINotificationFeedbackGenerator()
+        
+        generator.prepare()
+        generator.notificationOccurred(notification)
+    }
 }
 
 private extension HapticFeedbackDispatcher.Impacts {

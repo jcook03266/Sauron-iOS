@@ -13,14 +13,15 @@ struct PasscodeValidator: Validator {
     typealias CriteriaKeysEnumType = CriteriaKeys
     
     // MARK: - Validation Criteria
+    /// Important: This is also defined by the validator and should not be changed unless all other implicit references to this value are updated
+    static let maxPasscodeLength: Int = 4
+    
     /// The user's entered passcode must contain a four digit combination
     var validationCriteria: [String : Any] {
         return [CriteriaKeys.regex.rawValue : "^[0-9]{4}$"]
     }
     
     func validate(_ input: String) -> Bool {
-        let requiredPasscodeLength = validationCriteria
-        
         guard let regex = getCriteriaFor(key: .regex) as? String
         else { return false }
         

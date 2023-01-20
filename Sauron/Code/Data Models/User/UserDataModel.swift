@@ -76,23 +76,38 @@ final class SRNUser: ObservableObject {
         }
     }
     
-    // MARK: - Life Cycle
-//    var isNewUser: Bool {
-////        get {
-////
-////        }
-////        set {
-////
-////        }
-//    }
+    // MARK: - Authentication properties
+    var isAuthenticated: Bool {
+        return dependencies.authService.currentAuthCredential != nil
+    }
     
-    // MARK: - Published authentication properties
-    @Published var isAuthenticated: Bool = true
+    var hasPasscode: Bool {
+        return password != nil
+    }
+    
+    var isNewUser: Bool = false
     
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
-        lazy var userDefaultsService: UserDefaultsService = SRNUserAuthenticator.Dependencies.inject()
-        lazy var keychainManager: KeychainManager = SRNUserAuthenticator.Dependencies.inject()
+        lazy var userDefaultsService: UserDefaultsService = SRNUser.Dependencies.inject()
+        lazy var keychainManager: KeychainManager = SRNUser.Dependencies.inject()
+        lazy var authService: SRNUserAuthenticator = SRNUser.Dependencies.inject()
     }
     var dependencies = Dependencies()
+    
+    init() {
+        setup()
+    }
+    
+    private func setup() {
+        determineIfNewUser()
+    }
+    
+    private func determineIfNewUser() {
+        let userID: String? = dependencies
+            .keychainManager
+            .load(key: .userIDKey)
+        
+        isNewUser = userID != nil
+    }
 }

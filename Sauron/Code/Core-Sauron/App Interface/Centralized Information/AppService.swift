@@ -17,7 +17,7 @@ open class AppService: ObservableObject {
     @Published var deepLinkManager: DeepLinkManager = .shared
     
     // MARK: - Debug Environment Properties
-    static let isDebug: Bool = false
+    static let isDebug: Bool = true
     static let useMockData: Bool = false /// Determines whether or not to use mock data when running the application or real data pulled from valid endpoints
     
     // MARK: - Dependencies
@@ -68,10 +68,10 @@ open class AppService: ObservableObject {
     
     func setup() {
         dependencies.userManager.changeUserPeferredAuthMethod(to: .passcode)
-        
-        Task(priority: .high) {
-        await dependencies.authenticationManager.resetPasscode(with: "1234")
-        let value = await dependencies.authenticationManager.verifyNewPasscode(with: "1234")        }
+//
+//        Task(priority: .high) {
+//        await dependencies.authenticationManager.resetPasscode(with: "1234")
+//        let value = await dependencies.authenticationManager.verifyNewPasscode(with: "1234")        }
     }
     
     func load() {}
