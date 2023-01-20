@@ -63,6 +63,8 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
     struct FileManagerErrors {}
     struct CoreDataErrors {}
     struct DeeplinkingErrors {}
+    struct KeychainErrors {}
+    struct AuthenticationErrors {}
     
     // MARK: - Global state management
     fileprivate static var fatalErrorsEnabled: Bool {
@@ -99,6 +101,113 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
     }
 }
 
+// MARK: - Authentication Error Codes
+extension ErrorCodeDispatcher.AuthenticationErrors: ThrowableErrorCodeDispatcherProtocol {
+    typealias ErrorCodes = codes
+    
+    enum codes: Hashable, LocalizedError {
+        case encryptionFailed
+        case decryptionFailed
+        case userDoesNotExist
+        case userPasswordDoesNotExist
+        case lastUsedSaltNotFound
+        case faceIDAuthNotPossible(error: String)
+ 
+        var errorDescription: String? {
+            switch self {
+            case .encryptionFailed:
+                return "The passcode encryption algorithm failed, please diagnose the issue immediately!"
+                
+            case .decryptionFailed:
+                return "The passcode decryption algorithm failed, please diagnose the issue immediately!"
+                
+            case .userDoesNotExist:
+                return "An active user is required to perform this operation!"
+                
+            case .userPasswordDoesNotExist:
+                return "A password could not be loaded for the current user, please diagnose the issue!"
+                
+            case .lastUsedSaltNotFound:
+                return "The last salt used for encrypting the user's passcode was not found, please diagnose the issue and fix this."
+                
+            case .faceIDAuthNotPossible(error: let error):
+                return "The user cannot use faceID to login at this present moment, the process resulted in the following error \(error)"
+            }
+        }
+    }
+    
+    static func printErrorCode(for code: ErrorCodes) {
+        print(code.errorDescription ?? "")
+    }
+    
+    static func getErrorCodeFor(code: ErrorCodes) -> String {
+        return code.localizedDescription
+    }
+    
+    static func throwError(for code: codes) -> Error {
+        return code
+    }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+    }
+}
+
+// MARK: - Error Codes for Keychain
+extension ErrorCodeDispatcher.KeychainErrors: ThrowableErrorCodeDispatcherProtocol {
+    typealias ErrorCodes = codes
+    
+    enum codes: Hashable, LocalizedError {
+        case saveFailed(key: String, value: String)
+        case deletionFailed(key: String)
+        case loadFailed(key: String)
+        case updateFailed(key: String, value: String)
+ 
+        var errorDescription: String? {
+            switch self {
+            case .saveFailed(key: let key, value: let value):
+                return "The value \(value) for the key: \(key) could not be saved to the keychain"
+                
+            case .deletionFailed(key: let key):
+                return "The value for the given key \(key), could not be deleted from the keychain, this value might be absent from the secure store"
+                
+            case .loadFailed(key: let key):
+                return "The value for the given key \(key), could not be fetched from the keychain, this value might be absent from the secure store"
+                
+            case .updateFailed(key: let key, value: let value):
+                return "The updated value \(value) for the key: \(key) could not be saved to the keychain, please make sure this value exists prior to using this operation."
+            }
+        }
+    }
+    
+    static func printErrorCode(for code: ErrorCodes) {
+        print(code.errorDescription ?? "")
+    }
+    
+    static func getErrorCodeFor(code: ErrorCodes) -> String {
+        return code.localizedDescription
+    }
+    
+    static func throwError(for code: codes) -> Error {
+        return code
+    }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+    }
+}
+
+// MARK: - Error Codes for Deeplinking
 extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
@@ -139,8 +248,18 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
     static func throwError(for code: codes) -> Error {
         return code
     }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+    }
 }
 
+// MARK: - Error Codes for CoreData
 extension ErrorCodeDispatcher.CoreDataErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
@@ -177,8 +296,18 @@ extension ErrorCodeDispatcher.CoreDataErrors: ThrowableErrorCodeDispatcherProtoc
     static func throwError(for code: codes) -> Error {
         return code
     }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+    }
 }
 
+// MARK: - Error Codes for File Manager
 extension ErrorCodeDispatcher.FileManagerErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
@@ -224,8 +353,18 @@ extension ErrorCodeDispatcher.FileManagerErrors: ThrowableErrorCodeDispatcherPro
     static func throwError(for code: codes) -> Error {
         return code
     }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+    }
 }
 
+// MARK: - Error Codes for Networking
 extension ErrorCodeDispatcher.NetworkingErrors: ThrowableErrorCodeDispatcherProtocol {
     typealias ErrorCodes = codes
     
@@ -252,6 +391,15 @@ extension ErrorCodeDispatcher.NetworkingErrors: ThrowableErrorCodeDispatcherProt
     
     static func throwError(for code: codes) -> Error {
         return code
+    }
+    
+    static func triggerPreconditionFailure(for code: codes,
+                                           using extendedInformation: String = "") -> (() -> (Never)) {
+        guard ErrorCodeDispatcher.preconditionFailuresEnabled
+        else {
+            return { preconditionFailure() }}
+        
+        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
     }
 }
 

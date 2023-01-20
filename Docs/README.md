@@ -21,12 +21,13 @@
 <details>
 <summary> Quick Navigation </summary> 
 
-* [Project Summary ⇲ ](#Project-Summary)
-* [Design Patterns ⇲ ](#Design-Patterns-Used)
-* [Frameworks ⇲ ](#Frameworks-Used)
-* [Libraries ⇲ ](#Libraries-Used)
-* [Internal iOS APIs ⇲ ](#Internal-iOS-APIs-In-Use)
-* [External APIs ⇲ ](#External-APIs-In-Use)
+* [Project Summary ⇲](#Project-Summary)
+* [Design Patterns ⇲](#Design-Patterns-Used)
+* [Frameworks ⇲](#Frameworks-Used)
+* [Libraries ⇲](#Libraries-Used)
+* [Internal iOS APIs ⇲](#Internal-iOS-APIs-In-Use)
+* [External APIs ⇲](#External-APIs-In-Use)
+* [Handling Sensitive User Data ⇲](#Handling-Sensitive-User-Data)
 * [FTUE Onboarding Demo ⇲](#FTUE-Onboarding-Demo)
 * [Thirdparty Services Used for Development ⇲](#Thirdparty-Services-Used-for-Development)
 * [Important Advisory ⇲](#Important-Advisory)
@@ -62,11 +63,15 @@ All in all I highly recommend using SwiftUI for your next personal project or co
 * Concurrency / async/await/futures 
 * CoreData / Data Persistence
 * Network / Internet Connection Monitoring
+* Darwin / Salting Passcodes for secure services
+* LocalAuthentication / FaceID
 
 ## Libraries Used:
 * Lottie-iOS
 * swift-collections
 * SwiftUI-Shimmer
+* SwiftUI-Shimmer
+* CryptoSwift
 
 ## Internal iOS APIs In Use:
 * UserDefaults
@@ -75,6 +80,17 @@ All in all I highly recommend using SwiftUI for your next personal project or co
 ## External APIs In Use:
 * CoinGecko's Cryptocurrency Coin API
 * Exchangerate.host Global Exchange Rate API
+
+</div>
+
+<div align="left">
+
+## Handling Sensitive User Data
+When it comes to end-user information, Sauron doesn't store user data remotely; all relevant information is localized on the user's device in secure stores and local databases, but this offline persistence layer doesn't mean security shouldn't be taken into consideration. The app's main content is open to access via the user with full clearance, however, if the user chooses to do so they can specify an authentication method to use in order to grant them access to their personalized app data. These authentication methods are your usual faceID biometrics, and a custom passcode. The proprietary passcode security layer Sauron uses is very robust as it uses the Scrypt hashing algorithm combined with a randomized salt to encrypt the user's passcode, which therefore increases the difficulty of cracking the passcode without brute forcing it first. 
+
+And speaking of brute force, since the passcode is only 4 digits, which is relatively easy to crack since there's only 10^4 (10,000) possible combinations to try before getting access, another added layer of security is the persistent cool down Sauron makes use of that keeps bad actors at bay. The persistent cool down keeps track of a static date at which it will expire and allow the user to retry their passcode again, following their first 5 unsuccessful attempts. The cool down also lasts for 5 minutes, which will slow down any potential attackers by an order of 10,000/5 * 5 = 10,000 minutes aka 166.67 hours; wasting all system resources on single instance brute force machines, as the machine will idle in the cool down period in 5 minute intervals. 
+
+Going further, please keep in mind that this solution isn't a magic bullet, it won't solve any and all problems, nor will it guarantee 100% safety of a user's sensitive data, it's more like a firewall to keep intruders out at the request of the user. Another note would be that cryptographic security measures are incredibly hardware intensive so fine-tuning the parameters for the Scrypt algorithm was a bit of trial and error when it came to ensuring performance ~ 1 second results, and added security from iterative hashing. Only perform this hashing on a separate thread, if you do it on the main thread with the rest of the UI the user interface WILL seize up and potentially crash, so try to perform it on a background thread if your UI is currently active while the algorithm is functioning. I also highly recommend using this best practice for passwords that include characters beyond numerical digits, as the more personalized and variable the password, the better the odds of the password remaining secure, even in the event of a data leak. 
 
 </div>
 

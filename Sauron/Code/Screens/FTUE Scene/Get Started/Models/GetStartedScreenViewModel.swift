@@ -32,7 +32,7 @@ class GetStartedScreenViewModel: CoordinatedGenericViewModel {
     
     // MARK: - Styling
     // Colors / Gradients
-    var titleGradient: LinearGradient = Colors.gradient_1,
+    let titleGradient: LinearGradient = Colors.gradient_1,
         curateButtonBackgroundGradient: LinearGradient = Colors.gradient_1,
         curateButtonForegroundColor: Color = Colors.permanent_white.0,
         autoGenButtonBackgroundColor: Color = Colors.permanent_black.0,

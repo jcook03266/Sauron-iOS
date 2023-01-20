@@ -8,7 +8,7 @@
 import Foundation
 
 /// Service used for interfacing with the UserDefaults API in order to store small as-needed data neccessary for customizing the application's UX. This data can be user progression dependent feature flags, and user preferences
-class UserDefaultsService {
+final class UserDefaultsService {
     /// Shared userdefaults database
     var shared: UserDefaults {
         guard let userDefaultsDatabase = UserDefaults(suiteName: self.databaseName)
@@ -23,11 +23,6 @@ class UserDefaultsService {
     private var databaseName: String {
         return "group.com.Sauron"
     }
-    
-    // MARK: - Dependencies
-    struct Dependencies: InjectableServices {
-    }
-    let dependencies = Dependencies()
     
     // MARK: - All UserDefaults Keys
     enum NonOptionalKeys: AssociatedEnum {
@@ -54,6 +49,12 @@ class UserDefaultsService {
         case portfolioCoinAscendingSortOrder(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("portfolioAscendingSortOrder",
                                                                                                    defaultReturnValue: CoinStore.defaultAscendingSortOrder))
         
+        case userAuthMethodPreference(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userAuthMethodPreference",
+                                                                                            defaultReturnValue: SRNUserAuthenticator.defaultAuthMethod.rawValue))
+        
+        case userAuthTokenLifeCyclePreference(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userAuthTokenLifeCyclePreference",
+                                                                                                    defaultReturnValue: SRNUserAuthenticator.defaultAuthTokenLifeCycleDuration.rawValue))
+        
         func getAssociatedValue() -> UserDefaultsValueKey<Any> {
             switch self {
             case .didCompleteFTUE(let value):
@@ -65,6 +66,10 @@ class UserDefaultsService {
             case .portfolioCoinSortKey(let value):
                 return value
             case .portfolioCoinAscendingSortOrder(let value):
+                return value
+            case .userAuthMethodPreference(let value):
+                return value
+            case .userAuthTokenLifeCyclePreference(let value):
                 return value
             }
         }
@@ -80,6 +85,22 @@ class UserDefaultsService {
         
         func getAssociatedValue() -> UserDefaulsOptionalKey<Any?> {
             return .init("")
+        }
+    }
+    
+    enum OptionalDateKeys: AssociatedEnum {
+        static var allCases: [UserDefaultsService.OptionalDateKeys] = []
+        
+        typealias associatedValue = UserDefaulsOptionalKey<Date?>
+        
+        // MARK: - SRNUserAuthenticator
+        case savedRetryCoolDownExpirationDate(UserDefaulsOptionalKey<Date?> =  UserDefaulsOptionalKey<Date?>("savedRetryWaitExpirationDate"))
+        
+        func getAssociatedValue() -> UserDefaulsOptionalKey<Date?> {
+            switch self {
+            case .savedRetryCoolDownExpirationDate(let value):
+                return value
+            }
         }
     }
     
@@ -135,6 +156,23 @@ class UserDefaultsService {
     }
     
     func removeValueFor(key: OptionalKeys){
+        let key = key.getAssociatedValue().literalValue
+        
+        shared.removeObject(forKey: key)
+    }
+    
+    // MARK: - Optional Data Keys
+    func getValueFor(key: OptionalDateKeys) -> Date? {
+        return shared[key.getAssociatedValue()]
+    }
+    
+    func setValueFor(key: OptionalDateKeys,
+                     value: Date?)
+    {
+        shared[key.getAssociatedValue()] = value
+    }
+    
+    func removeValueFor(key: OptionalDateKeys){
         let key = key.getAssociatedValue().literalValue
         
         shared.removeObject(forKey: key)

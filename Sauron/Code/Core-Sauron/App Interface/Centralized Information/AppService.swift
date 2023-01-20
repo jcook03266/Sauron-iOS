@@ -17,7 +17,7 @@ open class AppService: ObservableObject {
     @Published var deepLinkManager: DeepLinkManager = .shared
     
     // MARK: - Debug Environment Properties
-    static let isDebug: Bool = false
+    static let isDebug: Bool = true
     static let useMockData: Bool = false /// Determines whether or not to use mock data when running the application or real data pulled from valid endpoints
     
     // MARK: - Dependencies
@@ -27,8 +27,10 @@ open class AppService: ObservableObject {
         let userDefaultsService: UserDefaultsService = inject()
         let ftueService: FTUEService = inject()
         let featureFlagService: FeatureFlagService = inject()
+        let userManager: UserManager = inject()
+        let authenticationManager: SRNUserAuthenticator = inject()
     }
-    let dependencies = Dependencies()
+    var dependencies = Dependencies()
     
     struct DevelopmentDependencies: InjectableDevelopmentServices {
         let featureFlagService: FeatureFlagService = inject()
@@ -65,11 +67,11 @@ open class AppService: ObservableObject {
     }
     
     func setup() {
-        //let store = dataStores.coinDataStore
-        
-        //        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-        //            print(store.coins)
-        //        }
+        dependencies.userManager.changeUserPeferredAuthMethod(to: .passcode)
+//
+//        Task(priority: .high) {
+//        await dependencies.authenticationManager.resetPasscode(with: "1234")
+//        let value = await dependencies.authenticationManager.verifyNewPasscode(with: "1234")        }
     }
     
     func load() {}
