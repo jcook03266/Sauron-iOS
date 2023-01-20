@@ -63,13 +63,12 @@ All in all I highly recommend using SwiftUI for your next personal project or co
 * Concurrency / async/await/futures 
 * CoreData / Data Persistence
 * Network / Internet Connection Monitoring
-* Darwin / Salting Passcodes for secure services
+* Darwin / Generating randomized salt
 * LocalAuthentication / FaceID
 
 ## Libraries Used:
 * Lottie-iOS
 * swift-collections
-* SwiftUI-Shimmer
 * SwiftUI-Shimmer
 * CryptoSwift
 
