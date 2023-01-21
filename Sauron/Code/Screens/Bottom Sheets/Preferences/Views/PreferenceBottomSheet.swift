@@ -22,7 +22,7 @@ struct PreferenceBottomSheet<T: Coordinator>: View {
                 informationSectionHeight: CGFloat = 40,
                 dismissButtonSize: CGSize = .init(width: 260, height: 50),
                 selectionChipsHeight: CGFloat = 40,
-selectionChipsScrollViewHorizontalInset: CGFloat = 20
+                selectionChipsScrollViewHorizontalInset: CGFloat = 20
     
     // Detents for sheet presentation
     private var bottomSheetMaxDetent: PresentationDetent {
@@ -41,14 +41,14 @@ selectionChipsScrollViewHorizontalInset: CGFloat = 20
                 titleViewLeadingPadding: CGFloat = 30,
                 titleViewHeight: CGFloat = 60,
                 previewContainerTrailingPadding: CGFloat = 15,
-searchBarLeadingPadding: CGFloat = 15,
+                searchBarLeadingPadding: CGFloat = 15,
                 searchBarBottomPadding: CGFloat = 10,
                 searchBarTopPadding: CGFloat = 5,
                 horizontalDividerBottomPadding: CGFloat = 10,
                 informationSectionTopPadding: CGFloat = 10,
                 informationSectionBottomPadding: CGFloat = 15,
                 informationSectionLeadingPadding: CGFloat = 20,
-                informationSectionTrailingPadding: CGFloat = 45,
+                informationSectionTrailingPadding: CGFloat = 20,
                 selectionChipsItemSpacing: CGFloat = 10
     
     var body: some View {
@@ -72,7 +72,7 @@ extension PreferenceBottomSheet {
             
             HStack {
                 searchBar
-             Spacer()
+                Spacer()
             }
             
             horizontalDivider
@@ -103,11 +103,11 @@ extension PreferenceBottomSheet {
     }
     
     var sheetBody: some View {
-                VStack {
-                    topSection
-                    bottomSection
-                    Spacer()
-                }
+        VStack {
+            topSection
+            bottomSection
+            Spacer()
+        }
         .frame(maxHeight: maxHeight)
         .padding(.top, topPadding)
         .padding(.bottom, bottomPadding)

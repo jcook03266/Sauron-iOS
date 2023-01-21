@@ -24,7 +24,8 @@ struct PortfolioCurationView: View {
                 bottomSectionToggleButtonBottomPadding: CGFloat = 10,
                 titleViewLeadingPadding: CGFloat = 90,
                 titleViewTrailingPadding: CGFloat = 20,
-                titleViewHeight: CGFloat = 100,
+                titleViewBottomPadding: CGFloat = 10,
+                titleViewTopPadding: CGFloat = 10, // Lines up with middle of back button
                 sideVerticalDividerWidth: CGFloat = 3,
                 sideVerticalDividerLeadingPadding: CGFloat = 35,
                 searchBarTopPadding: CGFloat = 20,
@@ -109,7 +110,8 @@ struct PortfolioCurationView: View {
             .applyGradient(gradient: model.titleGradient)
             .lineLimit(2)
             .minimumScaleFactor(0.1)
-            .frame(height: titleViewHeight)
+            .padding(.top, titleViewTopPadding)
+            .padding(.bottom, titleViewBottomPadding)
             .padding(.trailing, titleViewTrailingPadding)
             .padding(.leading, titleViewLeadingPadding)
     }
@@ -464,7 +466,7 @@ struct PortfolioCurationView: View {
     
     var informationSection: some View {
         Group {
-            if !model.dependencies.ftueService.isComplete {
+            if model.shouldDisplayFTUEUI {
                 InformationSectionView(informationCopy:
                                         (nil, model.makeChangesLaterPrompt))
                 .padding(.leading, infoSectionLeadingPadding)

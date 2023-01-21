@@ -252,8 +252,8 @@ extension AuthScreen {
         }
         .buttonStyle(OffsettableButtonStyle(offset: .init(width: 10,
                                                           height: 0)))
-        .opacity(!model.shouldDisableButtons ? 1 : 0.5)
-        .disabled(model.shouldDisableButtons)
+        .opacity(!model.shouldDisableButtons && !model.shouldDisableBottomCTA ? 1 : 0.5)
+        .disabled(model.shouldDisableButtons || model.shouldDisableBottomCTA)
     }
 }
 

@@ -27,12 +27,12 @@ struct InformationSectionView: View {
     var textAlignment: TextAlignment = .leading
     
     // MARK: Dimensions + Padding
-    var height: CGFloat = 35
+    var height: CGFloat = 35,
+        iconTrailingPadding: CGFloat = 10
+    
     var iconSize: CGFloat {
         return height - 8
     }
-    
-    private let iconTrailingPadding: CGFloat = 5
     
     var body: some View {
         HStack(alignment: .top, spacing: 0) {

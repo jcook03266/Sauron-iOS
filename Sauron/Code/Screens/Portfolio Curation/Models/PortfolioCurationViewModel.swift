@@ -112,6 +112,11 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
                                    userHasSelectedCoins])
     }
     
+    /// This screen has two states, FTUE and normal, this toggles either feature set
+    var shouldDisplayFTUEUI: Bool {
+        return !dependencies.ftueService.isComplete
+    }
+    
     // MARK: - Actions
     var toggleFilterPortfolioCoins: (() -> Void) {
         return { [weak self] in
@@ -261,7 +266,10 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     
     /// Shows the FTUE copy for first time users, else show the regular customization title for returning users that are editing their current portfolios
     var title: String {
-        return dependencies.ftueService.isComplete ? LocalizedStrings.getLocalizedString(for: .PORTFOLIO_CURATION_SCREEN_TITLE) : LocalizedStrings.getLocalizedString(for: .PORTFOLIO_CURATION_SCREEN_TITLE_FTUE_NEWLINE)
+        return shouldDisplayFTUEUI ? LocalizedStrings.getLocalizedString(for: .PORTFOLIO_CURATION_SCREEN_TITLE_FTUE_NEWLINE) : LocalizedStrings.getLocalizedString(for: .PORTFOLIO_CURATION_SCREEN_TITLE)
+    }
+    var continueButtonText: LocalizedStringKey {
+        return shouldDisplayFTUEUI ? LocalizedStrings.getLocalizedStringKey(for: .CONTINUE) :  LocalizedStrings.getLocalizedStringKey(for: .DISMISS)
     }
     
     var searchResultsCounter: String {
@@ -292,7 +300,6 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         rankHeader = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_RANK),
         currencyPreferencesButtonText = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_CURRENCY_PREFERENCES_BUTTON),
         languagePreferencesButtonText = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_LANGUAGE_PREFERENCES_BUTTON),
-        continueButtonText = LocalizedStrings.getLocalizedStringKey(for: .CONTINUE),
         makeChangesLaterPrompt = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_MAKE_CHANGES_LATER_PROMPT),
         searchBarPlaceholder = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_SEARCHBAR_PLACEHOLDER),
         noSearchResultsText = LocalizedStrings.getLocalizedStringKey(for: .PORTFOLIO_CURATION_SCREEN_NO_SEARCH_RESULTS_NEWLINE)

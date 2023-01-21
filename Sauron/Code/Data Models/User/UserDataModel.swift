@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-/// Object used to store basic offline information about a Sauron user
-final class SRNUser: ObservableObject {
+/// Object used to store basic offline information about a Sauron user (SRNUser)
+final class SRNUser {
     /// A unique identifier used to classify the user's information, this isn't tied to an online identity, moreover it's used to encapsulate all data under one domain specific to this user
     var userID: UUID {
         get {
@@ -108,6 +108,12 @@ final class SRNUser: ObservableObject {
             .keychainManager
             .load(key: .userIDKey)
         
-        isNewUser = userID != nil
+        isNewUser = userID == nil
+        
+        if isNewUser { createNewUserIDIfNeeded() }
+    }
+    
+    private func createNewUserIDIfNeeded() {
+        userID = .init()
     }
 }

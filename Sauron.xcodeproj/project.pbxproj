@@ -785,6 +785,13 @@
 			path = "Geometry Effects";
 			sourceTree = "<group>";
 		};
+		498EDB95297C181100A6EE35 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		49975A722972710700C29090 /* Exchange Rates */ = {
 			isa = PBXGroup;
 			children = (
@@ -1867,6 +1874,7 @@
 		49AB9D572972D7450044EC8D /* Home Screen */ = {
 			isa = PBXGroup;
 			children = (
+				498EDB95297C181100A6EE35 /* Views */,
 			);
 			path = "Home Screen";
 			sourceTree = "<group>";

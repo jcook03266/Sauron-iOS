@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+/// View model for the auth screen | Interfaces with the authentication service to provide the user with a fluid GUI for accessing the application securely when auth is enabled
 class AuthScreenViewModel: CoordinatedGenericViewModel {
     typealias coordinator = MainCoordinator
     
@@ -84,6 +85,13 @@ class AuthScreenViewModel: CoordinatedGenericViewModel {
             self.passcodeResetInProgress = false
             self.userEnteredIncorrectPasscode = self.userDidEnterIncorrectPasscode
             self.dependencies.authService.resetPasscodeResetParameters()
+            
+            // If the user is trying to set a passcode then clear all auth attempts as they don't count
+            if self.shouldSetPasscode {
+                self.dependencies
+                    .authService
+                    .resetAuthAttempts()
+            }
         }
     }
     
@@ -110,7 +118,7 @@ class AuthScreenViewModel: CoordinatedGenericViewModel {
         }
     }
     
-    // MARK: - Convenience
+    // MARK: - Convenience variables
     /// Prevent the user from adding more digits to their passcode if the max length is met
     var canAddDigit: Bool {
         guard !dependencies.authService.userMustWait
@@ -155,14 +163,17 @@ class AuthScreenViewModel: CoordinatedGenericViewModel {
             .currentUser
             .hasPasscode
         && !passcodeResetInProgress
-        && !isConfirmingPasscodeEdit
-        && !userEnteredIncorrectPasscode
     }
     
     var isConfirmingPasscodeEdit: Bool {
         return dependencies
             .authService
             .isVerifyingNewPasscode
+    }
+    
+    /// Don't enable the forgot your passcode prompt when the user doesn't have a passcode
+    var shouldDisableBottomCTA: Bool {
+        return shouldSetPasscode && !isConfirmingPasscodeEdit
     }
     
     var shouldDisplayForgotPasscodeBottomCTAText: Bool {
@@ -229,7 +240,7 @@ class AuthScreenViewModel: CoordinatedGenericViewModel {
         else if passcodeResetInProgress {
             return userEnteredIncorrectPasscode ? incorrectPasscodeTitle : (isConfirmingPasscodeEdit ? passcodeConfirmationTitle : resetPasscodeTitle)
         }
-        else if shouldSetPasscode && !useFaceID {
+        else if shouldSetPasscode {
             return userEnteredIncorrectPasscode ? incorrectPasscodeTitle : (isConfirmingPasscodeEdit ? passcodeConfirmationTitle : setPasscodeTitle)
         }
         else if userEnteredIncorrectPasscode {
@@ -373,11 +384,19 @@ extension AuthScreenViewModel {
         passcodeTextEntry.removeLast()
     }
     
-    /// Clear the entered passcode, usually triggered when the user has been put in a cool down
+    /// Clear the entered passcode in an animated fashion, usually triggered when the user has been put in a cool down
     func clearAll() {
         guard !isPasscodeEmpty else { return }
         
-        passcodeTextEntry.removeAll()
+        // Note: The time interval wrapper only works properly w/ multiplication, division results in unexpected behavior
+        for index in 0..<passcodeTextEntry.count {
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(0.1 * Double(index))) { [weak self] in
+                guard let self = self
+                else { return }
+                
+                self.clearLast()
+            }
+        }
     }
 }
 
@@ -420,8 +439,8 @@ extension AuthScreenViewModel {
     func tryAuthentication() {
         let authService = dependencies.authService
         
-        if passcodeResetInProgress && !isConfirmingPasscodeEdit {
-            /// Reset the user's passcode
+        if passcodeResetInProgress && !isConfirmingPasscodeEdit || shouldSetPasscode && !isConfirmingPasscodeEdit {
+            /// Set / Reset the user's passcode
             Task(priority: .high) {
                 await authService
                     .resetPasscode(with: passcodeTextEntry)
@@ -456,6 +475,7 @@ extension AuthScreenViewModel {
         }
     }
     
+    // MARK: - State Mutation
     /// Warn the user of their mistake before they're locked out of the application
     func incorrectPasscodeEntered() {
         HapticFeedbackDispatcher.warningDidOccur()
@@ -463,11 +483,6 @@ extension AuthScreenViewModel {
         
         userEnteredIncorrectPasscode = true
         userDidEnterIncorrectPasscode = userEnteredIncorrectPasscode
-    }
-    
-    func dismiss() {
-        hardReset()
-        self.coordinator.popView()
     }
     
     /// Resets all operations and clears the user's progress in this view back to a default state
@@ -481,5 +496,11 @@ extension AuthScreenViewModel {
         
         // Reset the auth service
         dependencies.authService.resetAuthenticationProccesses()
+    }
+    
+    // MARK: - Navigation
+    func dismiss() {
+        hardReset()
+        self.coordinator.popView()
     }
 }
