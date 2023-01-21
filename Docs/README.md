@@ -29,6 +29,7 @@
 * [External APIs ⇲](#External-APIs-In-Use)
 * [Handling Sensitive User Data ⇲](#Handling-Sensitive-User-Data)
 * [FTUE Onboarding Demo ⇲](#FTUE-Onboarding-Demo)
+* [Optional Authentication Gateway Demo ⇲](#Optional-Authentication-Gateway-Demo)
 * [Thirdparty Services Used for Development ⇲](#Thirdparty-Services-Used-for-Development)
 * [Important Advisory ⇲](#Important-Advisory)
 </details>
@@ -98,6 +99,14 @@ Going further, please keep in mind that this solution isn't a magic bullet, it w
 ## FTUE Onboarding Demo:
 
 https://user-images.githubusercontent.com/63657230/212473279-acb62b56-8b78-457f-8593-99eb56780c4a.mp4
+
+</div>
+
+<div align="center">
+
+## Optional Authentication Gateway Demo:
+
+https://user-images.githubusercontent.com/63657230/213864245-1df46285-1e69-43c7-8db2-b055afafaa98.MP4
 
 </div>
 
