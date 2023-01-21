@@ -106,7 +106,7 @@ https://user-images.githubusercontent.com/63657230/212473279-acb62b56-8b78-457f-
 
 ## Optional Authentication Gateway Demo:
 
-https://user-images.githubusercontent.com/63657230/213864245-1df46285-1e69-43c7-8db2-b055afafaa98.MP4
+https://user-images.githubusercontent.com/63657230/213867124-845f19cc-6090-4667-b37c-0c5b4809a0a1.mp4
 
 </div>
 
