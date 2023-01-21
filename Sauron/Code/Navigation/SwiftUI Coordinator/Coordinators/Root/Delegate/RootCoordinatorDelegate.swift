@@ -61,6 +61,7 @@ class RootCoordinatorDelegate: ObservableObject {
         launchScreenManager.onComplete { [weak self] in
             guard let self = self else { return }
             
+            // The decision tree decides which scene to navigate to when the launch screen is done
             let activeRootNode = self.decisionTree.execute()
             if let activeRoot = activeRootNode?.value {
                 self.switchActiveRoot(to: activeRoot)
@@ -78,13 +79,14 @@ class RootCoordinatorDelegate: ObservableObject {
             .build { builder in
                 builder.addDecision { [weak self] in
                     guard let self = self else { return false }
-                    
                     return self.dependencies.ftueService.shouldDisplayFTUE
                 }
                 
+                // Onboarding Coordinator
                 let trueChild = BinaryDecisionTree<RootCoordinatorDispatcher.RootCoordinators>.Node(value: RootCoordinatorDispatcher.RootCoordinators.onboardingCoordinator)
                 
-                let falseChild = BinaryDecisionTree<RootCoordinatorDispatcher.RootCoordinators>.Node(value: RootCoordinatorDispatcher.RootCoordinators.onboardingCoordinator)
+                // Main Coordinator
+                let falseChild = BinaryDecisionTree<RootCoordinatorDispatcher.RootCoordinators>.Node(value: RootCoordinatorDispatcher.RootCoordinators.mainCoordinator)
                 
                 builder.addTrueChild(child: trueChild)
                 builder.addFalseChild(child: falseChild)

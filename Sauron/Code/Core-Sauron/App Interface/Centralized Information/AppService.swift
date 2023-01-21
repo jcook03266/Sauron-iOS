@@ -67,11 +67,8 @@ open class AppService: ObservableObject {
     }
     
     func setup() {
-        dependencies.userManager.changeUserPeferredAuthMethod(to: .passcode)
-//
-//        Task(priority: .high) {
-//        await dependencies.authenticationManager.resetPasscode(with: "1234")
-//        let value = await dependencies.authenticationManager.verifyNewPasscode(with: "1234")        }
+        // Disabled for testing purposes
+        dependencies.userManager.changeUserPeferredAuthMethod(to: .none)
     }
     
     func load() {}

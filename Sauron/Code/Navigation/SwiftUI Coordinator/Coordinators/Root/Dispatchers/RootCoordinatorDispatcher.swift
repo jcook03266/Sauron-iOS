@@ -11,13 +11,9 @@ import Foundation
 class RootCoordinatorDispatcher {
     var delegate: RootCoordinatorDelegate
     
-    var launchScreenCoordinator: LaunchScreenCoordinator!
-    var onboardingCoordinator: OnboardingCoordinator!
-    
-//
-//    var mainCoordinator: MainCoordinator {
-//        return MainCoordinator(rootCoordinatorDelegate: delegate)
-//    }
+    var launchScreenCoordinator: LaunchScreenCoordinator!,
+        onboardingCoordinator: OnboardingCoordinator!,
+        mainCoordinator: MainCoordinator!
     
     init(delegate: RootCoordinatorDelegate) {
         self.delegate = delegate
@@ -28,6 +24,7 @@ class RootCoordinatorDispatcher {
     func initCoordinators() {
         launchScreenCoordinator = .init(rootCoordinatorDelegate: delegate)
         onboardingCoordinator = .init(rootCoordinatorDelegate: delegate)
+        mainCoordinator = .init(rootCoordinatorDelegate: delegate)
     }
     
     func getRootCoordinatorFor(root: RootCoordinators) -> any RootCoordinator {
@@ -37,7 +34,7 @@ class RootCoordinatorDispatcher {
         case .onboardingCoordinator:
             return self.onboardingCoordinator
         case .mainCoordinator:
-            return self.onboardingCoordinator
+            return self.mainCoordinator
         }
     }
     

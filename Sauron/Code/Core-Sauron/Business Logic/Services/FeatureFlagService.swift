@@ -16,9 +16,20 @@ protocol FeatureFlagServiceProtocol {
 final class FeatureFlagService {
     var override: Bool? = nil
     
+    /// Toggles the visibility of the onboarding carousel scene at the beginning of the app on first install / FTUE
     var isOnboardingScreenEnabled: Bool {
-        guard override == nil
-        else { return override! }
+        if let override = override {
+            return override
+        }
+        
+        return true
+    }
+    
+    /// Toggles the auth screen functionality, when disabled no auth screen is ever presented which is equivalent to no auth method being selected which is the default behavior
+    var isAuthScreenEnabled: Bool {
+        if let override = override {
+            return override
+        }
         
         return true
     }

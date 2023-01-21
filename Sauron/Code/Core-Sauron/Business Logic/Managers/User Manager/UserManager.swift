@@ -13,7 +13,8 @@ class UserManager: ObservableObject {
     // MARK: - Published Properties
     @Published private(set) var currentUser: SRNUser!
     /// Keeps track of how long the user has been using the application
-    @Published var currentSessionDuration: Double = 0 // In seconds
+    @Published private(set) var currentSessionDuration: Double = 0 // In seconds
+    @Published var isUserAuthenticated: Bool = false
     
     // MARK: - Singleton
     static let shared: UserManager = .init()
@@ -57,6 +58,10 @@ class UserManager: ObservableObject {
     }
     
     func changeUserPreferredAuthTokenLifeCycleDuration(to duration: SRNUserAuthenticator.AuthTokenLifeCycle) {
+        // A non-auth user can't change their auth token life cycle duration because the token is immortal
+        guard canAuthenticate()
+        else { return }
+        
         currentUser.userPreferredAuthTokenLifeCycleDuration = duration
     }
     
@@ -73,6 +78,15 @@ class UserManager: ObservableObject {
     /// Triggered when the user has authenticated themselves successfully
     func didAuthenticate() {
         startSession()
+    }
+    
+    func getUserAuthPreference() -> SRNUserAuthenticator.AuthMethod {
+        return currentUser.userPreferredAuthMethod
+    }
+    
+    /// Only users that have selected an auth method can authenticate themselves
+    func canAuthenticate() -> Bool {
+        return getUserAuthPreference() != .none
     }
     
     private func startSession() {

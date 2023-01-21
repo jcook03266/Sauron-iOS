@@ -57,6 +57,8 @@
 		4986C3092960FBF5003CFF84 /* InformationSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4986C3082960FBF5003CFF84 /* InformationSectionView.swift */; };
 		498781C42964A858008F8A9A /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498781C32964A858008F8A9A /* UIImage+Extension.swift */; };
 		498EDB94297A9C9000A6EE35 /* ShakeGeometryEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498EDB93297A9C9000A6EE35 /* ShakeGeometryEffect.swift */; };
+		498EDB98297C240900A6EE35 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498EDB97297C240900A6EE35 /* HomeScreen.swift */; };
+		498EDB9A297C241D00A6EE35 /* HomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498EDB99297C241D00A6EE35 /* HomeScreenViewModel.swift */; };
 		49975A7129726BCB00C29090 /* ExchangeRateDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A7029726BCB00C29090 /* ExchangeRateDataProvider.swift */; };
 		49975A742972712600C29090 /* LatestExchangeRateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A732972712600C29090 /* LatestExchangeRateModel.swift */; };
 		49975A7829727DD200C29090 /* FiatCurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A7729727DD200C29090 /* FiatCurrencyModel.swift */; };
@@ -254,6 +256,8 @@
 		4986C3082960FBF5003CFF84 /* InformationSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationSectionView.swift; sourceTree = "<group>"; };
 		498781C32964A858008F8A9A /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		498EDB93297A9C9000A6EE35 /* ShakeGeometryEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeGeometryEffect.swift; sourceTree = "<group>"; };
+		498EDB97297C240900A6EE35 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		498EDB99297C241D00A6EE35 /* HomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewModel.swift; sourceTree = "<group>"; };
 		49975A7029726BCB00C29090 /* ExchangeRateDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateDataProvider.swift; sourceTree = "<group>"; };
 		49975A732972712600C29090 /* LatestExchangeRateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestExchangeRateModel.swift; sourceTree = "<group>"; };
 		49975A7729727DD200C29090 /* FiatCurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatCurrencyModel.swift; sourceTree = "<group>"; };
@@ -630,6 +634,7 @@
 		4925C8A0295C2B94006E1A80 /* Main Scene */ = {
 			isa = PBXGroup;
 			children = (
+				498EDB9B297C25ED00A6EE35 /* Tabbar */,
 				49AB9D5A2972D7670044EC8D /* Alerts Screen */,
 				49AB9D592972D7620044EC8D /* Settings Screen */,
 				49AB9D582972D75B0044EC8D /* Wallet Screen */,
@@ -788,8 +793,40 @@
 		498EDB95297C181100A6EE35 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				498EDB97297C240900A6EE35 /* HomeScreen.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		498EDB96297C20EC00A6EE35 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				498EDB99297C241D00A6EE35 /* HomeScreenViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		498EDB9B297C25ED00A6EE35 /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				498EDB9E297C260000A6EE35 /* Models */,
+				498EDB9D297C25F700A6EE35 /* Views */,
+			);
+			path = Tabbar;
+			sourceTree = "<group>";
+		};
+		498EDB9D297C25F700A6EE35 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		498EDB9E297C260000A6EE35 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		49975A722972710700C29090 /* Exchange Rates */ = {
@@ -1874,6 +1911,7 @@
 		49AB9D572972D7450044EC8D /* Home Screen */ = {
 			isa = PBXGroup;
 			children = (
+				498EDB96297C20EC00A6EE35 /* Models */,
 				498EDB95297C181100A6EE35 /* Views */,
 			);
 			path = "Home Screen";
@@ -2274,6 +2312,7 @@
 				499E134029552550004C61CE /* LoopingVideoPlayerView.swift in Sources */,
 				499E12E42954D647004C61CE /* VOCViewModel.swift in Sources */,
 				4925C8B1295C6B48006E1A80 /* StoreProtocol.swift in Sources */,
+				498EDB98297C240900A6EE35 /* HomeScreen.swift in Sources */,
 				499E13182954D6F8004C61CE /* PartitionedProgressView.swift in Sources */,
 				49216A08296040930078CCC3 /* PCCoinRowViewModel.swift in Sources */,
 				490871672977A35100EC6D6F /* KeypadUtilityButtonViewModel.swift in Sources */,
@@ -2399,6 +2438,7 @@
 				499E12DA2954D50B004C61CE /* RootCoordinatorDelegate.swift in Sources */,
 				49B22B80295620CF009C3F4F /* CoverScreenViewModel.swift in Sources */,
 				499E127A2954C40F004C61CE /* SwiftUIAnimationTransitions.swift in Sources */,
+				498EDB9A297C241D00A6EE35 /* HomeScreenViewModel.swift in Sources */,
 				49A518882967921500258F80 /* SatelliteTextFieldModel.swift in Sources */,
 				499E13142954D6F8004C61CE /* SheathedTextField.swift in Sources */,
 				49975A822972D3CD00C29090 /* DeeplinkBuilder.swift in Sources */,

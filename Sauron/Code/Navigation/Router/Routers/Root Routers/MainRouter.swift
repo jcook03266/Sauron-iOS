@@ -13,6 +13,7 @@ class MainRouter: Routable {
     typealias Body = AnyView
     
     // MARK: -  View Models
+    @Published var homeScreenViewModel: HomeScreenViewModel!
     @Published var authScreenViewModel: AuthScreenViewModel!
     
     // MARK: - Observed
@@ -25,6 +26,7 @@ class MainRouter: Routable {
     }
     
     func initViewModels() {
+        self.homeScreenViewModel = .init(coordinator: self.coordinator)
         self.authScreenViewModel = .init(coordinator: self.coordinator)
     }
     
@@ -38,7 +40,9 @@ class MainRouter: Routable {
         
         switch route {
         case .home:
-            break
+            view = HomeScreen(model: self.homeScreenViewModel)
+            
+            statusBarHidden = false
         case .wallet:
             break
         case .settings:

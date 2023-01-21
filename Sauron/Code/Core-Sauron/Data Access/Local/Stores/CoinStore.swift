@@ -16,9 +16,11 @@ class CoinStore: StoreProtocol, Mockable {
     
     // MARK: - Properties
     static let shared: CoinStore = .init()
-    var cancellables: Set<AnyCancellable> = [],
-debounceInterval: Double = 0.25,
-    scheduler = DispatchQueue.main
+    
+    var cancellables: Set<AnyCancellable> = []
+    
+    let debounceInterval: Double = 0.25,
+        scheduler = DispatchQueue.main
     
     // MARK: - Observed
     @ObservedObject var dataProvider: CoinDataProvider = .shared
@@ -36,7 +38,7 @@ debounceInterval: Double = 0.25,
     
     // MARK: - Defaults
     static let defaultSortKey: SortKeys = .rank,
-     defaultAscendingSortOrder: Bool = true
+               defaultAscendingSortOrder: Bool = true
     
     /// Use these variables to save sort properties to user defaults
     private var userPreferredSortKey: SortKeys {
@@ -323,29 +325,29 @@ debounceInterval: Double = 0.25,
         case .name:
             return sort(coins: coins,
                         ascending: isSortOrderAscending,
-                                           sortKey: sortKey,
-                 sortKeyType: sortKey.getNameType())
+                        sortKey: sortKey,
+                        sortKeyType: sortKey.getNameType())
         case .id:
             return sort(coins: coins,
                         ascending: isSortOrderAscending,
-                                           sortKey: sortKey,
-                 sortKeyType: sortKey.getIDType())
+                        sortKey: sortKey,
+                        sortKeyType: sortKey.getIDType())
         case .price:
             return sort(coins: coins,
                         ascending: isSortOrderAscending,
-                                           sortKey: sortKey,
-                 sortKeyType: sortKey.getPriceType())
+                        sortKey: sortKey,
+                        sortKeyType: sortKey.getPriceType())
         case .rank:
             return sort(coins: coins,
-                 ascending: isSortOrderAscending,
-                                           sortKey: sortKey,
-                 sortKeyType: sortKey.getRankType())
+                        ascending: isSortOrderAscending,
+                        sortKey: sortKey,
+                        sortKeyType: sortKey.getRankType())
             
         case .volume:
             return sort(coins: coins,
-                 ascending: isSortOrderAscending,
-                                           sortKey: sortKey,
-                 sortKeyType: sortKey.getVolumeType())
+                        ascending: isSortOrderAscending,
+                        sortKey: sortKey,
+                        sortKeyType: sortKey.getVolumeType())
         }
     }
     
@@ -378,7 +380,7 @@ debounceInterval: Double = 0.25,
                 value1 = coin1.totalVolume as! T
                 value2 = coin2.totalVolume as! T
             }
-        
+            
             return ascending ? (value1 < value2) : (value1 > value2)
         }
     }
@@ -397,7 +399,7 @@ debounceInterval: Double = 0.25,
              id,
              price,
              rank,
-        volume
+             volume
         
         func getNameType() -> String.Type { return String.self }
         

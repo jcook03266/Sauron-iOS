@@ -141,40 +141,49 @@ class SRNUserAuthenticator: ObservableObject {
         .autoconnect()
         .sink { [weak self] _ in
             guard let self = self,
-                  let currentAuthCredential = self.currentAuthCredential
+                  let currentAuthCredential = self.currentAuthCredential,
+                  !currentAuthCredential.isValid
             else { return }
             
-            if !currentAuthCredential.isValid {
-                self.invalidateAuthToken()
-            }
+            self.invalidateAuthToken()
         }
         .store(in: &cancellables)
     }
     
     // MARK: - Auth Token Life Cycle
     private func generateNewAuthToken() {
-        // Ensure the last token was invalidated
+        // Ensure that the last token was invalidated
         if currentAuthCredential != nil {
             invalidateAuthToken()
         }
         
-        let expirationDate: Date = .now.advanced(by: currentUser.userPreferredAuthTokenLifeCycleDuration.getNumericalLiteral())
+        let expirationDate: Date = .now.advanced(by:10)
         
         self.currentAuthCredential = PasscodeAuthToken(expirationDate: expirationDate)
+        dependencies.userManager.didAuthenticate()
+        dependencies.userManager.isUserAuthenticated = true
+        
         addSubscribers()
     }
     
     private func invalidateAuthToken() {
-        guard let currentAuthCredential = currentAuthCredential
+        guard let currentAuthCredential = currentAuthCredential,
+              dependencies.userManager.canAuthenticate()
         else { return }
         
         pastTokens.insert(currentAuthCredential)
         self.currentAuthCredential = nil
+        
+        dependencies.userManager.isUserAuthenticated = false
     }
     
     // MARK: - Security methods
     /// Triggers an invalidation event where the user no longer has access to the main app content unless they authenticate with their respective auth method
     func revokeUserAuthStatus() {
+        // Don't invalidate a non-auth user's token, they have constant access without verification until they specify otherwise
+        guard dependencies.userManager.canAuthenticate()
+        else { return }
+        
         invalidateAuthToken()
     }
     
@@ -250,7 +259,6 @@ class SRNUserAuthenticator: ObservableObject {
         }
         
         generateNewAuthToken()
-        dependencies.userManager.didAuthenticate()
         
         return passcodeMatches
     }
@@ -451,8 +459,10 @@ class SRNUserAuthenticator: ObservableObject {
         case passcode, faceID, none
     }
     
+    /// Specifies the duration of a token's life, at the end of this life the token expires and a new one must be generated to grant the user access again
     enum AuthTokenLifeCycle: String, CaseIterable {
-        case minutes_15,
+        case minutes_5,
+             minutes_15,
              minutes_30,
              hour_1,
              hour_2,
@@ -461,6 +471,8 @@ class SRNUserAuthenticator: ObservableObject {
         /// Get the literal number associated with the time interval (in seconds)
         func getNumericalLiteral() -> Double {
             switch self {
+            case .minutes_5:
+                return 300
             case .minutes_15:
                 return 900
             case .minutes_30:
@@ -477,6 +489,8 @@ class SRNUserAuthenticator: ObservableObject {
         /// Gets a formatted string version of the time interval
         func getStringLiteral() -> String {
             switch self {
+            case .minutes_5:
+                return "5m"
             case .minutes_15:
                 return "15m"
             case .minutes_30:

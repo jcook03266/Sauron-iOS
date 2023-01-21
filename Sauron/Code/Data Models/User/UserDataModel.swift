@@ -42,6 +42,10 @@ final class SRNUser {
     // MARK: - Preferences
     var userPreferredAuthTokenLifeCycleDuration: SRNUserAuthenticator.AuthTokenLifeCycle {
         get {
+            /// The token will be immortal until the user selects a proper auth method
+            guard userPreferredAuthMethod != .none
+            else { return .never }
+            
             let rawValue = dependencies
                 .userDefaultsService
                 .getValueFor(type: SRNUserAuthenticator.AuthTokenLifeCycle.RawValue.self,
@@ -50,6 +54,10 @@ final class SRNUser {
             return SRNUserAuthenticator.AuthTokenLifeCycle(rawValue: rawValue) ?? SRNUserAuthenticator.defaultAuthTokenLifeCycleDuration
         }
         set {
+            // Don't set this if the user doesn't have an actual auth method selected
+            guard userPreferredAuthMethod != .none
+            else { return }
+            
             dependencies
                 .userDefaultsService
                 .setValueFor(type: SRNUserAuthenticator.AuthTokenLifeCycle.RawValue.self,

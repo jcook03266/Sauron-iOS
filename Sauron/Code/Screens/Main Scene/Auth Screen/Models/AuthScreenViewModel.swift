@@ -30,7 +30,8 @@ class AuthScreenViewModel: CoordinatedGenericViewModel {
     
     // MARK: - Subscription
     var cancellables: Set<AnyCancellable> = []
-    let scheduler: DispatchQueue = DispatchQueue.main
+    let scheduler: DispatchQueue = DispatchQueue.main,
+        dismissalDelay: TimeInterval = 2 // Delays the dismissal in order to display any last special UI updates
     
     // MARK: - Static
     /// The amount of attempts remaining the user should be at or below to trigger the display of the attempts remaining counter
@@ -405,14 +406,16 @@ extension AuthScreenViewModel {
     /// A user can select different authentication methods to gain authorization into the application,
     /// this method explores the routes beyond the passcode immediately and tries to get an authentication token for those methods
     func determineAuthVector() {
+        isAuthenticated = false
+        
         switch dependencies.userManager.currentUser.userPreferredAuthMethod {
         case .passcode:
-            isAuthenticated = false
+            break
         case .faceID:
             useFaceIDToAuthenticate()
         case .none:
             isAuthenticated = dependencies.authService.authenticateUnsecuredUser()
-            if isAuthenticated { dismiss() }
+            dismiss()
         }
     }
     
@@ -486,7 +489,9 @@ extension AuthScreenViewModel {
     }
     
     /// Resets all operations and clears the user's progress in this view back to a default state
+    /// so that the view can be presented again with a clean slate
     func hardReset() {
+        clearAll()
         disableUserEntry = false
         passcodeResetInProgress = false
         userEnteredIncorrectPasscode = false
@@ -499,8 +504,15 @@ extension AuthScreenViewModel {
     }
     
     // MARK: - Navigation
+    /// Only triggered when the user has been successfully authenticated
     func dismiss() {
+        guard isAuthenticated
+        else { return }
+        
         hardReset()
-        self.coordinator.popView()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + dismissalDelay) {
+            self.coordinator.dismissFullScreenCover()
+        }
     }
 }

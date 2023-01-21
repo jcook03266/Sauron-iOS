@@ -151,9 +151,15 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     }
     
     var continueAction: (() -> Void) {
-        return {
+        return { [weak self] in
             HapticFeedbackDispatcher.interstitialCTAButtonPress()
-                
+            guard let self = self else { return }
+            
+            // First time user experience is now complete, move on to the main app content
+            self.dependencies.ftueService.completeFTUE()
+            self.coordinator
+                .rootCoordinatorDelegate
+                .switchToMainScene()
         }
     }
     
