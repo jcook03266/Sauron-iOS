@@ -28,6 +28,7 @@ enum LocalizedStrings: String, CaseIterable {
          DISMISS,
          NO_SEARCH_RESULTS,
          CANCEL,
+         ABSENCE_OF_VALUE,
          COVER_SCREEN_TITLE_WELCOME_BACK,
          COVER_SCREEN_TITLE_WELCOME_BACK_NEWLINE,
          GET_STARTED_SCREEN_CURATE_BUTTON,

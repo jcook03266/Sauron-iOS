@@ -38,6 +38,7 @@
 "DISMISS" = "Dismiss";
 "NO_SEARCH_RESULTS" = "No Search Results";
 "CANCEL" = "Cancel";
+"ABSENCE_OF_VALUE" = "No Value Found";
 
 // MARK: - Cover Screen
 "COVER_SCREEN_TITLE_WELCOME_BACK" = "Welcome Back";

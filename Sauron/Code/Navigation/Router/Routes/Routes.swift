@@ -35,6 +35,9 @@ enum OnboardingRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProto
 
 // MARK: - Main / Tabbar Router [For tabbar use only, no deeplinks!]
 enum MainRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
+    /// For tabbar use only, hence why the auth screen is excluded
+    static var allCases: [MainRoutes] = [.home, .wallet, .settings, .alerts]
+    
     var id: String {
         UUID().uuidString
     }

@@ -68,31 +68,13 @@ struct Icons {
 
 // MARK: - Image Enumerations
 enum ImageRepository: String, CaseIterable, Hashable {
-    case twitter,
-         google,
-         apple,
-         dotMatrix,
-         dashedCircle,
-         shapeCluster,
-         two_tone_dotMatrices = "two.tone.dotMatrices",
-         golden_ratio_IanPorthole = "golden.ratio.IanPorthole",
-         gamingSetup_1 = "gamingPCSetup.1",
-         ram,
-         ssd,
-         water_cooler = "water-cooler",
-         motherboard,
-         monitor,
-         keyboard,
-         gpu,
-         cpu,
-         cpu_cooler = "cpu-cooler",
-         gaming_pc = "gaming-pc"
+    case coin_cluster_background_graphic = "coin.cluster.background.graphic",
+         two_tone_dot_matrix_background_graphic = "two.tone.dot.matrix.background.graphic",
+         launchscreen_background = "launchscreen-background"
 }
 
 enum CustomIconRepository: String, CaseIterable, Hashable {
-    case chat = "chat",
-         brain_graph = "brain.graph",
-         ghost = "ghost",
+    case wallet,
          app_icon_transparent = "app-icon-transparent"
 }
 
@@ -147,6 +129,7 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          bell = "bell",
          clock = "clock",
          questionmark_circle = "questionmark.circle",
+         questionmark_square_dashed = "questionmark.square.dashed",
          exclamationmark_triangle = "exclamationmark.triangle",
          lock,
          lock_fill = "lock.fill",
@@ -170,7 +153,7 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          plus_square_on_square = "plus.square.on.square",
          square_and_arrow_up = "square.and.arrow.up",
          square_and_arrow_down = "square.and.arrow.down",
-         gear = "gear",
+         gear,
          bolt_fill = "bolt.fill",
          bolt_slash_fill = "bolt.slash.fill",
          bolt_badge_a_fill = "bolt.badge.a.fill",
@@ -198,5 +181,8 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          list_number = "list.number",
          flame_fill = "flame.fill",
          faceid,
-         delete_backward_fill = "delete.backward.fill"
+         delete_backward_fill = "delete.backward.fill",
+         bitcoinsign_circle_fill = "bitcoinsign.circle.fill",
+         cloud_sun_bolt_fill = "cloud.sun.bolt.fill"
+         
 }
