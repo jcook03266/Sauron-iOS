@@ -11,7 +11,8 @@ import Foundation
 protocol DeeplinkHandlerProtocol {
     associatedtype Router: Routable
     associatedtype Route: RoutesProtocol
-    associatedtype Coordinator: RootCoordinator
+    associatedtype RCoordinator: RootCoordinator
+    associatedtype ChildCoordinator: Coordinator
     
     // MARK: - Properties
     // Referential
@@ -19,7 +20,8 @@ protocol DeeplinkHandlerProtocol {
     var routerDirectory: RouteDirectories { get }
     var routes: Route.Type { get }
     var router: Router { get }
-    var coordinator: Coordinator { get }
+    var rootCoordinator: RCoordinator { get }
+    var childCoordinator: (ChildCoordinator)? { get }
     
     // Static
     var deeplinkURLPrefix: String { get }

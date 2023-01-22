@@ -143,8 +143,22 @@ extension Coordinator {
         }
     }
     
+    public func getChild<C: Coordinator>(for coordinator: C.Type) -> (C)? {
+        return children.first {
+            $0 is C
+        } as? C
+    }
+    
     public func getChild(at index: Int) -> (any Coordinator)? {
         return children[index]
+    }
+    
+    public func getFirstChild() -> (any Coordinator)? {
+        return children.first
+    }
+    
+    public func getLastChild() -> (any Coordinator)? {
+        return children.last
     }
     
     public func addChild(_ child: any Coordinator) {
@@ -333,7 +347,7 @@ protocol RootCoordinator: Coordinator {
     func coordinatedView() -> any CoordinatedView // View to be used to access the specific properties of each coordinator view
 }
 
-extension RootCoordinator {
+extension Coordinator {
     func navigateTo(targetRoute: Router.Route) {
         let path = router.getPath(to: targetRoute)
         
@@ -373,34 +387,42 @@ extension RootCoordinator {
 
 protocol TabbarCoordinator: RootCoordinator {
     /// Returns the coordinator for the specified tabbar tab route, should be contained in the children store, if not then it will be instantiated and added to the children store
-    func getCoordinatorFor(route: MainRoutes) -> any Coordinator
+    func getTabCoordinatorFor(route: MainRoutes) -> any Coordinator
+    
+    // MARK: - Published
+    /// Keeps track of the currently selected tab on the coordinator level, this is also tracker by the main router as well
+    var currentTab: MainRoutes { get set }
 }
 
 extension TabbarCoordinator {
-//    func getCoordinatorFor(route: TabbarRoutes) -> any Coordinator {
-//        var coordinator: any Coordinator
-//        
-//        switch route {
-//        case .builds:
-//            coordinator = dispatcher.buildsCoordinator
-//        case .components:
-//            coordinator = dispatcher.componentsCoordinator
-//        case .command_center:
-//            coordinator = dispatcher.commandCenterCoordinator
-//        case .explore:
-//            coordinator = dispatcher.exploreCoordinator
-//        case .inbox:
-//            coordinator = dispatcher.inboxCoordinator
-//        }
-//        
-//        return coordinator
-//    }
+    func getTabCoordinatorFor(route: MainRoutes) -> any Coordinator {
+        guard route != .authScreen
+        else { return dispatcher.homeTabCoordinator }
+        
+        var coordinator: any Coordinator
+
+        switch route {
+        case .home:
+            coordinator = dispatcher.homeTabCoordinator
+        case .wallet:
+            coordinator = dispatcher.walletTabCoordinator
+        case .settings:
+            coordinator = dispatcher.settingsTabCoordinator
+        case .alerts:
+            coordinator = dispatcher.alertsTabCoordinator
+        case .authScreen:
+            // Not a tab, so no coordinator is provided for it, the auth screen can appear from anywhere in the main scene
+            coordinator = dispatcher.homeTabCoordinator
+        }
+
+        return coordinator
+    }
     
     /// The tabbar has specific children it manages, these children are never discarded throughout the tabbar's lifecycle so they're constant
-//    func populateChildren() {
-//        for route in MainRouter.Route.allCases {
-//            let child = getCoordinatorFor(route: route)
-//            addChild(child)
-//        }
-//    }
+    func populateChildren() {
+        for route in MainRoutes.allCases {
+            let child = getTabCoordinatorFor(route: route)
+            addChild(child)
+        }
+    }
 }

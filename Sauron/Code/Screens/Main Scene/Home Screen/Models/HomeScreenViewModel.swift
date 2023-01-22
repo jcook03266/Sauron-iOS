@@ -9,12 +9,12 @@ import SwiftUI
 
 /// View model for the home screen tab in the main coordinator
 class HomeScreenViewModel: CoordinatedGenericViewModel {
-    typealias coordinator = MainCoordinator
+    typealias coordinator = HomeTabCoordinator
     
     // MARK: - Observed
-    @ObservedObject var coordinator: MainCoordinator
+    @ObservedObject var coordinator: coordinator
     
-    init(coordinator: MainCoordinator) {
+    init(coordinator: coordinator) {
         self.coordinator = coordinator
     }
 }

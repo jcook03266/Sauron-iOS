@@ -16,10 +16,12 @@ class SRNTabbarViewModel: GenericViewModel {
     // MARK: - Observed
     @ObservedObject var coordinator: MainCoordinator
     @ObservedObject var contextSessionService: TabbarContextSessionTrackingService
+    @ObservedObject var router: MainRouter
     
     // MARK: - Published
     @Published var currentTab: tabs = SRNTabbarViewModel.defaultTab
     @Published var lastTab: tabs = SRNTabbarViewModel.defaultTab
+    @Published var iconTapped: Bool = false
     
     // MARK: - Static Instance Variables
     static let defaultTab: tabs = .home
@@ -36,7 +38,7 @@ class SRNTabbarViewModel: GenericViewModel {
                 noIcon: Image = Icons.getIconImage(named: .questionmark_square_dashed)
     
     var currentIcon: Image {
-        return getIconFor(tab: currentTab)
+        return getIcon(for: currentTab)
     }
     
     // MARK: - Localized Text
@@ -70,10 +72,11 @@ class SRNTabbarViewModel: GenericViewModel {
         tabbarButtonFontInactiveWeigth: Font.Weight = .regular
     
     // Colors
-    let tabbarActiveButtonUnderlineGradient: LinearGradient = Colors.gradient_1,
+    let containerBackgroundColor: Color = Colors.neutral_100.0,
+        tabbarActiveButtonUnderlineGradient: LinearGradient = Colors.gradient_1,
         tabbarIconBackgroundGradient: LinearGradient = Colors.gradient_1,
-        tabbarIconForegroundColor: Color = Colors.white.0,
-        tabButtonActiveForegroundGradient: LinearGradient = Colors.gradient_1,
+        tabbarIconForegroundColor: Color = Colors.permanent_white.0,
+        tabButtonActiveForegroundColor: Color = Colors.primary_2.0,
         tabButtonInactiveForegroundColor: Color = Colors.black.0,
         shadowColor: Color = Colors.shadow_1.0
     
@@ -82,15 +85,45 @@ class SRNTabbarViewModel: GenericViewModel {
         HapticFeedbackDispatcher.tabbarButtonPress
     }
     
+    var iconButtonPressed: (() -> Void) {
+        return { [weak self] in
+            guard let self = self
+            else { return }
+            HapticFeedbackDispatcher.genericButtonPress()
+            
+            self.iconTapped.toggle()
+        }
+    }
+    
     // MARK: - Convenience
     var didMove: Bool {
         return contextSessionService.totalContextSwitches > 0
     }
     
+    var icon3DRotationAngle: CGFloat {
+        return iconTapped ? 360 : 0
+    }
+    
+    // MARK: - Models
+    var tabModels: [SRNTabbarTabViewModel] {
+        return [
+            .init(parent: self,
+                  tab: .home),
+            .init(parent: self,
+                  tab: .wallet),
+            .init(parent: self,
+                  tab: .settings),
+            .init(parent: self,
+                  tab: .alerts),
+        ]
+    }
+    
     init(coordinator: MainCoordinator,
-         currentTab: tabs)
+         router: MainRouter,
+         currentTab: tabs = SRNTabbarViewModel.defaultTab)
     {
         self.coordinator = coordinator
+        self.router = router
         self.currentTab = currentTab
         self.contextSessionService = .init(currentTab: currentTab)
         
@@ -104,6 +137,17 @@ class SRNTabbarViewModel: GenericViewModel {
         
         $lastTab
             .assign(to: &contextSessionService.$lastTab)
+        
+        // Listen for updates from the router and respond accordingly
+        router
+            .$currentTab
+            .sink { [weak self] in
+                guard let self = self
+                else { return }
+                
+                self.navigateTo(tab: $0)
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Navigation Logic
@@ -124,7 +168,7 @@ class SRNTabbarViewModel: GenericViewModel {
         contextSessionService.createNewContextSession(with: tab)
         
         coordinator
-            .navigateTo(targetRoute: tab)
+            .navigateTo(tab: tab)
         
         onNavigate()
     }
@@ -137,9 +181,28 @@ class SRNTabbarViewModel: GenericViewModel {
                    onNavigate: onNavigate)
     }
     
-    // MARK: - Asset Selection
+    // MARK: - Tab Specific Data Selections
+    func getLocalizedTextLabel(for tab: tabs) -> String {
+        guard tab != .authScreen
+        else { return absenceOfValue }
+        
+        switch tab {
+        case .home:
+            return homeTabLabel
+        case .wallet:
+            return walletTabLabel
+        case .settings:
+            return settingsTabLabel
+        case .alerts:
+            return alertsTabLabel
+        case .authScreen:
+            /// This is not a tab and is not supported by the tabbar
+            return absenceOfValue
+        }
+    }
+    
     /// Retrieve the icon for the given tab (excluding the auth screen)
-    func getIconFor(tab: tabs) -> Image {
+    func getIcon(for tab: tabs) -> Image {
         guard tab != .authScreen
         else { return noIcon }
         

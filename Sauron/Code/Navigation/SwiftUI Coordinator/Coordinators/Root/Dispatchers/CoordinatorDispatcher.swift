@@ -11,63 +11,42 @@ import Foundation
 public struct CoordinatorDispatcher {
     var parentCoordinator: any Coordinator
     
-//    // MARK: - Tabbar coordinator's child coordinators
-//    var buildsCoordinator: BuildsCoordinator {
-//        return BuildsCoordinator(parent: parentCoordinator)
-//    }
-//    var componentsCoordinator: ComponentsCoordinator {
-//        return ComponentsCoordinator(parent: parentCoordinator)
-//    }
-//    var commandCenterCoordinator: CommandCenterCoordinator {
-//        return CommandCenterCoordinator(parent: parentCoordinator)
-//    }
-//    var exploreCoordinator: ExploreCoordinator {
-//        return ExploreCoordinator(parent: parentCoordinator)
-//    }
-//    var inboxCoordinator: InboxCoordinator {
-//        return InboxCoordinator(parent: parentCoordinator)
-//    }
+    // MARK: - Tabbar coordinator's child coordinators
+    var homeTabCoordinator: HomeTabCoordinator {
+        return HomeTabCoordinator(parent: parentCoordinator)
+    }
+    var walletTabCoordinator: WalletTabCoordinator {
+        return WalletTabCoordinator(parent: parentCoordinator)
+    }
+    var settingsTabCoordinator: SettingsTabCoordinator {
+        return SettingsTabCoordinator(parent: parentCoordinator)
+    }
+    var alertsTabCoordinator: AlertsTabCoordinator {
+        return AlertsTabCoordinator(parent: parentCoordinator)
+    }
     
     init(parentCoordinator: any Coordinator) {
         self.parentCoordinator = parentCoordinator
     }
     
-//    func getCoordinatorFor(root: Coordinators) -> any Coordinator {
-//        switch root {
-//        case .BuildsCoordinator:
-//            return self.buildsCoordinator
-//        case .ComponentsCoordinator:
-//            return self.componentsCoordinator
-//        case .CommandCenterCoordinator:
-//            return self.commandCenterCoordinator
-//        case .ExploreCoordinator:
-//            return self.exploreCoordinator
-//        case .InboxCoordinator:
-//            return self.inboxCoordinator
-//        }
-//    }
-//    
-//    func getCoordinatorFor(coordinator: Coordinators) -> any Coordinator {
-//        switch coordinator {
-//        case .BuildsCoordinator:
-//            return self.buildsCoordinator
-//        case .ComponentsCoordinator:
-//            return self.componentsCoordinator
-//        case .CommandCenterCoordinator:
-//            return self.commandCenterCoordinator
-//        case .ExploreCoordinator:
-//            return self.exploreCoordinator
-//        case .InboxCoordinator:
-//            return self.inboxCoordinator
-//        }
-//    }
+    func getCoordinatorFor(tab: Coordinators) -> any Coordinator {
+        switch tab {
+        case .homeTabCoordinator:
+            return self.homeTabCoordinator
+        case .walletTabCoordinator:
+            return self.walletTabCoordinator
+        case .settingsTabCoordinator:
+            return self.settingsTabCoordinator
+        case .alertsTabCoordinator:
+            return self.alertsTabCoordinator
+        }
+    }
     
-    /// Keeps track of all general coordinators
+    /// Keeps track of all tabbar tab coordinators
     enum Coordinators: Hashable, CaseIterable {
-        case BuildsCoordinator
-        case ComponentsCoordinator
-        case CommandCenterCoordinator
-        case ExploreCoordinator
-        case InboxCoordinator
+        case homeTabCoordinator
+        case walletTabCoordinator
+        case settingsTabCoordinator
+        case alertsTabCoordinator
     }
 }

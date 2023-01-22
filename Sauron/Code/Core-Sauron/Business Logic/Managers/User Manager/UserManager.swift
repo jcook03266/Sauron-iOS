@@ -77,6 +77,7 @@ class UserManager: ObservableObject {
     
     /// Triggered when the user has authenticated themselves successfully
     func didAuthenticate() {
+        self.isUserAuthenticated = true
         startSession()
     }
     

@@ -13,11 +13,15 @@ class MainRouter: Routable {
     typealias Body = AnyView
     
     // MARK: -  View Models
-    @Published var homeScreenViewModel: HomeScreenViewModel!
     @Published var authScreenViewModel: AuthScreenViewModel!
+    @Published var tabbarModel: SRNTabbarViewModel!
     
     // MARK: - Observed
     @ObservedObject var coordinator: MainCoordinator
+    
+    // MARK: - Deeplinking Properties
+    /// Use this to navigate via the tabbar to any supported scene
+    @Published var currentTab: SRNTabbarTabViewModel.tabs = SRNTabbarViewModel.defaultTab
     
     init(coordinator: MainCoordinator) {
         self.coordinator = coordinator
@@ -26,12 +30,25 @@ class MainRouter: Routable {
     }
     
     func initViewModels() {
-        self.homeScreenViewModel = .init(coordinator: self.coordinator)
         self.authScreenViewModel = .init(coordinator: self.coordinator)
+        self.tabbarModel = .init(coordinator: self.coordinator,
+                                 router: self,
+                                 currentTab: currentTab)
     }
     
-    func getPath(to route: MainRoutes) -> OrderedSet<MainRoutes> {
-        return []
+    func navigateTo(tab: SRNTabbarViewModel.tabs,
+                    onNavigate: @escaping (() -> Void) = {})
+    {
+        tabbarModel.navigateTo(tab: tab,
+                               onNavigate: onNavigate)
+    }
+    
+    /// Since this is a tabbar coordinator the coordinator children handle their own path finding
+    func getPath(to route: MainRoutes) -> OrderedCollections.OrderedSet<MainRoutes> {
+        guard route == .authScreen
+        else { return [] }
+        
+        return [.authScreen]
     }
     
     func view(for route: MainRoutes) -> AnyView {
@@ -40,9 +57,7 @@ class MainRouter: Routable {
         
         switch route {
         case .home:
-            view = HomeScreen(model: self.homeScreenViewModel)
-            
-            statusBarHidden = false
+            break
         case .wallet:
             break
         case .settings:

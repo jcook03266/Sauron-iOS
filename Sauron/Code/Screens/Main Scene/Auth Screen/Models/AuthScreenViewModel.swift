@@ -408,15 +408,27 @@ extension AuthScreenViewModel {
     func determineAuthVector() {
         isAuthenticated = false
         
-        switch dependencies.userManager.currentUser.userPreferredAuthMethod {
+        switch dependencies
+            .userManager
+            .currentUser
+            .userPreferredAuthMethod
+        {
         case .passcode:
             break
         case .faceID:
             useFaceIDToAuthenticate()
         case .none:
-            isAuthenticated = dependencies.authService.authenticateUnsecuredUser()
-            dismiss()
+            grantAccessToNonAuthUser()
         }
+    }
+    
+    /// Provides a permanent token for non-auth users
+    func grantAccessToNonAuthUser() {
+        isAuthenticated = dependencies
+            .authService
+            .authenticateUnsecuredUser()
+        
+        dismiss()
     }
     
     /// Interfaces with the faceID auth method in the auth service to transform the states encapsulated within this model depending on the outcome of the future

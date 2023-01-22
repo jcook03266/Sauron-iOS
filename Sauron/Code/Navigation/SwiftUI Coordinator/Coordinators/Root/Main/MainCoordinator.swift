@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 import UIKit
 
-class MainCoordinator: RootCoordinator {
+class MainCoordinator: TabbarCoordinator {
     typealias Router = MainRouter
     typealias Body = AnyView
     
@@ -28,6 +28,7 @@ class MainCoordinator: RootCoordinator {
     @Published var fullCoverItem: MainRoutes?
     @Published var rootView: AnyView!
     @Published var rootRoute: MainRoutes!
+    @Published var currentTab: MainRoutes = SRNTabbarViewModel.defaultTab
     
     // MARK: - Observed
     @ObservedObject var rootCoordinatorDelegate: RootCoordinatorDelegate
@@ -53,8 +54,18 @@ class MainCoordinator: RootCoordinator {
         UINavigationBar.changeAppearance(clear: true)
         
         addSubscribers()
+        
+        // Add the tabbar tab coordinators as children of this root
+        populateChildren()
+        
+        // Ensure the amount of children equals the amount of tabs currently enumerated
+        assert(children.count == MainRoutes.allCases.count)
+        
+        shouldGrantAccess()
+        presentRootTab()
     }
     
+    // MARK: - Publisher Subscriptions
     private func addSubscribers() {
         let userManager = dependencies.userManager
         
@@ -70,9 +81,26 @@ class MainCoordinator: RootCoordinator {
                 guard let self = self
                 else { return }
                 
-                if !isAuthenticated { self.presentAuthUI() }
+                if !isAuthenticated { self.presentAuthUI()
+                }
             }
             .store(in: &cancellables)
+    }
+    
+    // MARK: - User Authentication
+    /// Only grant unlimited token default access to non-auth users
+    private func shouldGrantAccess() {
+        guard !router
+            .authScreenViewModel
+            .isAuthenticated,
+        dependencies
+            .userManager
+            .getUserAuthPreference() == .none
+        else { return }
+        
+        router
+            .authScreenViewModel
+            .grantAccessToNonAuthUser()
     }
     
     /// Make the user authenticate themselves to gain access to the main app content
@@ -88,12 +116,29 @@ class MainCoordinator: RootCoordinator {
         self.presentFullScreenCover(with: .authScreen)
     }
     
+    // MARK: - Startup
+    /// Present the target first tab, this is the first tab the user will see when they enter the app, (mutable)
+    func presentRootTab() {
+        navigateTo(tab: rootRoute)
+    }
+    
+    // MARK: - Tabbar Navigation
+    func navigateTo(tab: MainRoutes){
+        currentTab = tab
+        
+        let child = getTabCoordinatorFor(route: tab)
+        present(coordinator: child)
+    }
+    
+    // MARK: - Root Coordinated View Builders
     func coordinatorView() -> AnyView {
-        AnyView(MainCoordinatorView(coordinator: self))
+        AnyView(MainCoordinatorView(coordinator: self,
+                                    tabbarModel: self.router.tabbarModel))
     }
     
     func coordinatedView() -> any CoordinatedView {
-        return MainCoordinatorView(coordinator: self)
+        return MainCoordinatorView(coordinator: self,
+                                   tabbarModel: self.router.tabbarModel)
     }
 }
 

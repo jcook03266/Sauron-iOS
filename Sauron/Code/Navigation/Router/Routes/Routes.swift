@@ -55,7 +55,9 @@ enum HomeRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
         UUID().uuidString
     }
     
-    case main
+    case main = ""
+    
+    
 }
 // MARK: - Wallets Tab Router
 enum WalletRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
@@ -63,7 +65,7 @@ enum WalletRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol 
         UUID().uuidString
     }
     
-    case main
+    case main = ""
 }
 // MARK: - Settings Tab Router
 enum SettingsRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
@@ -71,7 +73,7 @@ enum SettingsRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtoco
         UUID().uuidString
     }
     
-    case main
+    case main = ""
 }
 // MARK: - Alerts Tab Router
 enum AlertsRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
@@ -79,7 +81,7 @@ enum AlertsRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol 
         UUID().uuidString
     }
     
-    case main
+    case main = ""
 }
 
 /// A record of all possible route pathways across the app, this is used to deeplink a user into a specific part of the application when they trigger a link with a scheme specific to this application

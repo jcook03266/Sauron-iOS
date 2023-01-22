@@ -18,6 +18,6 @@ struct HomeScreen: View {
 
 struct HomeScreen_Previews: PreviewProvider {
     static var previews: some View {
-        HomeScreen(model: .init(coordinator: .init()))
+        HomeScreen(model: .init(coordinator: .init(parent: MainCoordinator())))
     }
 }

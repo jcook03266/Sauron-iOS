@@ -17,6 +17,7 @@ final class DeepLinkManager: ObservableObject {
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
         let userDefaultsService: UserDefaultsService = inject()
+        let userManager: UserManager = inject()
     }
     let dependencies = Dependencies()
     
@@ -52,7 +53,11 @@ extension DeepLinkManager: DeeplinkManagerProtocol {
     func injectHandlers() {
         deeplinkHandlers = [
             LaunchScreenDeeplinkHandler(manager: self),
-            OnboardingDeeplinkHandler(manager: self)
+            OnboardingDeeplinkHandler(manager: self),
+            HomeTabDeeplinkHandler(manager: self),
+            WalletTabDeeplinkHandler(manager: self),
+            SettingsTabDeeplinkHandler(manager: self),
+            AlertsTabDeeplinkHandler(manager: self)
         ]
     }
 }

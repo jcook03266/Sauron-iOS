@@ -71,6 +71,7 @@ extension DeeplinkManagerProtocol {
         self.manage(lastActiveLink)
     }
     
+    /// Debugging
     func printLastActiveLinkDebugDescription() {
         print("🔗 Last Active Deeplink: \(lastActiveLink?.description ?? "None")")
     }

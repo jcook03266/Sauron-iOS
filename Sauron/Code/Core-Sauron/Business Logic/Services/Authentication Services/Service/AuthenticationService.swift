@@ -161,7 +161,6 @@ class SRNUserAuthenticator: ObservableObject {
         
         self.currentAuthCredential = PasscodeAuthToken(expirationDate: expirationDate)
         dependencies.userManager.didAuthenticate()
-        dependencies.userManager.isUserAuthenticated = true
         
         addSubscribers()
     }

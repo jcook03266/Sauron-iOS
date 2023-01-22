@@ -216,6 +216,7 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
         case noHandlerFoundFor(url: URL)
         case routeCouldNotBeInitialized(routeRawValue: String, url: URL)
         case routeUnreachableFromCurrentRoute
+        case unAuthorizedUser(url: URL)
  
         var errorDescription: String? {
             switch self {
@@ -233,6 +234,9 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
                 let currentURL: String = DeepLinkManager.shared.activeDeepLinkTarget?.absoluteString ?? "ACTIVE_URL_NOT_STORED_PLEASE_CHECK"
                 
                 return "The route parsed from the url: \(currentURL), could not be reached from the current context"
+                
+            case .unAuthorizedUser(url: let url):
+                return "An unauthorized user tried to open the following url: \(url), this user must authenticate themselves first in order to open URLs in this app"
             }
         }
     }

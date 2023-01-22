@@ -39,12 +39,23 @@ class RootCoordinatorDelegate: ObservableObject {
     // MARK: - Root Routes for Root Coordinators
     var launchScreenRootRoute: LaunchScreenRoutes = .main
     var onboardingRootRoute: OnboardingRoutes {
-        guard dependencies.featureFlagService.isOnboardingScreenEnabled
+        guard dependencies
+            .featureFlagService
+            .isOnboardingScreenEnabled
         else { return .getStarted }
         
         return dependencies.ftueService.shouldDisplayOnboarding ? .main : .getStarted
     }
     var mainRootRoute: MainRoutes = .home
+    
+    // MARK: - Convenience
+    var canNavigateToMainScene: Bool {
+        return !dependencies.ftueService.shouldDisplayFTUE
+    }
+    
+    var canNavigateToOnboardingScene: Bool {
+        return dependencies.ftueService.shouldDisplayFTUE
+    }
     
     private init() {
         self.dispatcher = .init(delegate: self)
@@ -79,7 +90,7 @@ class RootCoordinatorDelegate: ObservableObject {
             .build { builder in
                 builder.addDecision { [weak self] in
                     guard let self = self else { return false }
-                    return self.dependencies.ftueService.shouldDisplayFTUE
+                    return self.canNavigateToOnboardingScene
                 }
                 
                 // Onboarding Coordinator
@@ -99,20 +110,34 @@ class RootCoordinatorDelegate: ObservableObject {
     func switchActiveRoot(to root: RootCoordinatorDispatcher.RootCoordinators) {
         guard root != self.activeRoot else { return }
         
+        // prevent the user from access restricted scenes
+        if root == .mainCoordinator && !canNavigateToMainScene
+            || root == .onboardingCoordinator && !canNavigateToOnboardingScene
+        { return }
+        
         activeRoot = root
         activeRootCoordinator = dispatcher.getRootCoordinatorFor(root: root)
     }
     
     // MARK: - Convenience functions
     func switchToLaunchScreenScene() {
+        /// Switching to the launch screen after it has already been presented is only available in a debugging environment, no deeplinking is provided
         switchActiveRoot(to: .launchScreenCoordinator)
     }
     
     func switchToOnboardingScene() {
+        /// Only first time users can access the onboarding screen
+        guard canNavigateToOnboardingScene
+        else { return }
+        
         switchActiveRoot(to: .onboardingCoordinator)
     }
     
     func switchToMainScene() {
+        /// Ensure that the user has completed the FTUE first, they can't bypass the hard lock
+        guard canNavigateToMainScene
+        else { return }
+        
         switchActiveRoot(to: .mainCoordinator)
     }
 }
