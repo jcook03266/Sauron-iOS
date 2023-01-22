@@ -157,7 +157,7 @@ class SRNUserAuthenticator: ObservableObject {
             invalidateAuthToken()
         }
         
-        let expirationDate: Date = .now.advanced(by:10)
+        let expirationDate: Date = .now.advanced(by: currentUser.userPreferredAuthTokenLifeCycleDuration.getNumericalLiteral())
         
         self.currentAuthCredential = PasscodeAuthToken(expirationDate: expirationDate)
         dependencies.userManager.didAuthenticate()

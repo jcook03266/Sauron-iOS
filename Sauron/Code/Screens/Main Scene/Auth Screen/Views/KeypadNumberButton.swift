@@ -35,7 +35,7 @@ extension KeypadNumberButton {
         .onLongPressGesture {
             model.longPressAction()
         }
-        .buttonStyle(.genericSpringyShrink)
+        .buttonStyle(.keypadButtonStyle)
         .frame(width: size.width,
                height: size.height)
         .disabled(!model.isEnabled)

@@ -8,13 +8,36 @@
 import SwiftUI
 import UIKit
 
+/// A more opaque version of the generic springy shrink style
+struct KeypadButtonStyle: ButtonStyle {
+    // MARK: - Animation Properties
+    var springResponse: CGFloat = 0.6
+    var scaleAmount: CGFloat = 0.8
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration
+            .label
+            .opacity(configuration.isPressed ? 0.25 : 1)
+            .scaleEffect(configuration.isPressed ? scaleAmount : 1)
+            .animation(.spring(response: springResponse),
+                       value: configuration.isPressed)
+    }
+}
+
+extension ButtonStyle where Self == KeypadButtonStyle {
+    static var keypadButtonStyle: Self {
+        return .init()
+    }
+}
+
 /// Shrinks the button by the specified amount
 struct GenericSpringyShrink: ButtonStyle {
     var springResponse: CGFloat = 0.6
     var scaleAmount: CGFloat = 0.8
     
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        configuration
+            .label
             .opacity(configuration.isPressed ? 0.75 : 1)
             .scaleEffect(configuration.isPressed ? scaleAmount : 1)
             .animation(.spring(response: springResponse),
@@ -34,7 +57,8 @@ struct OffsettableButtonStyle: ButtonStyle {
     var offset: CGSize = CGSize(width: -20, height: 0)
     
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        configuration
+            .label
             .opacity(configuration.isPressed ? 0.75 : 1)
             .offset(configuration.isPressed ? offset : .zero)
             .animation(.spring(response: springResponse),
@@ -55,7 +79,8 @@ struct OffsettableShrinkButtonStyle: ButtonStyle {
     var scaleAmount: CGFloat = 0.95
     
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        configuration
+            .label
             .opacity(configuration.isPressed ? 0.75 : 1)
             .offset(configuration.isPressed ? offset : .zero)
             .scaleEffect(configuration.isPressed ? scaleAmount : 1)
