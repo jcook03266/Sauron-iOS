@@ -36,7 +36,7 @@ class TabbarContextSession: Identifiable, Hashable {
     
     /// - Returns: The total duration the user was in the current tab context for [in  seconds]
     func getTotalDuration() -> Double {
-        return sessionEnd.distance(to: sessionStart)
+        return sessionStart.distance(to: sessionEnd)
     }
     
     /// The user has switched out of the current tab and so the duration has to be recorded

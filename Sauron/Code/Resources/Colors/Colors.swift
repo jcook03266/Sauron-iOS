@@ -133,6 +133,16 @@ struct Colors {
             return LinearGradient(stops: colorStops,
                                   startPoint: startPoint,
                                   endPoint: endPoint)
+        case .gradient_6:
+            /// This is what gradient 1 should look like according to the design specs, but the current gradient 1 looks best as is for its usage case, this is used for the main content screens background
+            let colors = getColors(named: .primary_3,
+                                   color2: .secondary_1)
+            let startPoint = UnitPoint(x: 0, y: 0)
+            let endPoint = UnitPoint(x: 0, y: 1)
+            
+            return LinearGradient(colors: [colors.0, colors.1.opacity(0.7)],
+                                  startPoint: startPoint,
+                                  endPoint: endPoint)
         }
     }
     
@@ -231,6 +241,9 @@ struct Colors {
     static var gradient_5: LinearGradient {
         return getLinearGradient(named: .gradient_5)
     }
+    static var gradient_6: LinearGradient {
+        return getLinearGradient(named: .gradient_6)
+    }
 }
 
 // MARK: Colors Enum
@@ -240,5 +253,5 @@ enum ColorRepository: String, CaseIterable, Codable, Hashable {
 
 // MARK: Gradients Enum
 enum GradientRepository: String, CaseIterable, Codable, Hashable {
-    case gradient_1, gradient_2, gradient_3, gradient_4, gradient_5
+    case gradient_1, gradient_2, gradient_3, gradient_4, gradient_5, gradient_6
 }

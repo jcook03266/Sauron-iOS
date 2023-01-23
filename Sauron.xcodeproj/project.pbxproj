@@ -76,6 +76,11 @@
 		4996AF77297D7C9C00112DC0 /* WalletScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF76297D7C9C00112DC0 /* WalletScreen.swift */; };
 		4996AF79297D7CA700112DC0 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF78297D7CA700112DC0 /* SettingsScreen.swift */; };
 		4996AF7B297D7CB300112DC0 /* AlertsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF7A297D7CB300112DC0 /* AlertsScreen.swift */; };
+		4996AF7E297E036C00112DC0 /* MailingListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF7D297E036C00112DC0 /* MailingListService.swift */; };
+		4996AF84297E1BFF00112DC0 /* MLSProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF83297E1BFF00112DC0 /* MLSProtocol.swift */; };
+		4996AF88297E1C3E00112DC0 /* MLSHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF87297E1C3E00112DC0 /* MLSHandlers.swift */; };
+		4996AF8A297E1C5500112DC0 /* MLSHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF89297E1C5500112DC0 /* MLSHandlerProtocol.swift */; };
+		4996AF8C297E1C7C00112DC0 /* MLSSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4996AF8B297E1C7C00112DC0 /* MLSSubscription.swift */; };
 		49975A7129726BCB00C29090 /* ExchangeRateDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A7029726BCB00C29090 /* ExchangeRateDataProvider.swift */; };
 		49975A742972712600C29090 /* LatestExchangeRateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A732972712600C29090 /* LatestExchangeRateModel.swift */; };
 		49975A7829727DD200C29090 /* FiatCurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49975A7729727DD200C29090 /* FiatCurrencyModel.swift */; };
@@ -292,6 +297,11 @@
 		4996AF76297D7C9C00112DC0 /* WalletScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletScreen.swift; sourceTree = "<group>"; };
 		4996AF78297D7CA700112DC0 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		4996AF7A297D7CB300112DC0 /* AlertsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsScreen.swift; sourceTree = "<group>"; };
+		4996AF7D297E036C00112DC0 /* MailingListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailingListService.swift; sourceTree = "<group>"; };
+		4996AF83297E1BFF00112DC0 /* MLSProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSProtocol.swift; sourceTree = "<group>"; };
+		4996AF87297E1C3E00112DC0 /* MLSHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSHandlers.swift; sourceTree = "<group>"; };
+		4996AF89297E1C5500112DC0 /* MLSHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSHandlerProtocol.swift; sourceTree = "<group>"; };
+		4996AF8B297E1C7C00112DC0 /* MLSSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSSubscription.swift; sourceTree = "<group>"; };
 		49975A7029726BCB00C29090 /* ExchangeRateDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateDataProvider.swift; sourceTree = "<group>"; };
 		49975A732972712600C29090 /* LatestExchangeRateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestExchangeRateModel.swift; sourceTree = "<group>"; };
 		49975A7729727DD200C29090 /* FiatCurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatCurrencyModel.swift; sourceTree = "<group>"; };
@@ -922,6 +932,66 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		4996AF7C297E033D00112DC0 /* Notification Services */ = {
+			isa = PBXGroup;
+			children = (
+				4996AF85297E1C1D00112DC0 /* Mailing List Service */,
+			);
+			path = "Notification Services";
+			sourceTree = "<group>";
+		};
+		4996AF7F297E1BD500112DC0 /* Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				4996AF87297E1C3E00112DC0 /* MLSHandlers.swift */,
+				4996AF82297E1BF200112DC0 /* Protocols */,
+			);
+			path = Handlers;
+			sourceTree = "<group>";
+		};
+		4996AF80297E1BDE00112DC0 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				4996AF81297E1BED00112DC0 /* Protocols */,
+				4996AF7D297E036C00112DC0 /* MailingListService.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		4996AF81297E1BED00112DC0 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				4996AF83297E1BFF00112DC0 /* MLSProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		4996AF82297E1BF200112DC0 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				4996AF89297E1C5500112DC0 /* MLSHandlerProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		4996AF85297E1C1D00112DC0 /* Mailing List Service */ = {
+			isa = PBXGroup;
+			children = (
+				4996AF86297E1C2800112DC0 /* Models */,
+				4996AF7F297E1BD500112DC0 /* Handlers */,
+				4996AF80297E1BDE00112DC0 /* Manager */,
+			);
+			path = "Mailing List Service";
+			sourceTree = "<group>";
+		};
+		4996AF86297E1C2800112DC0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4996AF8B297E1C7C00112DC0 /* MLSSubscription.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		49975A722972710700C29090 /* Exchange Rates */ = {
 			isa = PBXGroup;
 			children = (
@@ -1083,6 +1153,7 @@
 		499E121B2954B4CA004C61CE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				4996AF7C297E033D00112DC0 /* Notification Services */,
 				49F4B720297541BF00319E39 /* Authentication Services */,
 				49B22B8529566DB1009C3F4F /* Validation Services */,
 				4925C88D295A780A006E1A80 /* FeatureFlagService.swift */,
@@ -2393,6 +2464,7 @@
 			files = (
 				499E127F2954C40F004C61CE /* LottieView.swift in Sources */,
 				499E12722954C40F004C61CE /* TextOscillator.swift in Sources */,
+				4996AF84297E1BFF00112DC0 /* MLSProtocol.swift in Sources */,
 				499E13112954D6F8004C61CE /* Tabs.swift in Sources */,
 				499E134329552550004C61CE /* VideoPlayer.swift in Sources */,
 				499E12422954B59E004C61CE /* Fonts.swift in Sources */,
@@ -2524,7 +2596,9 @@
 				499E12B92954D3E8004C61CE /* SheetModifier.swift in Sources */,
 				499E12822954C40F004C61CE /* GenericNavigationProtocol.swift in Sources */,
 				491429B3294D05540083CC9D /* Sauron.xcdatamodeld in Sources */,
+				4996AF7E297E036C00112DC0 /* MailingListService.swift in Sources */,
 				499E12762954C40F004C61CE /* NumberDataTypeExtensions.swift in Sources */,
+				4996AF8C297E1C7C00112DC0 /* MLSSubscription.swift in Sources */,
 				49B22B8C29566DB1009C3F4F /* LaunchScreenManager.swift in Sources */,
 				49A0B584296B8D30003324A3 /* PreferenceBottomSheet.swift in Sources */,
 				4953E5AE2968A7A100513560 /* CounterRectangularButton.swift in Sources */,
@@ -2558,8 +2632,10 @@
 				499E12DA2954D50B004C61CE /* RootCoordinatorDelegate.swift in Sources */,
 				49B22B80295620CF009C3F4F /* CoverScreenViewModel.swift in Sources */,
 				499E127A2954C40F004C61CE /* SwiftUIAnimationTransitions.swift in Sources */,
+				4996AF8A297E1C5500112DC0 /* MLSHandlerProtocol.swift in Sources */,
 				49916A8C297CE86F00EC2BCB /* SRNTabbarTabViewModel.swift in Sources */,
 				498EDB9A297C241D00A6EE35 /* HomeScreenViewModel.swift in Sources */,
+				4996AF88297E1C3E00112DC0 /* MLSHandlers.swift in Sources */,
 				49A518882967921500258F80 /* SatelliteTextFieldModel.swift in Sources */,
 				49916A88297CDE1600EC2BCB /* TabbarSessionTrackingService.swift in Sources */,
 				49916A85297CC16300EC2BCB /* SRNTabbarViewModel.swift in Sources */,

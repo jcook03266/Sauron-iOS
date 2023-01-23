@@ -10,10 +10,33 @@ import SwiftUI
 struct MainCoordinatorView: CoordinatedView {
     typealias Router = MainRouter
     typealias Coordinator = MainCoordinator
+    typealias ChildTabCoordinator = Sauron.Coordinator
     
     // MARK: - Observed
     @StateObject var coordinator: MainCoordinator
     @StateObject var tabbarModel: SRNTabbarViewModel
+    
+    // MARK: - Styling
+    private let backgroundGradient: LinearGradient = Colors.gradient_6
+    private var backgroundColor: Color {
+        return currentTab != .settings ?
+        Color.clear :
+        Colors.permanent_black.0
+    }
+    
+    // MARK: - Convenience
+    var currentChildTabCoordinator: any ChildTabCoordinator {
+        return coordinator
+            .getTabCoordinatorFor(route: currentTab)
+    }
+    
+    var currentTab: SRNTabbarViewModel.tabs {
+        return tabbarModel.currentTab
+    }
+    
+    var statusBarVisibilityForCurrentTab: Bool {
+        return currentChildTabCoordinator.statusBarHidden
+    }
     
     // MARK: - Navigation States
     @State var sheetItemState: MainRoutes? = nil
@@ -32,26 +55,35 @@ struct MainCoordinatorView: CoordinatedView {
                     with: [$fullCoverItemState, $sheetItemState]) {
             NavigationStack(path: $coordinator.navigationPath) {
                 ZStack {
-                tabbar
-                
-                coordinator.rootView
-                    .fullScreenCover(item: $fullCoverItemState,
-                                     onDismiss: {
-                        DispatchQueue.main.async {
-                            coordinator.dismissFullScreenCover()
-                        }
-                    },
-                                     content: { route in coordinator.router.view(for: route) })
-                    .sheet(item: $sheetItemState,
-                           onDismiss: {
-                        DispatchQueue.main.async {
-                            coordinator.dismissSheet()
-                        }
-                    },
-                           content: { route in coordinator.router.view(for: route) })
-                    .navigationDestination(for: Router.Route.self,
-                                           destination: { route in coordinator.router.view(for: route) })
-            }
+                    coordinator.rootView
+                        .fullScreenCover(item: $fullCoverItemState,
+                                         onDismiss: {
+                            DispatchQueue.main.async {
+                                coordinator.dismissFullScreenCover()
+                            }
+                        },
+                                         content: { route in coordinator.router.view(for: route) })
+                        .sheet(item: $sheetItemState,
+                               onDismiss: {
+                            DispatchQueue.main.async {
+                                coordinator.dismissSheet()
+                            }
+                        },
+                               content: { route in coordinator.router.view(for: route) })
+                        .navigationDestination(for: Router.Route.self,
+                                               destination: { route in coordinator.router.view(for: route) })
+                        .id(tabbarModel.currentTab)
+                        .zIndex(1)
+                        .transition(
+                            .asymmetric(insertion: .slideBackwards,
+                                        removal: .offset(x: 1000)))
+                    
+                    tabbar
+                }
+                .background(backgroundColor)
+                .background(backgroundGradient)
+                .animation(.easeInOut,
+                           value: tabbarModel.currentTab)
             }
         }
                     .opacity(show ? 1 : 0)
@@ -60,7 +92,7 @@ struct MainCoordinatorView: CoordinatedView {
                             show = true
                         }
                     }
-                    .statusBarHidden(coordinator.statusBarHidden)
+                    .statusBarHidden(statusBarVisibilityForCurrentTab)
     }
 }
 
@@ -72,7 +104,7 @@ extension MainCoordinatorView {
                 Spacer()
                 SRNTabbar(model: tabbarModel)
             }
-                
+            
             Spacer()
         }
     }

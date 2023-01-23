@@ -8,9 +8,21 @@
 import SwiftUI
 
 struct AlertsScreen: View {
+    // MARK: - Observed
+    
     var body: some View {
         Text("Cloud Alerts")
     }
+}
+
+// MARK: - View Combinations
+extension AlertsScreen {
+    
+}
+
+// MARK: - Subviews
+extension AlertsScreen {
+
 }
 
 struct AlertsScreen_Previews: PreviewProvider {

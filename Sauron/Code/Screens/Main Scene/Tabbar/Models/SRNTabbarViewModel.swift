@@ -22,6 +22,7 @@ class SRNTabbarViewModel: GenericViewModel {
     @Published var currentTab: tabs = SRNTabbarViewModel.defaultTab
     @Published var lastTab: tabs = SRNTabbarViewModel.defaultTab
     @Published var iconTapped: Bool = false
+    @Published var toggleTabbarViewTransitionAnimation: Bool = false
     
     // MARK: - Static Instance Variables
     static let defaultTab: tabs = .home
@@ -158,6 +159,8 @@ class SRNTabbarViewModel: GenericViewModel {
         guard tab != .authScreen,
               currentTab != tab
         else { return }
+        
+        toggleTabbarViewTransitionAnimation.toggle()
         
         // The user has switched contexts so the last session must be retired
         contextSessionService.retireCurrentContextSession()

@@ -8,10 +8,10 @@
 import SwiftUI
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    return true
-  }
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        return true
+    }
 }
 
 @main
@@ -35,7 +35,7 @@ struct SauronApp: App {
         WindowGroup {
             Group {
                 if AppService.isDebug {
-                    MainCoordinator(rootCoordinatorDelegate: rootCoordinatorDelegate).view(for: .authScreen)
+                    MainCoordinator(rootCoordinatorDelegate: rootCoordinatorDelegate).coordinatorView()
                 }
                 else {
                     activeRootCoordinator.coordinatorView()

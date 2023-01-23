@@ -47,6 +47,8 @@ class SettingsTabRouter: Routable {
             statusBarHidden = false
         }
         
+        /// Allow the coordinator to listen to updated from this toggle from this router
+        self.coordinator.statusBarHidden = statusBarHidden
         return AnyView(view
             .routerStatusBarVisibilityModifier(visible: statusBarHidden,
                                                coordinator: self.coordinator)

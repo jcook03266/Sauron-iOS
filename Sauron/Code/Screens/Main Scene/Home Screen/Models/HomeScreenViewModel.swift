@@ -14,6 +14,10 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     // MARK: - Observed
     @ObservedObject var coordinator: coordinator
     
+    // MARK: - Styling
+    let backgroundColor: Color = Color.clear,
+        foregroundContainerColor: Color = Colors.white.0
+    
     init(coordinator: coordinator) {
         self.coordinator = coordinator
     }

@@ -17,7 +17,7 @@ open class AppService: ObservableObject {
     @Published var deepLinkManager: DeepLinkManager = .shared
     
     // MARK: - Debug Environment Properties
-    static let isDebug: Bool = false
+    static let isDebug: Bool = true
     static let useMockData: Bool = false /// Determines whether or not to use mock data when running the application or real data pulled from valid endpoints
     
     // MARK: - Dependencies

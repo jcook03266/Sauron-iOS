@@ -70,6 +70,7 @@ class MainRouter: Routable {
             statusBarHidden = self.coordinator.statusBarHidden
         }
         
+        self.coordinator.statusBarHidden = statusBarHidden
         return AnyView(view
             .routerStatusBarVisibilityModifier(visible: statusBarHidden,
                                                coordinator: self.coordinator)

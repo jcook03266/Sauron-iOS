@@ -76,6 +76,11 @@ extension InjectableServices {
     static func inject() -> UserManager {
         return .shared
     }
+    
+    // MARK: - Mailing List Service
+    static func inject() -> MailingListService {
+        return .shared
+    }
 }
 
 // MARK: - Other domain specific dependency containers
@@ -116,6 +121,11 @@ extension InjectableManagers {
     
     // MARK: - Validator Manager
     static func inject() -> ValidatorManager {
+        return .shared
+    }
+    
+    // MARK: - User Manager
+    static func inject() -> UserManager {
         return .shared
     }
 }

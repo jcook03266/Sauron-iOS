@@ -47,6 +47,7 @@ class WalletTabRouter: Routable {
             statusBarHidden = false
         }
         
+        self.coordinator.statusBarHidden = statusBarHidden
         return AnyView(view
             .routerStatusBarVisibilityModifier(visible: statusBarHidden,
                                                coordinator: self.coordinator)
