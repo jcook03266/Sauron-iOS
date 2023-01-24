@@ -12,7 +12,7 @@ struct GetStartedScreen: View {
     @StateObject var model: GetStartedScreenViewModel
     
     // MARK: - States
-    @State var didAppear: Bool = false
+    @State private var didAppear: Bool = false
     
     // MARK: - Padding + Dimensions
     private let topBarCornerRadius: CGFloat = 40,
@@ -217,9 +217,10 @@ struct GetStartedScreen: View {
     var appNameSignature: some View {
         Text(model.appNameSignature)
             .withFont(model.appNameSignatureFont)
-            .fontWeight(.semibold)
+            .fontWeight(model.appNameSignatureFontWeight)
             .minimumScaleFactor(0.1)
-            .scaledToFit()
+            .lineLimit(1)
+            .multilineTextAlignment(.center)
             .applyGradient(gradient: model.appNameSignatureGradient)
             .fixedSize()
     }

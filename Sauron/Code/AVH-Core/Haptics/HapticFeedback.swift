@@ -19,6 +19,10 @@ struct HapticFeedbackDispatcher {
         Impacts.generateImpact(with: .light, intensity: 0.8)
     }
     
+    static func radioButtonPress() {
+        Impacts.generateImpact(with: .light, intensity: 0.9)
+    }
+    
     static func utilityButtonPress() {
         Impacts.generateImpact(with: .light, intensity: 1)
     }

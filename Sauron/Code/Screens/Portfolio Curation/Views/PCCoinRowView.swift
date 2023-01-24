@@ -12,8 +12,8 @@ struct PCCoinRowView: View {
     // MARK: - Observed Objects
     @StateObject var model: PCCoinRowViewModel
     
-    // MARK: - States
-    @State var didAppear: Bool = false
+    // MARK: - States (Local Use Only hence it's privatized)
+    @State private var didAppear: Bool = false
     
     // MARK: - Dimensions + Padding
     private var imageViewTrailingPadding: CGFloat {
@@ -38,11 +38,7 @@ struct PCCoinRowView: View {
                 assetIdentifierChipLeadingPadding: CGFloat = 0,
                 priceChipLeadingPadding: CGFloat = 0,
                 priceChipTrailingPadding: CGFloat = 10,
-                radioButtonDiameter: CGFloat = 30,
-                radioButtonInscribedCircleDiameter: CGFloat = 20,
                 radioButtonLeadingPadding: CGFloat = 0,
-                radioButtonShadowRadius: CGFloat = 3,
-                radioButtonShadowOffset: CGSize = .init(width: 0, height: 1),
                 rankLeadingPadding: CGFloat = 10,
                 rankTrailingPadding: CGFloat = 5,
 rankSize: CGSize = .init(width: 30, height: 30),
@@ -92,37 +88,9 @@ radioButtonBackgroundFillGradient: LinearGradient = Colors.gradient_1,
     }
     
     var radioButton: some View {
-        Button(action: {
-            model.selectedAction()
-        }) {
-            Circle()
-                .fill(radioButtonBackgroundGradient)
-                .overlay {
-                    Group {
-                        if model.isSelected {
-                            Circle()
-                                .fill(radioButtonBackgroundFillGradient)
-                                .transition(.scale)
-                        }
-                        else {
-                            Circle()
-                                .fill(radioButtonBackgroundFillColor)
-                                .transition(.scale)
-                        }
-                    }
-                    .frame(width: radioButtonInscribedCircleDiameter)
-                }
-                .frame(width: radioButtonDiameter)
-                .shadow(color: radioButtonShadowColor,
-                        radius: radioButtonShadowRadius,
-                        x: radioButtonShadowOffset.width,
-                        y: radioButtonShadowOffset.height)
-                .animation(.spring(),
-                           value: model.isSelected)
-                .padding(.leading, radioButtonLeadingPadding)
-                .padding(.trailing, radioButtonTrailingPadding)
-        }
-        .buttonStyle(.genericSpringyShrink)
+        RadioButton(model: model.radioButtonViewModel)
+            .padding(.leading, radioButtonLeadingPadding)
+            .padding(.trailing, radioButtonTrailingPadding)
     }
     
     /// Reflects the current identifier for the asset (symbol or name)

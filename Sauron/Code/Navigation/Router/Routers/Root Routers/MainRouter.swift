@@ -36,6 +36,7 @@ class MainRouter: Routable {
                                  currentTab: currentTab)
     }
     
+    /// Switches the tabbar to the specified tab which translates to the rendered tabbar view
     func navigateTo(tab: SRNTabbarViewModel.tabs,
                     onNavigate: @escaping (() -> Void) = {})
     {
@@ -52,7 +53,7 @@ class MainRouter: Routable {
     }
     
     func view(for route: MainRoutes) -> AnyView {
-        var view: any View = EmptyView() // TODO: Remove placeholder
+        var view: any View = EmptyView()
         var statusBarHidden: Bool = false
         
         switch route {

@@ -13,7 +13,7 @@ class AlertsTabRouter: Routable {
     typealias Body = AnyView
     
     // MARK: -  View Models
-    //@Published var buildsViewModel: BuildsViewModel!
+    @Published var alertsScreenViewModel: AlertsScreenViewModel!
     
     // MARK: - Observed
     @ObservedObject var coordinator: AlertsTabCoordinator
@@ -25,7 +25,7 @@ class AlertsTabRouter: Routable {
     }
     
     func initViewModels() {
-        
+        self.alertsScreenViewModel = .init(coordinator: self.coordinator)
     }
     
     func getPath(to route: Route) -> OrderedCollections.OrderedSet<Route> {
@@ -42,7 +42,7 @@ class AlertsTabRouter: Routable {
         
         switch route {
         case .main:
-            view = AlertsScreen()
+            view = AlertsScreen(model: self.alertsScreenViewModel)
             
             statusBarHidden = false
         }

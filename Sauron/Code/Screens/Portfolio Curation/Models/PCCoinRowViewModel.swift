@@ -12,6 +12,7 @@ class PCCoinRowViewModel: GenericViewModel {
     // MARK: - Observed Objects
     @ObservedObject var parentViewModel: PortfolioCurationViewModel
     @ObservedObject var coinImageViewModel: CoinImageViewModel
+    @ObservedObject var radioButtonViewModel: RadioButtonViewModel = .init()
     
     // MARK: - Published
     @Published var coinModel: CoinModel
@@ -68,15 +69,14 @@ class PCCoinRowViewModel: GenericViewModel {
         rankTextFontWeight: Font.Weight = .semibold
     
     // MARK: - Actions
-    var selectedAction: (() -> Void) {
-        return { [weak self] in
-            guard let self = self else { return }
-            
-            HapticFeedbackDispatcher.genericButtonPress()
-            self.isSelected.toggle()
-            
-            self.updateCoinSelectionState()
-        }
+    @discardableResult
+    func selectedAction() -> Bool {
+        HapticFeedbackDispatcher.genericButtonPress()
+        self.isSelected.toggle()
+        
+        self.updateCoinSelectionState()
+        
+        return self.isSelected
     }
     
     init(parentViewModel: PortfolioCurationViewModel,
@@ -87,6 +87,8 @@ class PCCoinRowViewModel: GenericViewModel {
         self.coinModel = coinModel
         self.coinImageViewModel = .init(coinModel: coinModel)
         self.isSelected = isSelected
+        self.radioButtonViewModel = .init(onSelectAction: self.selectedAction(),
+                                          isSelected: self.isSelected)
     }
     
     private func updateCoinSelectionState() {

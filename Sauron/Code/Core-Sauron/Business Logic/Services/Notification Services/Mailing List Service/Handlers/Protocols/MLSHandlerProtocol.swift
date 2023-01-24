@@ -21,17 +21,19 @@ extension MLSHandlerProtocol {
         return subscription.type == supportedSubscriptionType
     }
     
-    func handle(_ subscription: MLSSubscription) {
-        guard canHandle(subscription)
+    /// Handles subscription service requests by subscribing or unsubscribing the user conditionally
+    func handle(_ subscriptionRequest: MLSSubscription) {
+        guard canHandle(subscriptionRequest)
         else { return }
         
-        switch subscription.subscribed {
+        /// If the subscription request has a subscribed flag then subscribe the user to it, if not then unsubscribe
+        switch subscriptionRequest.subscribed {
         case true:
             mailingListService
-                .subscribeTo(subscription: subscription)
+                .subscribeTo(subscription: subscriptionRequest)
         case false:
             mailingListService
-                .unsubscribeFrom(subscription: subscription)
+                .unsubscribeFrom(subscription: subscriptionRequest)
         }
     }
 }

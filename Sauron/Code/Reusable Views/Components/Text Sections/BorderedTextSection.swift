@@ -75,7 +75,7 @@ struct BorderedTextSection: View {
 /// Controls the expansion of this text section by keeping track of the expansion state and original view size to enable  size restoration
 class TextSectionExpansionController: ObservableObject {
     @Published var expanded: Bool
-    @State var enableExpansion: Bool
+    @State private var enableExpansion: Bool
     
     init(expanded: Bool = false,
          enableExpansion: Bool = true) {

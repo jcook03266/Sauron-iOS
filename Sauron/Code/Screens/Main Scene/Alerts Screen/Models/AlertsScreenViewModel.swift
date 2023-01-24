@@ -1,18 +1,19 @@
 //
-//  HomeScreenViewModel.swift
+//  AlertsScreenViewModel.swift
 //  Sauron
 //
-//  Created by Justin Cook on 1/21/23.
+//  Created by Justin Cook on 1/23/23.
 //
 
 import SwiftUI
 
-/// View model for the home screen tab in the main coordinator
-class HomeScreenViewModel: CoordinatedGenericViewModel {
-    typealias coordinator = HomeTabCoordinator
+class AlertsScreenViewModel: CoordinatedGenericViewModel {
+    typealias coordinator = AlertsTabCoordinator
     
     // MARK: - Observed
     @ObservedObject var coordinator: coordinator
+    /// Pending Feature Campaign
+    @ObservedObject var FFRScreen: FFRScreenViewModel<coordinator>
     
     // MARK: - Styling
     // Colors
@@ -26,15 +27,15 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         titleFontWeight: Font.Weight = .semibold
     
     // MARK: - Assets
-    /// TDB
+    /// Images
+    let titleIcon: Image = Icons.getIconImage(named: .cloud_sun_bolt_fill)
     
     // MARK: - Localized Text
-    // TODO: - Create Daily Message Service For dynamic user message prompts for returning users, and first time users
-    var title: String {
-        return LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_GREETING_RETURNING_USER_1)
-    }
+    let title: String = LocalizedStrings.getLocalizedString(for: .ALERTS_SCREEN_TITLE)
     
     init(coordinator: coordinator) {
         self.coordinator = coordinator
+        self.FFRScreen = .init(coordinator: coordinator,
+                               targetMailingListSubscriptionType: .cloudAlertsRelease)
     }
 }

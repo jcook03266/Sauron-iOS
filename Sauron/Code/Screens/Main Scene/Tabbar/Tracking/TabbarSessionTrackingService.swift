@@ -97,7 +97,7 @@ class TabbarContextSessionTrackingService: ObservableObject {
     func createNewContextSession(with tab: tabs) {
         currentTabbarContext = .init(tab: tab)
         
-        logUpdates()
+        //logUpdates()
     }
     
     func getLastContextSession() -> TabbarContextSession {

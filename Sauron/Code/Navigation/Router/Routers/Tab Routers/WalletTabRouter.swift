@@ -13,7 +13,7 @@ class WalletTabRouter: Routable {
     typealias Body = AnyView
     
     // MARK: -  View Models
-    //@Published var buildsViewModel: BuildsViewModel!
+    @Published var walletScreenViewModel: WalletScreenViewModel!
     
     // MARK: - Observed
     @ObservedObject var coordinator: WalletTabCoordinator
@@ -25,11 +25,10 @@ class WalletTabRouter: Routable {
     }
     
     func initViewModels() {
-        
+        self.walletScreenViewModel = .init(coordinator: self.coordinator)
     }
     
     func getPath(to route: Route) -> OrderedCollections.OrderedSet<Route> {
-        
         switch route {
         case .main:
             return [.main]
@@ -42,7 +41,7 @@ class WalletTabRouter: Routable {
         
         switch route {
         case .main:
-            view = WalletScreen()
+            view = WalletScreen(model: self.walletScreenViewModel)
             
             statusBarHidden = false
         }
@@ -54,5 +53,3 @@ class WalletTabRouter: Routable {
         )
     }
 }
-
-

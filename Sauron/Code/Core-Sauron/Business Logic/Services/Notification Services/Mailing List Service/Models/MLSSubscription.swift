@@ -8,7 +8,11 @@
 import Foundation
 
 /// A transportable package describing a subscription of a specific type that can be posted, and requested from a remote server
-struct MLSSubscription: Hashable {
+struct MLSSubscription: Identifiable, Hashable {
+    var id: MLSSubscriptionType {
+        return type
+    }
+    
     // MARK: - Properties
     /// Used by the responsibility chain to determine the correct handler
     let type: MLSSubscriptionType
@@ -24,6 +28,10 @@ struct MLSSubscription: Hashable {
         self.type = type
         self.timeOfCreation = timeOfCreation
         self.subscribed = subscribed
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     enum MLSSubscriptionType {

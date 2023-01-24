@@ -124,10 +124,11 @@ class MainCoordinator: TabbarCoordinator {
     
     // MARK: - Tabbar Navigation
     func navigateTo(tab: MainRoutes){
-        currentTab = tab
+        guard let child = getChildTabCoordinator(for: tab)
+        else { return }
         
-        let child = getTabCoordinatorFor(route: tab)
-        present(coordinator: child)
+        currentTab = tab
+        switchTo(coordinator: child)
     }
     
     // MARK: - Root Coordinated View Builders

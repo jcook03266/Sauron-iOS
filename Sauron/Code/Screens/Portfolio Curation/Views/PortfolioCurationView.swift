@@ -12,10 +12,10 @@ struct PortfolioCurationView: View {
     @StateObject var model: PortfolioCurationViewModel
     
     // MARK: - States
-    @State var didAppear: Bool = false
-    @State var displayBottomSection: Bool = true
-    @State var scrollViewContentOffset: CGPoint = .zero
-    @State var lastScrollViewContentOffset: CGPoint = .zero
+    @State private var didAppear: Bool = false
+    @State private var displayBottomSection: Bool = true
+    @State private var scrollViewContentOffset: CGPoint = .zero
+    @State private var lastScrollViewContentOffset: CGPoint = .zero
     
     // MARK: - Dimensions + Padding
     private let backButtonTrailingPadding: CGFloat = 20,
@@ -291,9 +291,7 @@ struct PortfolioCurationView: View {
                 model.sortButtonPressedAction()
             } label: {
                 model.sortButtonIcon
-                    .resizable()
-                    .renderingMode(.template)
-                    .aspectRatio(contentMode: .fit)
+                    .fittedResizableTemplateImageModifier()
                     .applyGradient(gradient: model.sortButtonGradient)
                     .frame(width: sortButtonIconSize.width,
                            height: sortButtonIconSize.height)

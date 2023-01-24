@@ -14,7 +14,7 @@ struct VOCPageView: View {
     @ObservedObject var manager: VOCViewModel
     
     // MARK: - States
-    @State var scrollEnabled: Bool = false
+    @State private var scrollEnabled: Bool = false
     
     let font: FontRepository = .heading_2,
         titleGradient: LinearGradient = Colors.gradient_1,

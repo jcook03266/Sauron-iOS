@@ -14,7 +14,7 @@ class ProgressBarNavigationCoordinator<ViewModel>: ObservableObject, GenericNavi
     @ObservedObject var progressBar: PartitionedProgressBarViewModel
     
     // States
-    @State var enabled: Bool = true
+    @State private var enabled: Bool = true
     
     // Published
     @Published var currentPage: Int // 1-indexed

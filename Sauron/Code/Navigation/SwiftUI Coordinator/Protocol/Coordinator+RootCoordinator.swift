@@ -105,14 +105,33 @@ extension Coordinator {
 
 // MARK: - Child coordinator life cycle management
 extension Coordinator {
-    /// Present the given coordinator which will take over the current root view and define its own view hierarchy
-    public func present(coordinator: any Coordinator,
+    /// Present the given unique coordinator which will take over the current root view and define its own view hierarchy
+    /// Note: Each child must be unique, the coordinator cannot have duplicate children as this will confuse the system and result in a memory leak from not being able to reach an isolated child instance
+    public func present<C: Coordinator>(coordinator: C,
                         onPresent: (() -> Void)? = nil) {
+        guard !doesChildExist(C.self)
+        else { return }
+        
         dismissSheet()
         dismissFullScreenCover()
         clearDismissalActionStore()
         
         addChild(coordinator)
+        coordinator.start()
+        self.rootView = coordinator.rootView
+        
+        completionHandler(onPresent)
+    }
+    
+    /// Switches to the given given child (if present), used by the tabbar coordinator to cycle through its coordinators
+    public func switchTo<C: Coordinator>(coordinator: C,
+                       onPresent: (() -> Void)? = nil) {
+        guard doesChildExist(C.self)
+        else { return }
+        
+        dismissSheet()
+        dismissFullScreenCover()
+        clearDismissalActionStore()
         coordinator.start()
         self.rootView = coordinator.rootView
         
@@ -132,15 +151,9 @@ extension Coordinator {
         completionHandler(onDismiss)
     }
     
-    /// Check to see if the given coordinator is an active child of this coordinator
-    public func doesChildExist(_ child: any Coordinator) -> Bool {
-        return children.contains(where: { $0 === child })
-    }
-    
-    public func getChild(for coordinator: any Coordinator) -> (any Coordinator)? {
-        return children.first {
-            $0 === coordinator
-        }
+    /// Check to see if the coordinator for the given type is an active child of this coordinator
+    public func doesChildExist<C: Coordinator>(_ childType: C.Type) -> Bool {
+        return children.contains(where: { $0 is C })
     }
     
     public func getChild<C: Coordinator>(for coordinator: C.Type) -> (C)? {
@@ -161,8 +174,8 @@ extension Coordinator {
         return children.last
     }
     
-    public func addChild(_ child: any Coordinator) {
-        guard !doesChildExist(child)
+    public func addChild<C: Coordinator>(_ child: C) {
+        guard !doesChildExist(C.self)
         else { return }
         
         children.append(child)
@@ -387,7 +400,7 @@ extension Coordinator {
 
 protocol TabbarCoordinator: RootCoordinator {
     /// Returns the coordinator for the specified tabbar tab route, should be contained in the children store, if not then it will be instantiated and added to the children store
-    func getTabCoordinatorFor(route: MainRoutes) -> any Coordinator
+    func getTabCoordinator(for route: MainRoutes) -> any Coordinator
     
     // MARK: - Published
     /// Keeps track of the currently selected tab on the coordinator level, this is also tracker by the main router as well
@@ -395,7 +408,7 @@ protocol TabbarCoordinator: RootCoordinator {
 }
 
 extension TabbarCoordinator {
-    func getTabCoordinatorFor(route: MainRoutes) -> any Coordinator {
+    func getTabCoordinator(for route: MainRoutes) -> any Coordinator {
         guard route != .authScreen
         else { return dispatcher.homeTabCoordinator }
         
@@ -418,10 +431,37 @@ extension TabbarCoordinator {
         return coordinator
     }
     
+    func getChildTabCoordinator(for tab: MainRoutes) -> (any Coordinator)? {
+        var child: (any Coordinator)? = nil
+    
+        switch tab {
+        case .home:
+            let foundChild: HomeTabCoordinator? = getChild(for: HomeTabCoordinator.self)
+            
+            child = foundChild
+        case .wallet:
+            let foundChild: WalletTabCoordinator? = getChild(for: WalletTabCoordinator.self)
+            
+            child = foundChild
+        case .settings:
+            let foundChild: SettingsTabCoordinator? = getChild(for: SettingsTabCoordinator.self)
+            
+            child = foundChild
+        case .alerts:
+            let foundChild: AlertsTabCoordinator? = getChild(for: AlertsTabCoordinator.self)
+            
+            child = foundChild
+        case .authScreen:
+            break
+        }
+        
+        return child
+    }
+    
     /// The tabbar has specific children it manages, these children are never discarded throughout the tabbar's lifecycle so they're constant
     func populateChildren() {
         for route in MainRoutes.allCases {
-            let child = getTabCoordinatorFor(route: route)
+            let child = getTabCoordinator(for: route)
             addChild(child)
         }
     }

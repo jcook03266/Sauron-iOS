@@ -13,8 +13,8 @@ struct CoverScreenView<GenericRootCoordinator: RootCoordinator>: View {
     @StateObject var model: CoverScreenViewModel<GenericRootCoordinator>
     
     // MARK: - States
-    @State var didAppear: Bool = false
-    @State var showAppName: Bool = false
+    @State private var didAppear: Bool = false
+    @State private var showAppName: Bool = false
     
     // MARK: - Padding
     var appNameTextViewBottomPadding: CGFloat = 20,

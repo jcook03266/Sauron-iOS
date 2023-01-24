@@ -35,6 +35,7 @@ struct SauronApp: App {
         WindowGroup {
             Group {
                 if AppService.isDebug {
+                    // Notice: Not Deeplinkable, this is an isolated instance
                     MainCoordinator(rootCoordinatorDelegate: rootCoordinatorDelegate).coordinatorView()
                 }
                 else {

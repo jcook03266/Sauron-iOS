@@ -13,7 +13,7 @@ class SettingsTabRouter: Routable {
     typealias Body = AnyView
     
     // MARK: -  View Models
-    //@Published var buildsViewModel: BuildsViewModel!
+    @Published var settingsScreenViewModel: SettingsScreenViewModel!
     
     // MARK: - Observed
     @ObservedObject var coordinator: SettingsTabCoordinator
@@ -25,7 +25,7 @@ class SettingsTabRouter: Routable {
     }
     
     func initViewModels() {
-        
+        self.settingsScreenViewModel = .init(coordinator: self.coordinator)
     }
     
     func getPath(to route: Route) -> OrderedCollections.OrderedSet<Route> {
@@ -42,7 +42,7 @@ class SettingsTabRouter: Routable {
         
         switch route {
         case .main:
-            view = SettingsScreen()
+            view = SettingsScreen(model: self.settingsScreenViewModel)
             
             statusBarHidden = false
         }

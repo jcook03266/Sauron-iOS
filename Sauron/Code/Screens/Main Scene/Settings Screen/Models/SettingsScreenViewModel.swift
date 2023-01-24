@@ -1,15 +1,14 @@
 //
-//  HomeScreenViewModel.swift
+//  SettingsScreenViewModel.swift
 //  Sauron
 //
-//  Created by Justin Cook on 1/21/23.
+//  Created by Justin Cook on 1/23/23.
 //
 
 import SwiftUI
 
-/// View model for the home screen tab in the main coordinator
-class HomeScreenViewModel: CoordinatedGenericViewModel {
-    typealias coordinator = HomeTabCoordinator
+class SettingsScreenViewModel: CoordinatedGenericViewModel {
+    typealias coordinator = SettingsTabCoordinator
     
     // MARK: - Observed
     @ObservedObject var coordinator: coordinator
@@ -26,13 +25,11 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         titleFontWeight: Font.Weight = .semibold
     
     // MARK: - Assets
-    /// TDB
+    /// Images
+    let titleIcon: Image = Icons.getIconImage(named: .gear)
     
     // MARK: - Localized Text
-    // TODO: - Create Daily Message Service For dynamic user message prompts for returning users, and first time users
-    var title: String {
-        return LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_GREETING_RETURNING_USER_1)
-    }
+    let title: String = LocalizedStrings.getLocalizedString(for: .SETTINGS_SCREEN_TITLE)
     
     init(coordinator: coordinator) {
         self.coordinator = coordinator

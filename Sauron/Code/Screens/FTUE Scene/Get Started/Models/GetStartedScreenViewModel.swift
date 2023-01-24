@@ -57,6 +57,7 @@ class GetStartedScreenViewModel: CoordinatedGenericViewModel {
         forkPromptFont: FontRepository = .body_S_Bold,
         learnMoreButtonFont: FontRepository = .body_M_Bold,
         appNameSignatureFont: FontRepository = .heading_0,
+        appNameSignatureFontWeight: Font.Weight = .semibold,
         tosPPPortalFont: FontRepository = .body_S
     
     // MARK: - Localized Text

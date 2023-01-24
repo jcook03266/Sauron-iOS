@@ -78,8 +78,7 @@ struct ArrowButton: View {
                             y: shadowCoordinates.y)
                     .overlay(
                         arrowIcon
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
+                            .fittedResizableTemplateImageModifier()
                             .frame(width: imageSize.width, height: imageSize.height)
                             .padding([.all], padding)
                             .foregroundColor(isEnabled ? foregroundColor : disabledForegroundColor)

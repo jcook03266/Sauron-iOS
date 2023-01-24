@@ -50,8 +50,12 @@ class MailingListService: MLSProtocol {
     }
     
     func isUserSubscribedTo(subscriptionType: MLSSubscription.MLSSubscriptionType) -> Bool {
-        
-        return activeUserSubscriptions.contains {
+        return getActiveSubscription(for: subscriptionType) != nil
+    }
+    
+    /// - Returns: The specific member found in the active subscriptions set's memory
+    func getActiveSubscription(for subscriptionType: MLSSubscription.MLSSubscriptionType) -> MLSSubscription? {
+        return activeUserSubscriptions.first {
             $0.type == subscriptionType
         }
     }
@@ -98,8 +102,12 @@ class MailingListService: MLSProtocol {
         else { return false }
         
         /// If the deletion from the backend is successful then remove it from the client side
-        activeUserSubscriptions.remove(subscription)
+        /// Some Network sensitive task */
         
+        guard let subscriptionToRemove = getActiveSubscription(for: subscription.type)
+        else { return false }
+        
+        activeUserSubscriptions.remove(subscriptionToRemove)
         return true
     }
     

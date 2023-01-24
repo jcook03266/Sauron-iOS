@@ -106,6 +106,7 @@ class SRNTabbarViewModel: GenericViewModel {
     }
     
     // MARK: - Models
+    /// Controls the order of the tabbar's tab buttons
     var tabModels: [SRNTabbarTabViewModel] {
         return [
             .init(parent: self,
@@ -113,9 +114,9 @@ class SRNTabbarViewModel: GenericViewModel {
             .init(parent: self,
                   tab: .wallet),
             .init(parent: self,
-                  tab: .settings),
-            .init(parent: self,
                   tab: .alerts),
+            .init(parent: self,
+                  tab: .settings)
         ]
     }
     

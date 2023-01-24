@@ -94,6 +94,40 @@
 "AUTH_SCREEN_ATTEMPTS_REMAINING_COUNTER_PLURAL" = "Attempts remaining";
 "AUTH_SCREEN_RETRY_TIME_REMAINING_COUNTER" = "Retry in:";
 
+// MARK: - Main Scene
+// MARK: - Home Screen
+"HOME_SCREEN_GREETING_NEW_USER_1" = "Welcome 🔥";
+"HOME_SCREEN_GREETING_NEW_USER_2" = "Enjoy your stay 🔥";
+"HOME_SCREEN_GREETING_NEW_USER_3" = "Let's Make Some Moves!";
+"HOME_SCREEN_GREETING_RETURNING_USER_1" = "Hey There 👋";
+"HOME_SCREEN_GREETING_RETURNING_USER_2" = "Fancy Seeing You Again";
+"HOME_SCREEN_GREETING_RETURNING_USER_3" = "Long Time No See! 👁";
+"HOME_SCREEN_GREETING_RETURNING_USER_4" = "We Missed You ❤️‍🔥";
+
+// MARK: - Wallet Screen
+"WALLET_SCREEN_TITLE" = "My Wallet";
+
+// MARK: - Settings Screen
+"SETTINGS_SCREEN_TITLE" = "Settings";
+
+// MARK: - Alerts Screen
+"ALERTS_SCREEN_TITLE" = "Cloud Alerts";
+
+// MARK: - Future Feature Release Screen
+// Title
+"FUTURE_FEATURE_RELEASE_SCREEN_COMING_SOON" = "Coming Soon.";
+
+// Not Subscribed Users
+"FUTURE_FEATURE_RELEASE_SCREEN_MAILING_LIST_SUBSCRIPTION_PROMPT_NOT_SUBSCRIBED" = "Get updates on this feature";
+"FUTURE_FEATURE_RELEASE_SCREEN_MAILING_LIST_SUBSCRIPTION_PROMPT_NOT_SUBSCRIBED_SUBTITLE" = "This will subscribe you to our notification list";
+"FUTURE_FEATURE_RELEASE_SCREEN_MAILING_LIST_SUBSCRIPTION_PROMPT_NOT_SUBSCRIBED_SUBTITLE_NEWLINE" = "This will subscribe you to our \nnotification list";
+
+// Subscribed Users
+"FUTURE_FEATURE_RELEASE_SCREEN_MAILING_LIST_SUBSCRIPTION_PROMPT_SUBSCRIBED" = "You’re getting updates about this feature";
+"FUTURE_FEATURE_RELEASE_SCREEN_MAILING_LIST_SUBSCRIPTION_PROMPT_SUBSCRIBED_NEWLINE" = "You’re getting updates \nabout this feature";
+"FUTURE_FEATURE_RELEASE_SCREEN_MAILING_LIST_SUBSCRIPTION_PROMPT_SUBSCRIBED_SUBTITLE" = "You can unsubscribe at any time";
+"FUTURE_FEATURE_RELEASE_SCREEN_MAILING_LIST_SUBSCRIPTION_PROMPT_SUBSCRIBED_SUBTITLE_NEWLINE" = "You can unsubscribe at any \ntime";
+
 // MARK: - Sort Filter Context Menu
 "SORT_FILTER_CONTEXT_MENU_TITLE" = "Sort by:";
 "SORT_FILTER_CONTEXT_MENU_NAME_OPTION" = "Name";

@@ -14,9 +14,9 @@ struct SatelliteTextField: View {
     @StateObject var model: SatelliteTextFieldModel
     
     // MARK: - States
-    @FocusState var textFieldFocused: Bool
-    @State var clearTextFieldButtonPressed: Bool = false
-    @State var clearTextFieldButtonRotationAmount: CGFloat = 0
+    @FocusState private var textFieldFocused: Bool
+    @State private var clearTextFieldButtonPressed: Bool = false
+    @State private var clearTextFieldButtonRotationAmount: CGFloat = 0
     
     // MARK: - View Properties
     var animationDuration: CGFloat = 0.3

@@ -27,7 +27,7 @@ struct MainCoordinatorView: CoordinatedView {
     // MARK: - Convenience
     var currentChildTabCoordinator: any ChildTabCoordinator {
         return coordinator
-            .getTabCoordinatorFor(route: currentTab)
+            .getTabCoordinator(for: currentTab)
     }
     
     var currentTab: SRNTabbarViewModel.tabs {
@@ -38,7 +38,7 @@ struct MainCoordinatorView: CoordinatedView {
         return currentChildTabCoordinator.statusBarHidden
     }
     
-    // MARK: - Navigation States
+    // MARK: - Navigation States (Part of protocol | can't be privatized)
     @State var sheetItemState: MainRoutes? = nil
     @State var fullCoverItemState: MainRoutes? = nil
     
@@ -113,7 +113,8 @@ extension MainCoordinatorView {
 struct MainCoordinatorView_Previews: PreviewProvider {
     static var previews: some View {
         MainCoordinatorView(coordinator: .init(),
-                            tabbarModel: .init(coordinator: .init(), router: .init(coordinator: .init())))
+                            tabbarModel: .init(coordinator: .init(),
+                                               router: .init(coordinator: .init())))
     }
 }
 
