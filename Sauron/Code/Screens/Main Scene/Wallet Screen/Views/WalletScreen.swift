@@ -30,7 +30,7 @@ struct WalletScreen: View {
 // MARK: - View Combinations
 extension WalletScreen {
     var featureReleaseScreen: some View {
-        FutureFeatureReleaseScreen(model: model.FFRScreen)
+        FutureFeatureReleaseScreen(model: model.FFRScreenViewModel)
     }
     
     var contentContainer: some View {

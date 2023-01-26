@@ -3,7 +3,6 @@
   Sauron
 
   Created by Justin Cook on 12/22/22.
-  
 */
 
 // MARK: - App Specific:
@@ -96,6 +95,7 @@
 
 // MARK: - Main Scene
 // MARK: - Home Screen
+/// Greeting Section
 "HOME_SCREEN_GREETING_NEW_USER_1" = "Welcome 🔥";
 "HOME_SCREEN_GREETING_NEW_USER_2" = "Enjoy your stay 🔥";
 "HOME_SCREEN_GREETING_NEW_USER_3" = "Let's Make Some Moves!";
@@ -103,6 +103,11 @@
 "HOME_SCREEN_GREETING_RETURNING_USER_2" = "Fancy Seeing You Again";
 "HOME_SCREEN_GREETING_RETURNING_USER_3" = "Long Time No See! 👁";
 "HOME_SCREEN_GREETING_RETURNING_USER_4" = "We Missed You ❤️‍🔥";
+// Crypto News Section
+"HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS" = "Crypto News";
+
+// MARK: - Banner Events
+"BANNER_EVENT_FTUE_WELCOME_MESSAGE_CTA" = "Welcome to Sauron 🔥";
 
 // MARK: - Wallet Screen
 "WALLET_SCREEN_TITLE" = "My Wallet";

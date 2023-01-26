@@ -15,6 +15,10 @@ class HomeTabRouter: Routable {
     // MARK: -  View Models
     @Published var homeScreenViewModel: HomeScreenViewModel!
     
+    // MARK: - Deeplink URL Fragments
+    /// The section to scroll to on the home screen when passed a section identifier
+    @Published var homeScreenSectionFragment: HomeScreenViewModel.Sections? = nil
+    
     // MARK: - Observed
     @ObservedObject var coordinator: HomeTabCoordinator
     
@@ -25,7 +29,8 @@ class HomeTabRouter: Routable {
     }
     
     func initViewModels() {
-        self.homeScreenViewModel = .init(coordinator: self.coordinator)
+        self.homeScreenViewModel = .init(coordinator: self.coordinator,
+                                         router: self)
     }
     
     func getPath(to route: Route) -> OrderedCollections.OrderedSet<Route> {

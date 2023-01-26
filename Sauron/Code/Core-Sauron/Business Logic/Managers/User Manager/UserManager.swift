@@ -10,7 +10,7 @@ import Combine
 
 /// A general manager that allows for a higher level interface with the current user model
 class UserManager: ObservableObject {
-    // MARK: - Published Properties
+    // MARK: - Published
     @Published private(set) var currentUser: SRNUser!
     /// Keeps track of how long the user has been using the application
     @Published private(set) var currentSessionDuration: Double = 0 // In seconds

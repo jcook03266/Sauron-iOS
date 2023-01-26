@@ -26,6 +26,7 @@ extension Image {
     }
 }
 
+// MARK: - Fit
 private struct FittedResizableTemplateImage: ImageModifier {
     func body(content: Image) -> some View {
         content
@@ -44,17 +45,49 @@ private struct FittedResizableOriginalImage: ImageModifier {
     }
 }
 
+// MARK: - Fill
+private struct FilledResizableTemplateImage: ImageModifier {
+    func body(content: Image) -> some View {
+        content
+            .resizable()
+            .renderingMode(.original)
+            .aspectRatio(contentMode: .fill)
+    }
+}
+
+
+private struct FilledResizableOriginalImage: ImageModifier {
+    func body(content: Image) -> some View {
+        content
+            .resizable()
+            .renderingMode(.original)
+            .aspectRatio(contentMode: .fill)
+    }
+}
+
 extension Image {
-    /// - Properties: Resizable + .template rendering mode + .fit aspect ratio
+    /// - Modifier Properties: Resizable + .template rendering mode + .fit aspect ratio
     func fittedResizableTemplateImageModifier() -> some View {
         self
             .modifier(FittedResizableTemplateImage())
     }
-    
-    /// - Properties: Resizable + .original rendering mode + .fit aspect ratio
+
+    /// - Modifier Properties: Resizable + .original rendering mode + .fit aspect ratio
     func fittedResizableOriginalImageModifier() -> some View {
         self
             .modifier(FittedResizableOriginalImage())
+    }
+    
+    /// - Modifier Properties: Resizable + .template rendering mode + .fill aspect ratio
+    func filledResizableTemplateImageModifier() -> some View {
+        self
+            .modifier(FilledResizableTemplateImage())
+    }
+    
+    /// - Modifier Properties: Resizable + .original rendering mode + .fill aspect ratio
+    func filledResizableOriginalImageModifier() -> some View {
+        self
+            .modifier(FilledResizableOriginalImage())
     }
 }
 

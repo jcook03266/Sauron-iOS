@@ -62,7 +62,9 @@ extension DeepLinkManager: DeeplinkManagerProtocol {
     }
 }
 
+// MARK: - Constants + Event Banner Actions
 extension DeepLinkManager {
+    /// Reusable constants for keeping track of proper URL formatting standards
     class DeepLinkConstants {
         /// Universal links TBA:
         static let universalScheme = "https"
@@ -79,5 +81,19 @@ extension DeepLinkManager {
         static let parameterStub = "/?"
         static let fragmentStub = "#"
         static let directorySlash = "/"
+        static let parameterChainer = "&"
+        static let parameterEquator = "="
+    }
+    
+    /// All supported event banner deeplinks
+    class EventBannerActions {
+        static func ftueWelcomeMessageDeepLink() -> URL? {
+            let builtURL = DeepLinkBuilder.buildDeeplinkFor(routerDirectory: .HomeRoutes,
+                                                            directories: [],
+                                                            parameters: [:],
+                                                            fragment: "")
+            
+            return builtURL
+        }
     }
 }

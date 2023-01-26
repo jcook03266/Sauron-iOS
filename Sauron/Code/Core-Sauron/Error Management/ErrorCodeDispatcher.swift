@@ -97,7 +97,7 @@ struct ErrorCodeDispatcher: ErrorCodeDispatcherProtocol {
         else {
             return { preconditionFailure() }}
         
-        fatalError(code.rawValue + " , " + vestigialMessage)
+        fatalError(code.rawValue + ", " + vestigialMessage)
     }
 }
 
@@ -154,7 +154,7 @@ extension ErrorCodeDispatcher.AuthenticationErrors: ThrowableErrorCodeDispatcher
         else {
             return { preconditionFailure() }}
         
-        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+        preconditionFailure(code.localizedDescription + ", " + extendedInformation)
     }
 }
 
@@ -203,7 +203,7 @@ extension ErrorCodeDispatcher.KeychainErrors: ThrowableErrorCodeDispatcherProtoc
         else {
             return { preconditionFailure() }}
         
-        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+        preconditionFailure(code.localizedDescription + ", " + extendedInformation)
     }
 }
 
@@ -216,7 +216,8 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
         case noHandlerFoundFor(url: URL)
         case routeCouldNotBeInitialized(routeRawValue: String, url: URL)
         case routeUnreachableFromCurrentRoute
-        case unAuthorizedUser(url: URL)
+        case unauthorizedUser(url: URL)
+        case webLinkCouldNotBeOpened(url: URL)
  
         var errorDescription: String? {
             switch self {
@@ -235,8 +236,11 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
                 
                 return "The route parsed from the url: \(currentURL), could not be reached from the current context"
                 
-            case .unAuthorizedUser(url: let url):
+            case .unauthorizedUser(url: let url):
                 return "An unauthorized user tried to open the following url: \(url), this user must authenticate themselves first in order to open URLs in this app"
+                
+            case .webLinkCouldNotBeOpened(url: let url):
+                return "The external web URL: \(url), could not be opened at this time, please make sure it's properly formatted."
             }
         }
     }
@@ -259,7 +263,7 @@ extension ErrorCodeDispatcher.DeeplinkingErrors: ThrowableErrorCodeDispatcherPro
         else {
             return { preconditionFailure() }}
         
-        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+        preconditionFailure(code.localizedDescription + ", " + extendedInformation)
     }
 }
 
@@ -307,7 +311,7 @@ extension ErrorCodeDispatcher.CoreDataErrors: ThrowableErrorCodeDispatcherProtoc
         else {
             return { preconditionFailure() }}
         
-        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+        preconditionFailure(code.localizedDescription + ", " + extendedInformation)
     }
 }
 
@@ -364,7 +368,7 @@ extension ErrorCodeDispatcher.FileManagerErrors: ThrowableErrorCodeDispatcherPro
         else {
             return { preconditionFailure() }}
         
-        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+        preconditionFailure(code.localizedDescription + ", " + extendedInformation)
     }
 }
 
@@ -403,7 +407,7 @@ extension ErrorCodeDispatcher.NetworkingErrors: ThrowableErrorCodeDispatcherProt
         else {
             return { preconditionFailure() }}
         
-        preconditionFailure(code.localizedDescription + " , " + extendedInformation)
+        preconditionFailure(code.localizedDescription + ", " + extendedInformation)
     }
 }
 
@@ -425,7 +429,7 @@ extension ErrorCodeDispatcher.ResourceErrors: ErrorCodeDispatcherProtocol {
         else {
             return { preconditionFailure() }}
         
-        fatalError(code.rawValue + " , " + vestigialMessage)
+        fatalError(code.rawValue + ", " + vestigialMessage)
     }
     
     static func triggerPreconditionFailure(for code: codes,
@@ -434,7 +438,7 @@ extension ErrorCodeDispatcher.ResourceErrors: ErrorCodeDispatcherProtocol {
         else {
             return { preconditionFailure() }}
         
-        preconditionFailure(code.rawValue + " , " + extendedInformation)
+        preconditionFailure(code.rawValue + ", " + extendedInformation)
     }
 }
 
@@ -446,6 +450,8 @@ extension ErrorCodeDispatcher.SwiftErrors: ErrorCodeDispatcherProtocol {
         case inheritedCoderNotImplemented = "init(coder:) has not been implemented"
         case urlCouldNotBeParsed = "The given URL could not be transformed"
         case jsonCouldNotBeParsed = "The given JSON data could not be parsed into the target type, please make sure your data and types match"
+        case jsonCouldNotBeEncoded = "The given value could not be encoded into a transportable data type, please make sure that your value conforms to the encodable protocol with coding keys"
+        case nilValueUnwrapped = "A nil value was unwrapped"
     }
     
     static func getErrorCodeFor(code: ErrorCodes) -> String {
@@ -458,7 +464,7 @@ extension ErrorCodeDispatcher.SwiftErrors: ErrorCodeDispatcherProtocol {
         else {
             return { preconditionFailure() }}
         
-        fatalError(code.rawValue + " , " + vestigialMessage)
+        fatalError(code.rawValue + ", " + vestigialMessage)
     }
     
     static func throwError(for code: codes) -> Error {
@@ -485,7 +491,7 @@ extension ErrorCodeDispatcher.UserDefaultsErrors: ErrorCodeDispatcherProtocol {
         else {
             return { preconditionFailure() }}
         
-        fatalError(code.rawValue + " , " + vestigialMessage)
+        fatalError(code.rawValue + ", " + vestigialMessage)
     }
 }
 
@@ -511,6 +517,6 @@ extension ErrorCodeDispatcher.BundleErrors: ErrorCodeDispatcherProtocol {
         else {
             return { preconditionFailure() }}
         
-        fatalError(code.rawValue + " , " + vestigialMessage)
+        fatalError(code.rawValue + ", " + vestigialMessage)
     }
 }

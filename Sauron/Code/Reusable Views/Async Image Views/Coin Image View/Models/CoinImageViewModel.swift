@@ -28,10 +28,10 @@ class CoinImageViewModel: GenericViewModel {
     }
     
     private func getImage() {
-        coinImageFetcher.getImage { [weak self] fetchImage in
+        coinImageFetcher.getImage { [weak self] fetchedImage in
             guard let self = self else { return }
             
-            self.image = fetchImage
+            self.image = fetchedImage
             self.isLoading = false
         }
     }

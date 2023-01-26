@@ -34,19 +34,19 @@ final class DeepLinkBuilder {
         self.parameters = parameters
         self.fragment = fragment
         
-        buildDeeplinkFor(routerDirectory: routerDirectory,
+        self.currentDeeplink = DeepLinkBuilder.buildDeeplinkFor(routerDirectory: routerDirectory,
                                      directories: directories,
                                      parameters: parameters,
                                      fragment: fragment)
         
-        buildUniversalDeeplinkFor(routerDirectory: routerDirectory,
+        self.currentUniversalLink = DeepLinkBuilder.buildUniversalDeeplinkFor(routerDirectory: routerDirectory,
                                directories: directories,
                                parameters: parameters,
                                fragment: fragment)
     }
     
     @discardableResult
-    func buildDeeplinkFor(routerDirectory: RouteDirectories,
+    static func buildDeeplinkFor(routerDirectory: RouteDirectories,
                                       directories: [String] = [],
                                       parameters: [String : String] = [:],
                                       fragment: String = "") -> URL?
@@ -57,7 +57,9 @@ final class DeepLinkBuilder {
             host = routerDirectory.rawValue.getURLSafeString(),
             parameterStub = DeepLinkManager.DeepLinkConstants.parameterStub,
             fragmentStub = DeepLinkManager.DeepLinkConstants.fragmentStub,
-            directorySlash = DeepLinkManager.DeepLinkConstants.directorySlash
+            directorySlash = DeepLinkManager.DeepLinkConstants.directorySlash,
+            parameterChainer = DeepLinkManager.DeepLinkConstants.parameterChainer,
+            parameterEquator = DeepLinkManager.DeepLinkConstants.parameterEquator
         
         urlString += scheme
         urlString += schemeSuffix
@@ -76,23 +78,23 @@ final class DeepLinkBuilder {
             
             /// Append parameters and arguments onto the URL string, and concatenate these parameters with an ampersand
             for (index, (parameter, argument)) in parameters.enumerated() {
-                if index != 0 { urlString += "&"}
-                urlString += "\(parameter)=\(argument)"
+                if index != 0 { urlString += parameterChainer}
+                urlString += "\(parameter)\(parameterEquator)\(argument)"
             }
         }
         
-        // Fragment
+        // Fragment [Only one fragment is allowed]
         if !fragment.isEmpty {
+            urlString += directorySlash
             urlString += fragmentStub
-            urlString += fragment
+            urlString += fragment.getURLSafeString()
         }
   
-        currentDeeplink = urlString.asURL
-        return currentDeeplink
+        return urlString.asURL
     }
     
     @discardableResult
-    func buildUniversalDeeplinkFor(routerDirectory: RouteDirectories,
+    static func buildUniversalDeeplinkFor(routerDirectory: RouteDirectories,
                                 directories: [String] = [],
                                 parameters: [String : String] = [:],
                                 fragment: String = "") -> URL?
@@ -104,7 +106,9 @@ final class DeepLinkBuilder {
             path = routerDirectory.rawValue.getURLSafeString(),
             parameterStub = DeepLinkManager.DeepLinkConstants.parameterStub,
             fragmentStub = DeepLinkManager.DeepLinkConstants.fragmentStub,
-            directorySlash = DeepLinkManager.DeepLinkConstants.directorySlash
+            directorySlash = DeepLinkManager.DeepLinkConstants.directorySlash,
+            parameterChainer = DeepLinkManager.DeepLinkConstants.parameterChainer,
+            parameterEquator = DeepLinkManager.DeepLinkConstants.parameterEquator
         
         urlString += universalScheme
         urlString += schemeSuffix
@@ -125,18 +129,18 @@ final class DeepLinkBuilder {
             
             /// Append parameters and arguments onto the URL string, and concatenate these parameters with an ampersand
             for (index, (parameter, argument)) in parameters.enumerated() {
-                if index != 0 { urlString += "&"}
-                urlString += "\(parameter)=\(argument)"
+                if index != 0 { urlString += parameterChainer}
+                urlString += "\(parameter)\(parameterEquator)\(argument)"
             }
         }
         
-        // Fragment
+        // Fragment [Only one fragment is allowed]
         if !fragment.isEmpty {
+            urlString += directorySlash
             urlString += fragmentStub
-            urlString += fragment
+            urlString += fragment.getURLSafeString()
         }
         
-        currentUniversalLink = urlString.asURL
-        return currentUniversalLink
+        return urlString.asURL
     }
 }

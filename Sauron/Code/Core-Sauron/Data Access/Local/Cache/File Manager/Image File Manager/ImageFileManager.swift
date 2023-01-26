@@ -162,6 +162,6 @@ class ImageFileManager: FileManagerInterface {
     }
     
     enum ImageDirectoryNames: String, CaseIterable {
-        case coinImages
+        case coinImages, bannerEventImages
     }
 }

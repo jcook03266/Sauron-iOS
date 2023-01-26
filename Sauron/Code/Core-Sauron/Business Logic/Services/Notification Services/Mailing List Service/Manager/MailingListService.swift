@@ -15,7 +15,8 @@ class MailingListService: MLSProtocol {
     var handlers: [MLSHandlerProtocol] {
         return [
             SRNWalletReleaseMLSHandler(),
-            SRNCloudAlertsReleaseMLSHandler()
+            SRNCloudAlertsReleaseMLSHandler(),
+            SRNCryptoNewsReleaseMLSHandler()
         ]
     }
     

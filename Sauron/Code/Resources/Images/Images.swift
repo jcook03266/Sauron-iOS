@@ -70,7 +70,8 @@ struct Icons {
 enum ImageRepository: String, CaseIterable, Hashable {
     case coin_cluster_background_graphic = "coin.cluster.background.graphic",
          two_tone_dot_matrix_background_graphic = "two.tone.dot.matrix.background.graphic",
-         launchscreen_background = "launchscreen-background"
+         launchscreen_background = "launchscreen-background",
+         event_banner_ftue_welcome_background = "event.banner.ftue.welcome.background"
 }
 
 enum CustomIconRepository: String, CaseIterable, Hashable {
@@ -183,6 +184,7 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          faceid,
          delete_backward_fill = "delete.backward.fill",
          bitcoinsign_circle_fill = "bitcoinsign.circle.fill",
-         cloud_sun_bolt_fill = "cloud.sun.bolt.fill"
+         cloud_sun_bolt_fill = "cloud.sun.bolt.fill",
+         mic_circle_fill = "mic.circle.fill"
          
 }

@@ -17,6 +17,10 @@ class FFRScreenViewModel<HostCoordinator: Coordinator>: GenericViewModel {
     // MARK: - Published
     @Published var isUserSubscribed: Bool = false
     
+    // MARK: - Properties
+    /// Toggle between the long and shortened versions of the feature release screens
+    var useLongFormat: Bool
+    
     // MARK: - Mailing List Subscription Service
     var targetMailingListSubscriptionType: MLSSubscription.MLSSubscriptionType
     
@@ -87,10 +91,17 @@ class FFRScreenViewModel<HostCoordinator: Coordinator>: GenericViewModel {
     }
     
     init(coordinator: HostCoordinator,
-         targetMailingListSubscriptionType: MLSSubscription.MLSSubscriptionType)
+         targetMailingListSubscriptionType: MLSSubscription.MLSSubscriptionType,
+         useLongFormat: Bool = true)
     {
         self.coordinator = coordinator
         self.targetMailingListSubscriptionType =  targetMailingListSubscriptionType
+        self.useLongFormat = useLongFormat
+        
+        setup()
+    }
+    
+    private func setup() {
         self.isUserSubscribed = isUserSubscribedToTargetMailingList
         self.radioButtonViewModel = .init(onSelectAction: self.radioButtonAction(),
                                           isSelected: self.isUserSubscribed)

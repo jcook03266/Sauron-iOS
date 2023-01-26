@@ -54,7 +54,10 @@ final class LaunchScreenDeeplinkHandler: DeeplinkHandlerProtocol {
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator
         else {
-            ErrorCodeDispatcher.DeeplinkingErrors.printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route, url: url))
+            ErrorCodeDispatcher
+                .DeeplinkingErrors
+                .printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route,
+                                                                 url: url))
             
             return
         }
@@ -115,7 +118,10 @@ final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator
         else {
-            ErrorCodeDispatcher.DeeplinkingErrors.printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route, url: url))
+            ErrorCodeDispatcher
+                .DeeplinkingErrors
+                .printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route,
+                                                                 url: url))
             
             return
         }
@@ -151,6 +157,7 @@ final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
 // MARK: - Main Scene | Home Tab Handler
 /// Test links:
 /// - Home Tab: sauron://home/
+/// /// - Home Tab | Events Section: sauron://home#events or sauron://home/#events [either works]
 final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
     typealias Router = HomeTabRouter
     typealias Route = HomeRoutes
@@ -192,7 +199,7 @@ final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
         else {
             ErrorCodeDispatcher
                 .DeeplinkingErrors
-                .printErrorCode(for: .unAuthorizedUser(url: url))
+                .printErrorCode(for: .unauthorizedUser(url: url))
             return
         }
         
@@ -200,18 +207,30 @@ final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
         else { return }
         
         let path = url.path(),
-            route = path.normalizedPath.convertFromURLSafeString(),
-            queries = getQueries(from: url)
-          
+        route = path.normalizedPath.convertFromURLSafeString(),
+        _ = getQueries(from: url)
+   
         manager.switchActiveRoot(to: .mainCoordinator)
 
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)
         else {
-            ErrorCodeDispatcher.DeeplinkingErrors.printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route, url: url))
+            ErrorCodeDispatcher
+                .DeeplinkingErrors
+                .printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route,
+                                                                 url: url))
             
             return
+        }
+        
+        /// Pass the fragment to the home screen for it to scroll to the given identifier
+        if url.containsFragment ,
+           let fragment = url.fragment(),
+           let section = HomeScreenViewModel.Sections(rawValue: fragment.convertFromURLSafeString()) {
+            child
+                .router
+                .homeScreenSectionFragment = section
         }
         
         /// Send this query directly to the router corresponding to the route specified by the url
@@ -275,7 +294,7 @@ final class WalletTabDeeplinkHandler: DeeplinkHandlerProtocol {
         else {
             ErrorCodeDispatcher
                 .DeeplinkingErrors
-                .printErrorCode(for: .unAuthorizedUser(url: url))
+                .printErrorCode(for: .unauthorizedUser(url: url))
             return
         }
         
@@ -284,7 +303,7 @@ final class WalletTabDeeplinkHandler: DeeplinkHandlerProtocol {
         
         let path = url.path(),
             route = path.normalizedPath.convertFromURLSafeString(),
-            queries = getQueries(from: url)
+            _ = getQueries(from: url)
           
         manager.switchActiveRoot(to: .mainCoordinator)
 
@@ -292,7 +311,10 @@ final class WalletTabDeeplinkHandler: DeeplinkHandlerProtocol {
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)
         else {
-            ErrorCodeDispatcher.DeeplinkingErrors.printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route, url: url))
+            ErrorCodeDispatcher
+                .DeeplinkingErrors
+                .printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route,
+                                                                 url: url))
             
             return
         }
@@ -358,7 +380,7 @@ final class SettingsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         else {
             ErrorCodeDispatcher
                 .DeeplinkingErrors
-                .printErrorCode(for: .unAuthorizedUser(url: url))
+                .printErrorCode(for: .unauthorizedUser(url: url))
             return
         }
         
@@ -367,7 +389,7 @@ final class SettingsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         
         let path = url.path(),
             route = path.normalizedPath.convertFromURLSafeString(),
-            queries = getQueries(from: url)
+            _ = getQueries(from: url)
           
         manager.switchActiveRoot(to: .mainCoordinator)
 
@@ -375,7 +397,10 @@ final class SettingsTabDeeplinkHandler: DeeplinkHandlerProtocol {
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)
         else {
-            ErrorCodeDispatcher.DeeplinkingErrors.printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route, url: url))
+            ErrorCodeDispatcher
+                .DeeplinkingErrors
+                .printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route,
+                                                                 url: url))
             
             return
         }
@@ -441,7 +466,8 @@ final class AlertsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         else {
             ErrorCodeDispatcher
                 .DeeplinkingErrors
-                .printErrorCode(for: .unAuthorizedUser(url: url))
+                .printErrorCode(for: .unauthorizedUser(url: url))
+            
             return
         }
         
@@ -450,7 +476,7 @@ final class AlertsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         
         let path = url.path(),
             route = path.normalizedPath.convertFromURLSafeString(),
-            queries = getQueries(from: url)
+            _ = getQueries(from: url)
           
         manager.switchActiveRoot(to: .mainCoordinator)
 
@@ -458,7 +484,10 @@ final class AlertsTabDeeplinkHandler: DeeplinkHandlerProtocol {
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)
         else {
-            ErrorCodeDispatcher.DeeplinkingErrors.printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route, url: url))
+            ErrorCodeDispatcher
+                .DeeplinkingErrors
+                .printErrorCode(for: .routeCouldNotBeInitialized(routeRawValue: route,
+                                                                 url: url))
             
             return
         }

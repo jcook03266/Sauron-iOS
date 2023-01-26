@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Defines the conformance criteria for the centralized deep link manager used by the app
 protocol DeeplinkManagerProtocol {
@@ -81,7 +82,20 @@ extension DeeplinkManagerProtocol {
         lastActiveLink = target
     }
     
+    /// Opens a link to a specific system resource such as the settings app bundle
     func open(systemLink: SystemLinker.Links) {
         systemLinker.open(link: systemLink)
+    }
+    
+    /// Opens a non-specific link to some web resource
+    func open(webLink: URL) {
+        UIApplication.shared.open(webLink) { didOpen in
+            // If the link couldn't be opened successfully then notify the debug environment of this discrepancy
+            if !didOpen {
+                ErrorCodeDispatcher
+                    .DeeplinkingErrors
+                    .printErrorCode(for: .webLinkCouldNotBeOpened(url: webLink))
+            }
+        }
     }
 }

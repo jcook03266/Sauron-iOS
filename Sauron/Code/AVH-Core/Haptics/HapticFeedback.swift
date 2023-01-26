@@ -47,6 +47,10 @@ struct HapticFeedbackDispatcher {
         Impacts.generateImpact(with: .light, intensity: 0.6)
     }
     
+    static func eventBannerTapped() {
+        Impacts.generateImpact(with: .light, intensity: 1)
+    }
+    
     static func bottomSheetPresented() {
         Impacts.generateImpact(with: .medium, intensity: 0.4)
     }

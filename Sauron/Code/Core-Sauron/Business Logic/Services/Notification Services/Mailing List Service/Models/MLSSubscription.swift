@@ -36,6 +36,7 @@ struct MLSSubscription: Identifiable, Hashable {
     
     enum MLSSubscriptionType {
         case walletRelease,
-        cloudAlertsRelease
+        cloudAlertsRelease,
+        cryptoNewsRelease
     }
 }

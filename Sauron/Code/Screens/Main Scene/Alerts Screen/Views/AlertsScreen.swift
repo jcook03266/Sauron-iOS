@@ -30,7 +30,7 @@ struct AlertsScreen: View {
 // MARK: - View Combinations
 extension AlertsScreen {
     var featureReleaseScreen: some View {
-        FutureFeatureReleaseScreen(model: model.FFRScreen)
+        FutureFeatureReleaseScreen(model: model.FFRScreenViewModel)
     }
     
     var contentContainer: some View {

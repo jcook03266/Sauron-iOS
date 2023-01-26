@@ -20,3 +20,9 @@ class SRNCloudAlertsReleaseMLSHandler: MLSHandlerProtocol {
     var supportedSubscriptionType: MLSSubscription.MLSSubscriptionType = .cloudAlertsRelease
     var mailingListService: MailingListService = .shared
 }
+
+class SRNCryptoNewsReleaseMLSHandler: MLSHandlerProtocol {
+    // MARK: - Properties
+    var supportedSubscriptionType: MLSSubscription.MLSSubscriptionType = .cryptoNewsRelease
+    var mailingListService: MailingListService = .shared
+}

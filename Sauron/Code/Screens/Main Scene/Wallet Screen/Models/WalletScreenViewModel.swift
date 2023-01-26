@@ -13,7 +13,7 @@ class WalletScreenViewModel: CoordinatedGenericViewModel {
     // MARK: - Observed
     @ObservedObject var coordinator: coordinator
     /// Pending Feature Campaign
-    @ObservedObject var FFRScreen: FFRScreenViewModel<coordinator>
+    @ObservedObject var FFRScreenViewModel: FFRScreenViewModel<coordinator>
     
     // MARK: - Styling
     // Colors
@@ -35,7 +35,7 @@ class WalletScreenViewModel: CoordinatedGenericViewModel {
     
     init(coordinator: coordinator) {
         self.coordinator = coordinator
-        self.FFRScreen = .init(coordinator: coordinator,
+        self.FFRScreenViewModel = .init(coordinator: coordinator,
                                targetMailingListSubscriptionType: .walletRelease)
     }
 }

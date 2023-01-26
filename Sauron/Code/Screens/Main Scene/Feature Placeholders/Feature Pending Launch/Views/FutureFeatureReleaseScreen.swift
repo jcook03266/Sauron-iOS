@@ -18,10 +18,13 @@ struct FutureFeatureReleaseScreen<HostCoordinator: Coordinator>: View {
                                                             height: 150),
                 subscriptionPromptMaxWidth: CGFloat = 260
     
+    var radioButtonSize: CGFloat {
+        return 20
+    }
+    
     // MARK: - Padding
     private let coinClusterGraphicLeadingPadding: CGFloat = -30,
                 coinClusterGraphicTopPadding: CGFloat = 30,
-                titleViewLeadingPadding: CGFloat = 70,
                 twoToneDotMatrixTrailingPadding: CGFloat = 5,
                 twoToneDotMatrixTopPadding: CGFloat = 15,
                 titleViewBottomPadding: CGFloat = 10,
@@ -29,6 +32,10 @@ struct FutureFeatureReleaseScreen<HostCoordinator: Coordinator>: View {
     
     private var subscriptionPromptLeadingPadding: CGFloat {
         return 10
+    }
+    
+    private var subscriptionPromptSubtitleLeadingPadding: CGFloat {
+        return radioButtonSize + subscriptionPromptLeadingPadding
     }
     
     var body: some View {
@@ -39,6 +46,28 @@ struct FutureFeatureReleaseScreen<HostCoordinator: Coordinator>: View {
 // MARK: - View Combinations
 extension FutureFeatureReleaseScreen {
     var mainBody: some View {
+        Group {
+            if model.useLongFormat {
+               longFormattedBody
+            }
+            else {
+                shortFormattedBody
+            }
+        }
+        .animation(.spring(),
+                   value: model.isUserSubscribed)
+    }
+    
+    var shortFormattedBody: some View {
+        VStack(alignment: .leading,
+               spacing: 0) {
+            titleView
+            
+            subscriptionPromptTextStack
+        }
+    }
+    
+    var longFormattedBody: some View {
         GeometryReader { geom in
             ScrollView(.vertical) {
                 VStack(spacing: 0) {
@@ -52,8 +81,6 @@ extension FutureFeatureReleaseScreen {
                        minHeight: geom.size.height)
             }
         }
-        .animation(.spring(),
-                   value: model.isUserSubscribed)
     }
     
     var topSection: some View {
@@ -71,6 +98,29 @@ extension FutureFeatureReleaseScreen {
         }
     }
     
+    var subscriptionPromptTextStack: some View {
+        VStack(alignment: .leading,
+               spacing: 0) {
+  
+                VStack(alignment: .leading,
+                       spacing: 0) {
+                    
+                    HStack {
+                        radioButton
+                        
+                        subscriptionPromptView
+                    }
+                    
+                    subscriptionPromptSubtitleView
+                        .padding(.leading,
+                                 subscriptionPromptSubtitleLeadingPadding)
+                }
+                       .transition(.asymmetric(insertion: .slideBackwards,
+                                               removal: .offset(x: 400)))
+                       .id(model.isUserSubscribed)
+        }
+    }
+    
     var subscriptionPromptSection: some View {
         VStack(spacing: 0) {
             HStack {
@@ -80,26 +130,8 @@ extension FutureFeatureReleaseScreen {
                         titleView
                     }
                     
-                    HStack(alignment: .top,
-                           spacing: 0) {
-                        radioButton
-                        
-                        VStack(alignment: .leading,
-                               spacing: 0) {
-                            subscriptionPromptView
-                            subscriptionPromptSubtitleView
-                        }
-                               .transition(.asymmetric(insertion: .slideBackwards,
-                                                       removal: .slideForwards))
-                               .id(model.isUserSubscribed)
-                               .padding(.leading,
-                                        subscriptionPromptLeadingPadding)
-                    }
+                    subscriptionPromptTextStack
                 }
-                       .padding(.leading,
-                                titleViewLeadingPadding)
-                
-                Spacer()
             }
             
             HStack {
@@ -113,7 +145,7 @@ extension FutureFeatureReleaseScreen {
 // MARK: - Subviews
 extension FutureFeatureReleaseScreen {
     var radioButton: some View {
-        RadioButton(model: model.radioButtonViewModel)
+        RadioButton(model: model.radioButtonViewModel, outerDiameter: radioButtonSize)
     }
     
     var coinClusterBackgroundGraphicView: some View {
