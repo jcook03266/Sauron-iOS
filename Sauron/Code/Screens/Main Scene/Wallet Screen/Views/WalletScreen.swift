@@ -11,6 +11,12 @@ struct WalletScreen: View {
     // MARK: - Observed
     @StateObject var model: WalletScreenViewModel
     
+    // MARK: - Styling
+    private let backgroundGradient: LinearGradient = Colors.gradient_6
+    private var backgroundColor: Color {
+        return Color.clear
+    }
+    
     // MARK: - Dimensions
     private let foregroundContainerCornerRadius: CGFloat = 60,
                 titleIconSize: CGSize = .init(width: 40,
@@ -23,7 +29,15 @@ struct WalletScreen: View {
                 titleSectionLeadingPadding: CGFloat = 10
     
     var body: some View {
-        contentContainer
+        ZStack {
+            Group {
+                backgroundGradient
+                backgroundColor
+            }
+                .ignoresSafeArea()
+            
+            contentContainer
+        }
     }
 }
 
@@ -115,6 +129,6 @@ struct WalletScreen_Previews: PreviewProvider {
     static var previews: some View {
         WalletScreen(model: .init(coordinator: .init(parent: MainCoordinator())))
             .background(Colors.gradient_6)
-           // .ignoresSafeArea()
+        // .ignoresSafeArea()
     }
 }

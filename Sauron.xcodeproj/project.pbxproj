@@ -52,6 +52,8 @@
 		4925C8C3295D7C5D006E1A80 /* PortfolioCurationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925C8C2295D7C5D006E1A80 /* PortfolioCurationViewModel.swift */; };
 		4925C8C5295D7C67006E1A80 /* PortfolioCurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925C8C4295D7C67006E1A80 /* PortfolioCurationView.swift */; };
 		4925C8CB295F918F006E1A80 /* ImageDownloaderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925C8CA295F918F006E1A80 /* ImageDownloaderService.swift */; };
+		4936DD642985231800CBD2F2 /* RectangularSortButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4936DD632985231800CBD2F2 /* RectangularSortButtonViewModel.swift */; };
+		4936DD662985232800CBD2F2 /* RectangularSortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4936DD652985232800CBD2F2 /* RectangularSortButton.swift */; };
 		4953E5AE2968A7A100513560 /* CounterRectangularButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4953E5AD2968A7A100513560 /* CounterRectangularButton.swift */; };
 		4953E5B02968C2C400513560 /* Bool+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4953E5AF2968C2C400513560 /* Bool+Extensions.swift */; };
 		497A7C81297EC1C500045FA4 /* FFRScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497A7C80297EC1C500045FA4 /* FFRScreenViewModel.swift */; };
@@ -289,6 +291,8 @@
 		4925C8C2295D7C5D006E1A80 /* PortfolioCurationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCurationViewModel.swift; sourceTree = "<group>"; };
 		4925C8C4295D7C67006E1A80 /* PortfolioCurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCurationView.swift; sourceTree = "<group>"; };
 		4925C8CA295F918F006E1A80 /* ImageDownloaderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloaderService.swift; sourceTree = "<group>"; };
+		4936DD632985231800CBD2F2 /* RectangularSortButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularSortButtonViewModel.swift; sourceTree = "<group>"; };
+		4936DD652985232800CBD2F2 /* RectangularSortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularSortButton.swift; sourceTree = "<group>"; };
 		4953E5AD2968A7A100513560 /* CounterRectangularButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterRectangularButton.swift; sourceTree = "<group>"; };
 		4953E5AF2968C2C400513560 /* Bool+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+Extensions.swift"; sourceTree = "<group>"; };
 		497A7C80297EC1C500045FA4 /* FFRScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFRScreenViewModel.swift; sourceTree = "<group>"; };
@@ -849,6 +853,39 @@
 			children = (
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		4936DD5F298522E300CBD2F2 /* Sorting Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				4936DD60298522F600CBD2F2 /* Rectangular Sort Button */,
+			);
+			path = "Sorting Buttons";
+			sourceTree = "<group>";
+		};
+		4936DD60298522F600CBD2F2 /* Rectangular Sort Button */ = {
+			isa = PBXGroup;
+			children = (
+				4936DD622985230800CBD2F2 /* View */,
+				4936DD612985230400CBD2F2 /* Model */,
+			);
+			path = "Rectangular Sort Button";
+			sourceTree = "<group>";
+		};
+		4936DD612985230400CBD2F2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4936DD652985232800CBD2F2 /* RectangularSortButton.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4936DD622985230800CBD2F2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4936DD632985231800CBD2F2 /* RectangularSortButtonViewModel.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		497A7C7F297EC0D400045FA4 /* Feature Pending Launch */ = {
@@ -1813,6 +1850,7 @@
 		499E12EB2954D6F8004C61CE /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
+				4936DD5F298522E300CBD2F2 /* Sorting Buttons */,
 				497A7C84297EC6B700045FA4 /* Radio Button */,
 				49A5188D2967F00500258F80 /* Utility */,
 				499E12EC2954D6F8004C61CE /* CTA */,
@@ -2682,6 +2720,7 @@
 				49C2CFEA2980C840004E2987 /* BannerEventModel.swift in Sources */,
 				499E130E2954D6F8004C61CE /* ArrowButton.swift in Sources */,
 				49B22B93295784BF009C3F4F /* GetStartedScreen.swift in Sources */,
+				4936DD662985232800CBD2F2 /* RectangularSortButton.swift in Sources */,
 				4925C885295A140B006E1A80 /* InjectableServices.swift in Sources */,
 				499E12732954C40F004C61CE /* DeviceConstants.swift in Sources */,
 				4925C89D295BDFCA006E1A80 /* FormattingHelper.swift in Sources */,
@@ -2708,6 +2747,7 @@
 				499E1347295525CB004C61CE /* AppService.swift in Sources */,
 				499E132029552276004C61CE /* OnboardingCoordinatorView.swift in Sources */,
 				499E12772954C40F004C61CE /* CommonMath.swift in Sources */,
+				4936DD642985231800CBD2F2 /* RectangularSortButtonViewModel.swift in Sources */,
 				499E126E2954C40F004C61CE /* ShapeModifiers.swift in Sources */,
 				4996AF77297D7C9C00112DC0 /* WalletScreen.swift in Sources */,
 				49916A8A297CDE4500EC2BCB /* TabbarSessionModel.swift in Sources */,

@@ -43,7 +43,8 @@ struct StrongRectangularCTA: View {
             action()
         }) {
             textBody
-                .frame(width: size.width, height: size.height)
+                .frame(width: size.width,
+                       height: size.height)
                 .withFont(font)
                 .padding([.all], padding)
                 .foregroundColor(foregroundColor)

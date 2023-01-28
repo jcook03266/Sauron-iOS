@@ -56,8 +56,7 @@ enum HomeRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
     }
     
     case main = ""
-    
-    
+    case editPortfolio = "edit portfolio"
 }
 // MARK: - Wallets Tab Router
 enum WalletRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {

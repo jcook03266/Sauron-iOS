@@ -8,42 +8,109 @@
 import SwiftUI
 
 struct HomeScreen: View {
+    typealias Router = HomeTabRouter
+    
     // MARK: - Observed
     @StateObject var model: HomeScreenViewModel
+    
+    // MARK: - Styling
+    private let backgroundGradient: LinearGradient = Colors.gradient_6
+    private var backgroundColor: Color {
+        return Color.clear
+    }
     
     // MARK: - Dimensions
     private let foregroundContainerCornerRadius: CGFloat = 40,
                 titleHeight: CGFloat = 40,
                 sectionDividerHeight: CGFloat = 1,
-    // Crypto News
-cryptoNewsSectionIconSize: CGSize = .init(width: 35,
-                                          height: 35)
+                // Shared
+                sectionHeaderIconSize: CGSize = .init(width: 20,
+                                                      height: 20),
+                // My Portfolio
+                portfolioPlaceholderImageSize: CGSize = .init(width: 100,
+                                                              height: 100),
+                portfolioPlaceholderButtonSize: CGSize = .init(width: 270,
+                                                               height: 50),
+                // Crypto News
+                cryptoNewsSectionIconSize: CGSize = .init(width: 35,
+                                                          height: 35)
     
     // MARK: - Padding + Spacing
     private let titleSectionBottomPadding: CGFloat = 10,
                 titleSectionLeadingPadding: CGFloat = 10,
                 sectionDividerVerticalPadding: CGFloat = 10,
+                scrollViewBottomPadding: CGFloat = 100,
+                // Shared
+                sectionHeaderItemSpacing: CGFloat = 15,
+                sectionHeaderTopSpacing: CGFloat = 10,
+                sectionHeaderLeadingPadding: CGFloat = 15,
+                // MY Portfolio
+                portfolioPlaceholderImageTopPadding: CGFloat = 35,
+                portfolioPlaceholderImageBottomPadding: CGFloat = 25,
+                portfolioBottomPadding: CGFloat = 10,
                 // Crypto News
                 cryptoNewsSectionHeaderItemSpacing: CGFloat = 10,
                 cryptoNewsSectionHeaderBottomPadding: CGFloat = 50,
                 cryptoNewsSectionHeaderLeadingPadding: CGFloat = 40
     
     var body: some View {
-        contentContainer
-            .animation(.spring(),
-                       value: model.selectedSection)
-            .onAppear {
-                performOnAppearTasks()
+        NavigationStack(path: $model.navigationPath) {
+            ZStack {
+                Group {
+                    backgroundGradient
+                    backgroundColor
+                }
+                    .ignoresSafeArea()
+                
+                
+                contentContainer
+                    .fullScreenCover(item: $model.fullCoverItemState,
+                                     onDismiss: {
+                        DispatchQueue.main.async {
+                            model.coordinator.dismissFullScreenCover()
+                        }
+                    },
+                                     content: { route in model.coordinator.router.view(for: route)
+                    })
+                    .sheet(item: $model.sheetItemState,
+                           onDismiss: {
+                        DispatchQueue.main.async {
+                            model.coordinator.dismissSheet()
+                        }
+                    },
+                           content: { route in model
+                            .coordinator
+                            .router
+                            .view(for: route)
+                    })
+                    .navigationDestination(for: Router.Route.self,
+                                           destination: { route in model
+                            .coordinator
+                            .router
+                            .view(for: route)
+                    })
             }
-            .onDisappear {
-                performOnDisappearTasks()
-            }
+        }
+        .background(backgroundColor)
+        .background(backgroundGradient)
+        .animation(.spring(),
+                   value: model.selectedSection)
+        .animation(.spring(),
+                   value: model.shouldDisplayGreeting)
+        .onAppear {
+            performOnAppearTasks()
+        }
+        .onDisappear {
+            performOnDisappearTasks()
+        }
     }
     
     private func performOnAppearTasks() {
         model
             .eventBannerCarouselViewModel
             .startAutoScroll()
+        
+        model.setUserHasSeenHomeScreen()
     }
     
     private func performOnDisappearTasks() {
@@ -55,16 +122,24 @@ cryptoNewsSectionIconSize: CGSize = .init(width: 35,
 
 // MARK: - View Combinations
 extension HomeScreen {
-    // Title
-    var titleSection: some View {
-        HStack(spacing: 0) {
-            titleView
-            Spacer()
+    // Greeting Section
+    var GreetingSection: some View {
+        Group {
+            if model.shouldDisplayGreeting {
+                HStack(spacing: 0) {
+                    titleView
+                    Spacer()
+                }
+                .padding(.bottom,
+                         titleSectionBottomPadding)
+                .padding(.leading,
+                         titleSectionLeadingPadding)
+                .transition(
+                    .offset(x: -400)
+                    .animation(.spring())
+                )
+            }
         }
-        .padding(.bottom,
-                 titleSectionBottomPadding)
-        .padding(.leading,
-                 titleSectionLeadingPadding)
     }
     
     // Main Content
@@ -74,7 +149,7 @@ extension HomeScreen {
                 background
                 
                 VStack(spacing: 0) {
-                    titleSection
+                    GreetingSection
                     
                     HStack {
                         Spacer()
@@ -86,7 +161,7 @@ extension HomeScreen {
                             foregroundContent
                         }
                         .frame(width: geom.size.width * 0.975,
-                               height: geom.size.height * 0.84)
+                               height: geom.size.height * 0.84 + (model.shouldDisplayGreeting ? 0 : 40))
                     }
                 }
             }
@@ -108,10 +183,19 @@ extension HomeScreen {
                 ScrollViewReader { reader in
                     VStack {
                         eventBannerSectionAnchor
-                            .id(HomeScreenViewModel.Sections.eventBanner)
+                            .id(HomeScreenViewModel
+                                .Sections
+                                .eventBanner)
+                        
+                        portfolioSection
+                            .id(HomeScreenViewModel
+                                .Sections
+                                .myPortfolio)
                         
                         cryptoNewsSection
-                            .id(HomeScreenViewModel.Sections.news)
+                            .id(HomeScreenViewModel
+                                .Sections
+                                .news)
                     }
                     .onChange(of: model.selectedSection) {
                         guard $0 != nil
@@ -122,6 +206,8 @@ extension HomeScreen {
                         }
                     }
                 }
+                .padding(.bottom,
+                         scrollViewBottomPadding)
                 .frame(minWidth: geom.size.width,
                        minHeight: geom.size.height)
             }
@@ -141,13 +227,29 @@ extension HomeScreen {
         }
     }
     
+    // My Portfolio
+    var portfolioSection: some View {
+        VStack(spacing: 0) {
+            portfolioSectionHeader
+            
+            portfolioPlaceholder
+            
+            Spacer()
+        }
+        .padding(.top,
+                 sectionHeaderTopSpacing)
+        .padding(.bottom,
+                 portfolioBottomPadding)
+    }
+    
     // Crypto News
     var cryptoNewsSection: some View {
         VStack {
             sectionDivider
             
             cryptoNewsSectionHeader
-                .padding(.bottom, cryptoNewsSectionHeaderBottomPadding)
+                .padding(.bottom,
+                         cryptoNewsSectionHeaderBottomPadding)
             
             FutureFeatureReleaseScreen(model: model.FFRScreenViewModel)
         }
@@ -195,7 +297,7 @@ extension HomeScreen {
                  sectionDividerVerticalPadding)
     }
     
-    // Greeting Section
+    // User Personalized Greeting
     var titleView: some View {
         Text(model.title)
             .withFont(model.titleFont)
@@ -217,6 +319,75 @@ extension HomeScreen {
     var eventBannerSectionAnchor: some View {
         EmptyView()
     }
+    
+    // My Portfolio
+    var portfolioSectionHeader: some View {
+        ScrollView (.horizontal,
+                    showsIndicators: false)
+        {
+            HStack(alignment: .center,
+                   spacing: sectionHeaderItemSpacing) {
+                // Title
+                Text(model.portfolioSectionTitle)
+                    .withFont(model.sectionHeaderTitleFont)
+                    .fontWeight(model.sectionHeaderTitleFontWeight)
+                    .foregroundColor(model.sectionHeaderTitleColor)
+                    .minimumScaleFactor(0.5)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(1)
+                
+                // Icon
+                model.portfolioSectionIcon
+                    .fittedResizableTemplateImageModifier()
+                    .applyGradient(gradient: model.portfolioHeaderIconGradient)
+                    .frame(width: sectionHeaderIconSize.width,
+                           height: sectionHeaderIconSize.height)
+                
+                // Sort Toggle Button
+                RectangularSortButton(model: model.portfolioSortButtonViewModel)
+                
+                Spacer()
+            }
+                   .padding(.leading,
+                            sectionHeaderLeadingPadding)
+        }
+    }
+    
+    var portfolioPlaceholder: some View {
+        VStack {
+            HStack {
+                Spacer()
+                model.portfolioSectionPlaceholderImage
+                    .fittedResizableTemplateImageModifier()
+                    .foregroundColor(model.portfolioSectionPlaceholderImageColor)
+                    .frame(width: portfolioPlaceholderImageSize.width,
+                           height: portfolioPlaceholderImageSize.height)
+                Spacer()
+            }
+            .padding(.bottom,
+                     portfolioPlaceholderImageBottomPadding)
+            
+            StrongRectangularCTA(action: model.createPorfolioAction,
+                                 backgroundColor: model.portfolioSectionPlaceholderButtonBackgroundColor,
+                                 foregroundColor: model.portfolioSectionPlaceholderButtonForegroundColor,
+                                 shadowColor: model.portfolioSectionPlaceholderButtonShadowColor,
+                                 font: model.portfolioSectionPlaceholderButtonFont,
+                                 size: portfolioPlaceholderButtonSize,
+                                 message: (model.portfolioSectionPlaceholderButtonTitle, nil))
+        }
+        .padding(.top,
+                 portfolioPlaceholderImageTopPadding)
+    }
+    
+    //
+    //    var portfolioContentBody: some View {
+    //
+    //    }
+    
+    //    var portfolioSectionFooter: some View {
+    //
+    //    }
+    //
     
     // Crypto News
     var cryptoNewsSectionTitle: some View {
@@ -242,7 +413,7 @@ struct HomeScreen_Previews: PreviewProvider {
     static var previews: some View {
         HomeScreen(model: .init(coordinator: .init(parent: MainCoordinator()),
                                 router: .init(coordinator: .init(parent: MainCoordinator()))))
-            .background(Colors.gradient_6)
-            .ignoresSafeArea()
+        .background(Colors.gradient_6)
+        .ignoresSafeArea()
     }
 }

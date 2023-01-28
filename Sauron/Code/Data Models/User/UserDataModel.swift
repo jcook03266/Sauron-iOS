@@ -93,6 +93,7 @@ final class SRNUser {
         return password != nil
     }
     
+    // MARK: - First Time User Experience
     var isNewUser: Bool = false
     
     // MARK: - Dependencies
@@ -102,6 +103,10 @@ final class SRNUser {
         lazy var authService: SRNUserAuthenticator = SRNUser.Dependencies.inject()
     }
     var dependencies = Dependencies()
+    
+    // MARK: - Transient Content Display Modifiers
+    /// Triggers the home screen's daily message prompt to hide after the user's first visit
+    var hasVisitedHomeScreen: Bool = false
     
     init() {
         setup()

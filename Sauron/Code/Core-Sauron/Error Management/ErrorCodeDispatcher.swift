@@ -458,6 +458,10 @@ extension ErrorCodeDispatcher.SwiftErrors: ErrorCodeDispatcherProtocol {
         return code.rawValue
     }
     
+    static func printErrorCode(for code: ErrorCodes) {
+        print(code.rawValue)
+    }
+    
     static func triggerFatalError(for code: codes,
                                   with vestigialMessage: String = "") -> (() -> (Never)) {
         guard ErrorCodeDispatcher.fatalErrorsEnabled

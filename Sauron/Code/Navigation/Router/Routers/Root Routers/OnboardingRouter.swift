@@ -15,7 +15,7 @@ class OnboardingRouter: Routable {
     // MARK: -  View Models
     @Published var onboardingViewModel: VOCViewModel!
     @Published var getStartedScreenViewModel: GetStartedScreenViewModel!
-    @Published var portfolioCurationViewModel: PortfolioCurationViewModel!
+    @Published var portfolioCurationViewModel: PortfolioCurationViewModel<OnboardingCoordinator>!
     
     // MARK: - URLs
     @Published var webURL: URL!

@@ -22,35 +22,86 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     
     // MARK: - Published
     @Published var selectedSection: Sections? = nil
+    // Navigation
+    @Published var sheetItemState: HomeRoutes? = nil
+    @Published var fullCoverItemState: HomeRoutes? = nil
+    @Published var navigationPath: [HomeRoutes] = []
     
     // MARK: - Subscriptions
     var cancellables: Set<AnyCancellable> = []
     
+    // MARK: - Dependencies
+    struct Dependencies: InjectableServices {
+        let userManager: UserManager = inject()
+    }
+    let dependencies = Dependencies()
+    
+    // MARK: - Data Stores
+    struct DataStores: InjectableStores {
+        let portfolioManager: PortfolioManager = inject()
+        let coinStore: CoinStore = inject()
+    }
+    let dataStores = DataStores()
+    
     // MARK: - Styling
     // Colors
-    /// Shared
+    // Shared
     let backgroundColor: Color = Color.clear,
         foregroundContainerColor: Color = Colors.neutral_100.0,
         titleForegroundColor: Color = Colors.permanent_white.0,
         titleIconForegroundColor: Color = Colors.permanent_white.0,
         sectionDividerColor: Color = Colors.neutral_200.0,
-        /// Crypto News Section
+        sectionHeaderTitleColor: Color = Colors.black.0,
+        // My Portfolio
+        portfolioHeaderIconGradient: LinearGradient = Colors.gradient_1,
+        portfolioSectionPlaceholderImageColor: Color = Colors.black.0,
+        portfolioSectionPlaceholderButtonBackgroundColor: Color = Colors.permanent_black.0,
+        portfolioSectionPlaceholderButtonForegroundColor: Color = Colors.permanent_white.0,
+        portfolioSectionPlaceholderButtonShadowColor: Color = Colors.shadow_2.0,
+        // Crypto News Section
         cryptoNewsSectionTitleGradient: LinearGradient = Colors.gradient_1,
         cryptoNewsImageColor: Color = Colors.black.0
     
     // Fonts
     let titleFont: FontRepository = .heading_2,
         titleFontWeight: Font.Weight = .semibold,
+        // Shared
+        sectionHeaderTitleFont: FontRepository = .heading_3,
+        sectionHeaderTitleFontWeight: Font.Weight = .semibold,
+        // My Portfolio
+        portfolioSectionPlaceholderButtonFont: FontRepository = .body_L_Bold,
         // Crypto News
         cryptoNewsSectionTitleFont: FontRepository = .heading_4,
         cryptoNewsSectionTitleFontWeight: Font.Weight = .semibold
     
     // MARK: - Assets
-    /// Crypto News Section
-    let cryptoNewsSectionIcon: Image = Icons.getIconImage(named: .mic_circle_fill)
+    // My Portfolio
+    let portfolioSectionIcon: Image = Icons.getIconImage(named: .chart_pie_fill),
+        portfolioSectionPlaceholderImage: Image = Images.getImage(named: .placeholder_coin_stack_three),
+        // Crypto News Section
+        cryptoNewsSectionIcon: Image = Icons.getIconImage(named: .mic_circle_fill)
     
     // MARK: - Localized Text
-    let cryptoNewsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS)
+    // My Portfolio
+    let portfolioSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_MY_PORTFOLIO),
+        portfolioSectionSortButtonTitle: String = LocalizedStrings.getLocalizedString(for: .PERFORMANCE),
+        portfolioSectionPlaceholderButtonTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_MY_PORTFOLIO_PLACEHOLDER_BUTTON_TITLE),
+        // Crypto News
+        cryptoNewsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS)
+    
+    // MARK: - Actions
+    /// Push the user to the portfolio creation screen where they can create a portfolio if they don't have one currently
+    var createPorfolioAction: (() -> Void) {
+        return { [weak self] in
+            guard let self = self
+            else { return }
+            
+            self.coordinator
+                .presentFullScreenCover(with: .editPortfolio)
+            
+            self.objectWillChange.send()
+        }
+    }
     
     // TODO: - Create Daily Message Service For dynamic user message prompts for returning users, and first time users
     var title: String {
@@ -61,6 +112,28 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     /// Detect whether or not the event banner has multiple events loaded up
     var isEventBannerSingular: Bool {
         return eventBannerCarouselViewModel.totalPages <= 1
+    }
+    
+    /// If the user's portfolio is empty for some reason then prompt them to populate it
+    var isPortfolioEmpty: Bool {
+        return dataStores
+            .portfolioManager
+            .isEmpty
+    }
+    
+    var shouldDisplayGreeting: Bool {
+        return !dependencies
+            .userManager
+            .currentUser
+            .hasVisitedHomeScreen
+    }
+    
+    // MARK: - Models
+    var portfolioSortButtonViewModel: RectangularSortButtonViewModel {
+        return .init(sortIconType: .pointer,
+                     sortOrderIsDescending: true,
+                     userTriggeredDescendingSortOrderToggleAction: .random(),
+                     title: portfolioSectionSortButtonTitle)
     }
     
     init(coordinator: coordinator,
@@ -80,6 +153,38 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         self.router
             .$homeScreenSectionFragment
             .assign(to: &$selectedSection)
+        
+        self.coordinator
+            .$sheetItem
+            .assign(to: &$sheetItemState)
+        
+        self.coordinator
+            .$fullCoverItem
+            .assign(to: &$fullCoverItemState)
+        
+        self.coordinator
+            .$navigationPath
+            .assign(to: &$navigationPath)
+    }
+    
+    // MARK: - Transient Content Control
+    /// Hides the daily greeting from the home screen after a 10 second grace period
+    func setUserHasSeenHomeScreen() {
+        guard let currentUser = dependencies
+            .userManager
+            .currentUser,
+              !currentUser.hasVisitedHomeScreen
+        else { return }
+        
+        let gracePeriod = TimeInterval(10)
+        
+        DispatchQueue
+            .main
+            .asyncAfter(deadline: .now() + gracePeriod)
+        {
+            /// Inform observers that this observable object will change w/o requiring this value to be published
+            currentUser.hasVisitedHomeScreen = true
+        }
     }
     
     // MARK: - Section Selection

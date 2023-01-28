@@ -12,6 +12,12 @@ struct SettingsScreen: View {
     // MARK: - Observed
     @StateObject var model: SettingsScreenViewModel
     
+    // MARK: - Styling
+    private let backgroundGradient: LinearGradient = Colors.gradient_6
+    private var backgroundColor: Color {
+        return Colors.permanent_black.0
+    }
+    
     // MARK: - Dimensions
     private let foregroundContainerCornerRadius: CGFloat = 60,
                 titleIconSize: CGSize = .init(width: 40,
@@ -24,7 +30,15 @@ struct SettingsScreen: View {
                 titleSectionLeadingPadding: CGFloat = 10
     
     var body: some View {
-        contentContainer
+        ZStack {
+            Group {
+                backgroundGradient
+                backgroundColor
+            }
+                .ignoresSafeArea()
+            
+            contentContainer
+        }
     }
 }
 

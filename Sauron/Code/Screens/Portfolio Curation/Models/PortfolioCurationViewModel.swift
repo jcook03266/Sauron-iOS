@@ -8,12 +8,12 @@
 import SwiftUI
 import Combine
 
-class PortfolioCurationViewModel: CoordinatedGenericViewModel {
-    typealias coordinator = OnboardingCoordinator
+class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGenericViewModel {
+    typealias coordinator = ParentCoordinator
     
     // MARK: - Observed
-    @ObservedObject var coordinator: OnboardingCoordinator
-    @ObservedObject var router: OnboardingRouter
+    @ObservedObject var coordinator: ParentCoordinator
+    @ObservedObject var router: ParentCoordinator.Router
     
     // MARK: - Published
     @Published var assetIdentifierDisplayType: AssetIdentifierDisplayType = .Name
@@ -80,8 +80,11 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     var searchResultsCount: Int {
         return self.dataStores.coinStore.searchResultCount
     }
-    /// The user can only continue once they've added at least one coin to their portfolio
+    /// The user can only continue once they've added at least one coin to their portfolio in the onboarding scene, if not in onboarding then they can continue unconditionally
     var canContinue: Bool {
+        guard self.coordinator is OnboardingCoordinator
+        else { return true }
+        
         let condition: Bool = userHasSelectedCoins
         return condition
     }
@@ -95,7 +98,9 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     }
     
     var userHasSelectedCoins: Bool {
-        return !dataStores.portfolioManager.isEmpty
+        return !dataStores
+            .portfolioManager
+            .isEmpty
     }
     
     var isSearchBarActive: Bool {
@@ -103,7 +108,9 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     }
     
     var isUserSearching: Bool {
-        return !searchBarTextFieldModel.textEntry.isEmpty
+        return !searchBarTextFieldModel
+            .textEntry
+            .isEmpty
     }
     
     var contextPropertiesHasChanged: Bool {
@@ -114,7 +121,9 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     
     /// This screen has two states, FTUE and normal, this toggles either feature set
     var shouldDisplayFTUEUI: Bool {
-        return !dependencies.ftueService.isComplete
+        return !dependencies
+            .ftueService
+            .isComplete
     }
     
     // MARK: - Actions
@@ -142,24 +151,36 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     
     var goBackAction: (() -> Void) {
         return { [weak self] in
-            
             HapticFeedbackDispatcher.arrowButtonPress()
             guard let self = self else { return }
             
-            self.coordinator.popView()
+            if self.coordinator is OnboardingCoordinator {
+                self.coordinator.popView()
+            }
+            else if let coordinator = self.coordinator as? HomeTabCoordinator  {
+                // Dismiss
+                coordinator.dismissFullScreenCover()
+            }
         }
     }
     
     var continueAction: (() -> Void) {
         return { [weak self] in
-            HapticFeedbackDispatcher.interstitialCTAButtonPress()
-            guard let self = self else { return }
+            guard let self = self,
+                  self.canContinue
+            else { return }
             
-            // First time user experience is now complete, move on to the main app content
-            self.dependencies.ftueService.completeFTUE()
-            self.coordinator
-                .rootCoordinatorDelegate
-                .switchToMainScene()
+            if let coordinator = self.coordinator as? OnboardingCoordinator {
+                // First time user experience is now complete, move on to the main app content
+                self.dependencies.ftueService.completeFTUE()
+                
+                coordinator
+                    .rootCoordinatorDelegate
+                    .switchToMainScene()
+            }
+            else {
+                self.goBackAction()
+            }
         }
     }
     
@@ -227,10 +248,12 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
     
     var currencyPreferenceAction: (() -> Void) {
         return {[weak self] in
-            guard let self = self else { return }
-            
             HapticFeedbackDispatcher.bottomSheetPresented()
-            self.coordinator.presentSheet(with: .currencyPreferenceBottomSheet)
+            guard let self = self,
+                    let coordinator = self.coordinator as? OnboardingCoordinator
+            else { return }
+            
+            coordinator.presentSheet(with: .currencyPreferenceBottomSheet)
         }
     }
     
@@ -375,8 +398,8 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
         rankHeaderFont: FontRepository = .body_S,
         rankHeaderFontWeight: Font.Weight = .medium
     
-    init(coordinator: OnboardingCoordinator,
-         router: OnboardingRouter)
+    init(coordinator: ParentCoordinator,
+         router: ParentCoordinator.Router)
     {
         self.coordinator = coordinator
         self.router = router
@@ -447,22 +470,39 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             .$textEntry
             .assign(to: &dataStores.coinStore.$activeSearchQuery)
         
-        // Pass in external search queries and properties from the deeplinker here
-        self.router
-            .$portfolioCurationSearchQuery
-            .assign(to: &searchBarTextFieldModel.$textEntry)
-        
-        // Triggers the portfolio coins only filter from an external source
-        self.router
-            .$filterPortfolioCoinsOnly
-            .sink(receiveValue: { [weak self] in
-                guard let self = self else { return }
-                
-                self.dataStores.coinStore.displayPortfolioCoinsOnly = $0
-                self.filterPortfolioCoins = $0
-            })
-            .store(in: &cancellables)
-        
+        if let router = router as? OnboardingRouter {
+            // Pass in external search queries and properties from the deeplinker here
+            router
+                .$portfolioCurationSearchQuery
+                .assign(to: &searchBarTextFieldModel.$textEntry)
+            
+            // Triggers the portfolio coins only filter from an external source
+            router
+                .$filterPortfolioCoinsOnly
+                .sink(receiveValue: { [weak self] in
+                    guard let self = self else { return }
+                    
+                    self.dataStores.coinStore.displayPortfolioCoinsOnly = $0
+                    self.filterPortfolioCoins = $0
+                })
+                .store(in: &cancellables)
+        }
+        else if let router = router as? HomeTabRouter {
+            router
+                .$portfolioCurationSearchQuery
+                .assign(to: &searchBarTextFieldModel.$textEntry)
+            
+            router
+                .$filterPortfolioCoinsOnly
+                .sink(receiveValue: { [weak self] in
+                    guard let self = self else { return }
+                    
+                    self.dataStores.coinStore.displayPortfolioCoinsOnly = $0
+                    self.filterPortfolioCoins = $0
+                })
+                .store(in: &cancellables)
+        }
+            
         // Sorting order publisher for changing the sort order of coin data
         contextMenuModel
             .$sortInAscendingOrder
@@ -474,18 +514,22 @@ class PortfolioCurationViewModel: CoordinatedGenericViewModel {
             .store(in: &cancellables)
         
         // Auto refresh publisher for refreshing coin data
-        Timer.publish(every: coinDataRefreshInterval,
-                      on: .main,
-                      in: .default)
-        .autoconnect()
-        .receive(on: scheduler)
-        .sink { [weak self] _ in
-            guard let self = self
-            else { return }
-            
-            self.refresh()
-        }
-        .store(in: &cancellables)
+        
+        
+        
+        // FIXME: - This runs constantly find a way to make it only run when the view is active, aka isolate this subscription call to only when the view is active
+//        Timer.publish(every: coinDataRefreshInterval,
+//                      on: .main,
+//                      in: .default)
+//        .autoconnect()
+//        .receive(on: scheduler)
+//        .sink { [weak self] _ in
+//            guard let self = self
+//            else { return }
+//
+//            self.refresh()
+//        }
+//        .store(in: &cancellables)
     
     }
     

@@ -8,9 +8,9 @@
 import SwiftUI
 
 /// Row that displays general information about the target crypto coin
-struct PCCoinRowView: View {
+struct PCCoinRowView<ParentCoordinator: Coordinator>: View {
     // MARK: - Observed Objects
-    @StateObject var model: PCCoinRowViewModel
+    @StateObject var model: PCCoinRowViewModel<ParentCoordinator>
     
     // MARK: - States (Local Use Only hence it's privatized)
     @State private var didAppear: Bool = false
@@ -190,8 +190,8 @@ struct PCCoinRowView_Previews: PreviewProvider {
         let coin = env.testCoinModel!
         
         PCCoinRowView(model: .init(parentViewModel:
-                .init(coordinator: .init(),
-                      router: .init(coordinator: .init())),
+                .init(coordinator: OnboardingCoordinator(),
+                      router: OnboardingRouter(coordinator: .init())),
                                    coinModel: coin))
     }
 }

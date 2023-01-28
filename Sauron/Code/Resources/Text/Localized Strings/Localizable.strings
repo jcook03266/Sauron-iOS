@@ -38,6 +38,13 @@
 "NO_SEARCH_RESULTS" = "No Search Results";
 "CANCEL" = "Cancel";
 "ABSENCE_OF_VALUE" = "No Value Found";
+"SHOW_ALL" = "Show all";
+"QUICK_EDIT" = "Quick Edit";
+"MINIMIZE" = "Minimize";
+"MAXIMIZE" = "Maximize";
+"PREDICTION" = "Prediction";
+"TIMELINE" = "Timeline";
+"PERFORMANCE" = "Performance";
 
 // MARK: - Cover Screen
 "COVER_SCREEN_TITLE_WELCOME_BACK" = "Welcome Back";
@@ -103,6 +110,17 @@
 "HOME_SCREEN_GREETING_RETURNING_USER_2" = "Fancy Seeing You Again";
 "HOME_SCREEN_GREETING_RETURNING_USER_3" = "Long Time No See! 👁";
 "HOME_SCREEN_GREETING_RETURNING_USER_4" = "We Missed You ❤️‍🔥";
+// Portfolio Section
+"HOME_SCREEN_SECTION_TITLE_MY_PORTFOLIO" = "My Portfolio";
+"HOME_SCREEN_SECTION_MY_PORTFOLIO_PLACEHOLDER_BUTTON_TITLE" = "Start Your Portfolio";
+// Assets Section
+"HOME_SCREEN_SECTION_TITLE_ALL_ASSETS" = "All Assets";
+// Daily Highs Section
+"HOME_SCREEN_SECTION_TITLE_DAILY_HIGHS" = "High Performers";
+// Daily Lows Section
+"HOME_SCREEN_SECTION_TITLE_DAILY_LOWS" = "Market Losers";
+// Market Predictions Section
+"HOME_SCREEN_SECTION_TITLE_MARKET_PREDICTIONS" = "Market Predictions";
 // Crypto News Section
 "HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS" = "Crypto News";
 

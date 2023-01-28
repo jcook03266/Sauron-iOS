@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct PortfolioCurationView: View {
+struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
     // MARK: - Observed
-    @StateObject var model: PortfolioCurationViewModel
+    @StateObject var model: PortfolioCurationViewModel<ParentCoordinator>
     
     // MARK: - States
     @State private var didAppear: Bool = false
@@ -665,7 +665,7 @@ extension PortfolioCurationView {
 
 struct PortfolioCurationView_Previews: PreviewProvider {
     static var previews: some View {
-        PortfolioCurationView(model: .init(coordinator: .init(),
-                                           router: .init(coordinator: .init())))
+        PortfolioCurationView(model: .init(coordinator: OnboardingCoordinator(),
+                                           router: OnboardingRouter(coordinator: .init())))
     }
 }

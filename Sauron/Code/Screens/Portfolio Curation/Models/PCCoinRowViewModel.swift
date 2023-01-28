@@ -8,9 +8,9 @@
 import SwiftUI
 import Combine
 
-class PCCoinRowViewModel: GenericViewModel {
+class PCCoinRowViewModel<ParentCoordinator: Coordinator>: GenericViewModel {
     // MARK: - Observed Objects
-    @ObservedObject var parentViewModel: PortfolioCurationViewModel
+    @ObservedObject var parentViewModel: PortfolioCurationViewModel<ParentCoordinator>
     @ObservedObject var coinImageViewModel: CoinImageViewModel
     @ObservedObject var radioButtonViewModel: RadioButtonViewModel = .init()
     
@@ -79,7 +79,7 @@ class PCCoinRowViewModel: GenericViewModel {
         return self.isSelected
     }
     
-    init(parentViewModel: PortfolioCurationViewModel,
+    init(parentViewModel: PortfolioCurationViewModel<ParentCoordinator>,
          coinModel: CoinModel,
          isSelected: Bool = false)
     {

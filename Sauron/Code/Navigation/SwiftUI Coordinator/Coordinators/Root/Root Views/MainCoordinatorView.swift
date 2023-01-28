@@ -53,7 +53,6 @@ struct MainCoordinatorView: CoordinatedView {
     var body: some View {
         synchronize(publishedValues: [$coordinator.fullCoverItem, $coordinator.sheetItem],
                     with: [$fullCoverItemState, $sheetItemState]) {
-            NavigationStack(path: $coordinator.navigationPath) {
                 ZStack {
                     coordinator.rootView
                         .fullScreenCover(item: $fullCoverItemState,
@@ -79,12 +78,12 @@ struct MainCoordinatorView: CoordinatedView {
                                         removal: .offset(x: 1000)))
                     
                     tabbar
+                        .zIndex(2)
                 }
                 .background(backgroundColor)
                 .background(backgroundGradient)
                 .animation(.easeInOut,
                            value: tabbarModel.currentTab)
-            }
         }
                     .opacity(show ? 1 : 0)
                     .onAppear {
