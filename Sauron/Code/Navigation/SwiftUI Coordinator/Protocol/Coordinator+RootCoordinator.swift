@@ -360,6 +360,7 @@ protocol RootCoordinator: Coordinator {
     func coordinatedView() -> any CoordinatedView // View to be used to access the specific properties of each coordinator view
 }
 
+// MARK: - Navigation Path Traversal
 extension Coordinator {
     func navigateTo(targetRoute: Router.Route) {
         let path = router.getPath(to: targetRoute)
@@ -391,8 +392,28 @@ extension Coordinator {
                 index > currentRouteIndex
             }
             
-            for route in pathToTraverse {
-                self.pushView(with: route.element)
+            // Traverse the path to the target view, presenting each individual view in the manner in which it wants to be presented (if possible)
+            for (_, route) in pathToTraverse {
+                let routeStringLiteral = self.router.getStringLiteral(for: route)
+                
+                let preferredPresentationMethod = PreferredViewPresentationMethod
+                    .getPresentationType(from: routeStringLiteral)
+                
+                switch preferredPresentationMethod {
+                case .navigationStack:
+                    self.pushView(with: route)
+                case .bottomSheet:
+                    // Any current sheets must be dismissed before a new one can be added to the scene
+                    self.dismissSheet()
+                    self.dismissFullScreenCover()
+                    
+                    self.presentSheet(with: route)
+                case .fullCover:
+                    self.dismissSheet()
+                    self.dismissFullScreenCover()
+                    
+                    self.presentFullScreenCover(with: route)
+                }
             }
         }
     }

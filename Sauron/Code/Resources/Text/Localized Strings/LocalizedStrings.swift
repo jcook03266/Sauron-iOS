@@ -26,6 +26,7 @@ enum LocalizedStrings: String, CaseIterable {
          CONTINUE,
          SEARCH,
          DISMISS,
+         DONE,
          NO_SEARCH_RESULTS,
          CANCEL,
          ABSENCE_OF_VALUE,

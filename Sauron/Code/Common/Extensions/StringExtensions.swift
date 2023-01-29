@@ -115,6 +115,7 @@ extension String {
     /// Reverses the changes done to URL safe strings
     func convertFromURLSafeString() -> String {
         return self
+            .replacingOccurrences(of: "_", with: " ")
             .replacingOccurrences(of: "-", with: " ")
             .replacingOccurrences(of: "+", with: "_")
     }

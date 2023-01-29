@@ -36,6 +36,10 @@ class LaunchScreenRouter: Routable {
         }
     }
     
+    func getStringLiteral(for route: Route) -> String {
+        return route.rawValue
+    }
+    
     func view(for route: LaunchScreenRoutes) -> AnyView {
         switch route {
         case .main:

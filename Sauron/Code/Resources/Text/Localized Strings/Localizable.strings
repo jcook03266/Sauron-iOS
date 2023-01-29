@@ -35,6 +35,7 @@
 "CONTINUE" = "Continue";
 "SEARCH" = "Search";
 "DISMISS" = "Dismiss";
+"DONE" = "Done";
 "NO_SEARCH_RESULTS" = "No Search Results";
 "CANCEL" = "Cancel";
 "ABSENCE_OF_VALUE" = "No Value Found";

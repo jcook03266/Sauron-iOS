@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - Router Routes
 /// Enums of all possible router routes (views) depending on the router
 /// Each router is responsible for a specific set of views that it expects to present somewhere in its view hierarchy, this centralizes the app's navigation pathways to one source of truth
 /// Note: Any new views must be added under their respective router
@@ -30,7 +31,7 @@ enum OnboardingRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProto
     case getStarted = "get started"
     case portfolioCuration = "portfolio curation"
     case web
-    case currencyPreferenceBottomSheet = "currency preference bottom sheet"
+    case currencyPreferenceBottomSheet = "currency preference bs"
 }
 
 // MARK: - Main / Tabbar Router [For tabbar use only, no deeplinks!]
@@ -57,6 +58,7 @@ enum HomeRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
     
     case main = ""
     case editPortfolio = "edit portfolio"
+    case currencyPreferenceBottomSheet = "currency preference bs" // BS For bottom sheet presentation preference
 }
 // MARK: - Wallets Tab Router
 enum WalletRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
@@ -96,4 +98,25 @@ enum RouteDirectories: String, CaseIterable, Hashable, Identifiable, RoutesProto
     case WalletRoutes = "wallet"
     case SettingsRoutes = "settings"
     case AlertsRoutes = "alerts"
+}
+
+// MARK: - Deeplink Navigation Traversal
+/// An enum that specifies the method of presentation for a target view, each view can be presented in a number of ways
+/// Note: Please be advised that SwiftUI does not support multiple sheets being presented at once, if this is the case each sheet must be popped and a new one has to be presented in its place
+enum PreferredViewPresentationMethod: String, CaseIterable, Hashable {
+    case navigationStack = "ns"
+    case bottomSheet = "bs"
+    case fullCover = "fc"
+    
+    static func getPresentationType(from route: String) -> Self {
+        let components = route.components(separatedBy: " ")
+        
+        for method in PreferredViewPresentationMethod.allCases {
+            if components.contains(method.rawValue) {
+                return method
+            }
+        }
+        
+        return navigationStack
+    }
 }

@@ -15,21 +15,21 @@ struct FloatingContextMenu: View {
     // MARK: - Dimensions + Padding
     private let titleViewSize: CGSize = .init(width: 120,
                                               height: 40),
-titleViewHorizontalPadding: CGFloat = 0,
-titleViewVerticalPadding: CGFloat = 10,
-titleViewCornerRadius: CGFloat = 10,
-titleViewSpacingFromMenuBody: CGFloat = 5,
-menuBodyCornerRadius: CGFloat = 10,
-    /// Max height is 200, after that the scrollview kicks in
-menuBodySize: CGSize = .init(width: 200,
-                             height: 200),
-menuBodySideBarCornerRadius: CGFloat = 10,
-menuBodySideBarWidth: CGFloat = 40,
-scrollViewVerticalInset: CGFloat = 10,
-sortIconViewSize: CGSize = .init(width: 15, height: 15),
-sortIconHorizontalPadding: CGFloat = 10,
-shadowRadius: CGFloat = 2,
-shadowOffset: CGSize = .init(width: 0, height: 1)
+                titleViewHorizontalPadding: CGFloat = 0,
+                titleViewVerticalPadding: CGFloat = 10,
+                titleViewCornerRadius: CGFloat = 10,
+                titleViewSpacingFromMenuBody: CGFloat = 5,
+                menuBodyCornerRadius: CGFloat = 10,
+                /// Max height is 200, after that the scrollview kicks in
+                menuBodySize: CGSize = .init(width: 200,
+                                             height: 200),
+                menuBodySideBarCornerRadius: CGFloat = 10,
+                menuBodySideBarWidth: CGFloat = 40,
+                scrollViewVerticalInset: CGFloat = 10,
+                sortIconViewSize: CGSize = .init(width: 15, height: 15),
+                sortIconHorizontalPadding: CGFloat = 10,
+                shadowRadius: CGFloat = 2,
+                shadowOffset: CGSize = .init(width: 0, height: 1)
     
     /// Where the top right corner of the context menu's content will sit
     private var anchorPoint: CGPoint {
@@ -57,12 +57,16 @@ shadowOffset: CGSize = .init(width: 0, height: 1)
     var body: some View {
         ZStack {
             backdrop
-        
+            
             contextMenuBody
+                .scaleEffect(model.shouldDisplay ? 1 : 0.0001,
+                             anchor: .topTrailing)
                 .position(anchorPoint)
         }
         .zIndex(10)
         .opacity(model.shouldDisplay ? 1 : 0)
+        .animation(.spring(),
+                   value: model.shouldDisplay)
         .animation(.easeInOut,
                    value: model.selectedRow)
     }

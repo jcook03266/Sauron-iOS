@@ -97,9 +97,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
             else { return }
             
             self.coordinator
-                .presentFullScreenCover(with: .editPortfolio)
-            
-            self.objectWillChange.send()
+                .pushView(with: .editPortfolio)
         }
     }
     
@@ -168,7 +166,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     }
     
     // MARK: - Transient Content Control
-    /// Hides the daily greeting from the home screen after a 10 second grace period
+    /// Hides the daily greeting from the home screen after a 10 second delay
     func setUserHasSeenHomeScreen() {
         guard let currentUser = dependencies
             .userManager
@@ -176,11 +174,11 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
               !currentUser.hasVisitedHomeScreen
         else { return }
         
-        let gracePeriod = TimeInterval(10)
+        let delay = TimeInterval(10)
         
         DispatchQueue
             .main
-            .asyncAfter(deadline: .now() + gracePeriod)
+            .asyncAfter(deadline: .now() + delay)
         {
             /// Inform observers that this observable object will change w/o requiring this value to be published
             currentUser.hasVisitedHomeScreen = true

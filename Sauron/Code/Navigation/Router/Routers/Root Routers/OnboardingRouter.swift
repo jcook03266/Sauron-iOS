@@ -71,6 +71,10 @@ class OnboardingRouter: Routable {
         return path
     }
     
+    func getStringLiteral(for route: Route) -> String {
+        return route.rawValue
+    }
+    
     func view(for route: OnboardingRoutes) -> AnyView {
         var view: any View
         var statusBarHidden: Bool = false

@@ -35,6 +35,10 @@ class WalletTabRouter: Routable {
         }
     }
     
+    func getStringLiteral(for route: Route) -> String {
+        return route.rawValue
+    }
+    
     func view(for route: Route) -> AnyView {
         var view: any View
         var statusBarHidden: Bool = false

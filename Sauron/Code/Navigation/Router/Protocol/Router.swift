@@ -23,6 +23,8 @@ public protocol Routable: ObservableObject {
     func initViewModels() -> Void
     
     func getPath(to route: Route) -> OrderedSet<Route>
+    
+    func getStringLiteral(for route: Route) -> String
 }
 
 extension Routable {

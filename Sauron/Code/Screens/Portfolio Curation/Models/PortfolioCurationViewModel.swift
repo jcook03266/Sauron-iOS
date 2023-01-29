@@ -23,6 +23,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     @Published var portfolioCoins: [PortfolioCoinEntity] = []
     @Published var currentCurrency = Dependencies().fiatCurrencyManager.displayedCurrency
     @Published var filterPortfolioCoins: Bool = false
+    @Published var autoRefreshTimer: Timer.TimerPublisher? = nil
     
     // MARK: - Subscriptions
     var cancellables: Set<AnyCancellable> = []
@@ -77,6 +78,11 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     let placeholderViewRange: Range<Int> = 0..<10
     
     // MARK: - Interface variables for convenience
+    /// Moves the view's content down by the specified safe area whenever the main tabbar is displayed
+    var tabbarSafeArea: CGFloat {
+        return self.coordinator.parent is MainCoordinator ? 60 : 0
+    }
+    
     var searchResultsCount: Int {
         return self.dataStores.coinStore.searchResultCount
     }
@@ -154,13 +160,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             HapticFeedbackDispatcher.arrowButtonPress()
             guard let self = self else { return }
             
-            if self.coordinator is OnboardingCoordinator {
-                self.coordinator.popView()
-            }
-            else if let coordinator = self.coordinator as? HomeTabCoordinator  {
-                // Dismiss
-                coordinator.dismissFullScreenCover()
-            }
+            self.coordinator.popView()
         }
     }
     
@@ -190,7 +190,9 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.updateSortingCriteria(sortKey: .name,
+            self.dataStores
+                .coinStore
+                .updateSortingCriteria(sortKey: .name,
                                                             ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
@@ -200,7 +202,9 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.updateSortingCriteria(sortKey: .id,
+            self.dataStores
+                .coinStore
+                .updateSortingCriteria(sortKey: .id,
                                                             ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
@@ -210,7 +214,9 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.updateSortingCriteria(sortKey: .price,
+            self.dataStores
+                .coinStore
+                .updateSortingCriteria(sortKey: .price,
                                                             ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
@@ -220,7 +226,9 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.updateSortingCriteria(sortKey: .rank,
+            self.dataStores
+                .coinStore
+                .updateSortingCriteria(sortKey: .rank,
                                                             ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
@@ -230,7 +238,10 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            self.dataStores.coinStore.updateSortingCriteria(sortKey: .volume,
+            self
+                .dataStores
+                .coinStore
+                .updateSortingCriteria(sortKey: .volume,
                                                             ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
@@ -249,27 +260,34 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     var currencyPreferenceAction: (() -> Void) {
         return {[weak self] in
             HapticFeedbackDispatcher.bottomSheetPresented()
-            guard let self = self,
-                    let coordinator = self.coordinator as? OnboardingCoordinator
+            guard let self = self
             else { return }
             
-            coordinator.presentSheet(with: .currencyPreferenceBottomSheet)
+            if let coordinator = self.coordinator as? OnboardingCoordinator {
+                coordinator.presentSheet(with: .currencyPreferenceBottomSheet)
+            }
+            else if let coordinator = self.coordinator as? HomeTabCoordinator {
+                coordinator.presentSheet(with: .currencyPreferenceBottomSheet)
+            }
         }
     }
     
     var languagePreferenceAction: (() -> Void) {
         return { [weak self] in
+            HapticFeedbackDispatcher.genericButtonPress()
             guard let self = self else { return }
             
-            HapticFeedbackDispatcher.genericButtonPress()
-            self.dependencies.languageManager.goToAppSettings()
+            
+            self.dependencies
+                .languageManager
+                .goToAppSettings()
         }
     }
     
     var assetIdentifierHeaderTappedAction: (() -> Void) {
         return { [weak self] in
-            guard let self = self else { return }
             HapticFeedbackDispatcher.genericButtonPress()
+            guard let self = self else { return }
             
             self.assetIdentifierDisplayType = self.assetIdentifierDisplayType == .Name ? .Symbol : .Name
         }
@@ -298,7 +316,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
         return shouldDisplayFTUEUI ? LocalizedStrings.getLocalizedString(for: .PORTFOLIO_CURATION_SCREEN_TITLE_FTUE_NEWLINE) : LocalizedStrings.getLocalizedString(for: .PORTFOLIO_CURATION_SCREEN_TITLE)
     }
     var continueButtonText: LocalizedStringKey {
-        return shouldDisplayFTUEUI ? LocalizedStrings.getLocalizedStringKey(for: .CONTINUE) :  LocalizedStrings.getLocalizedStringKey(for: .DISMISS)
+        return shouldDisplayFTUEUI ? LocalizedStrings.getLocalizedStringKey(for: .CONTINUE) :  LocalizedStrings.getLocalizedStringKey(for: .DONE  )
     }
     
     var searchResultsCounter: String {
@@ -512,25 +530,32 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
                 self.dataStores.coinStore.changeAscendingSortOrder(to: $0)
             }
             .store(in: &cancellables)
-        
-        // Auto refresh publisher for refreshing coin data
-        
-        
-        
-        // FIXME: - This runs constantly find a way to make it only run when the view is active, aka isolate this subscription call to only when the view is active
-//        Timer.publish(every: coinDataRefreshInterval,
-//                      on: .main,
-//                      in: .default)
-//        .autoconnect()
-//        .receive(on: scheduler)
-//        .sink { [weak self] _ in
-//            guard let self = self
-//            else { return }
-//
-//            self.refresh()
-//        }
-//        .store(in: &cancellables)
+    }
     
+    /// Refreshes the coin data provider every specified interval when the view model has been embedded in a view, and cancels this publisher when that view is removed from memory
+    func subscribeToAutomaticReloading() {
+        autoRefreshTimer = Timer.publish(every: coinDataRefreshInterval,
+                              on: .main,
+                              in: .default)
+        
+        autoRefreshTimer?
+                .autoconnect()
+                .receive(on: scheduler)
+                .sink { [weak self] _ in
+                    guard let self = self
+                    else { return }
+        
+                    self.refresh()
+                }
+                .store(in: &cancellables)
+    }
+    
+    func unsubscribeFromAutomaticReloading() {
+        autoRefreshTimer?
+            .connect()
+            .cancel()
+        
+        autoRefreshTimer = nil
     }
     
     // MARK: - Convenience Methods

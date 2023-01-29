@@ -48,7 +48,14 @@ class HomeTabRouter: Routable {
         
         case .editPortfolio:
             return [.main, .editPortfolio]
+            
+        case .currencyPreferenceBottomSheet:
+            return [.main, .editPortfolio, .currencyPreferenceBottomSheet]
         }
+    }
+    
+    func getStringLiteral(for route: Route) -> String {
+        return route.rawValue
     }
     
     func view(for route: Route) -> AnyView {
@@ -65,6 +72,11 @@ class HomeTabRouter: Routable {
                 .navigationBarBackButtonHidden(true)
             
             statusBarHidden = false
+            
+        case .currencyPreferenceBottomSheet:
+            view = PreferenceBottomSheet(model: BottomSheetDispatcher.getCurrencyPreferenceModel(using: self.coordinator))
+            
+            statusBarHidden = self.coordinator.statusBarHidden
         }
         
         self.coordinator.statusBarHidden = statusBarHidden

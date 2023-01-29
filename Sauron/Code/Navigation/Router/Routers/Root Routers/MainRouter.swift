@@ -52,6 +52,10 @@ class MainRouter: Routable {
         return [.authScreen]
     }
     
+    func getStringLiteral(for route: Route) -> String {
+        return route.rawValue
+    }
+    
     func view(for route: MainRoutes) -> AnyView {
         var view: any View = EmptyView()
         var statusBarHidden: Bool = false

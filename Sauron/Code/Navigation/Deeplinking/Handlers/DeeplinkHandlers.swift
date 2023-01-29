@@ -46,8 +46,8 @@ final class LaunchScreenDeeplinkHandler: DeeplinkHandlerProtocol {
     func openURL(_ url: URL) {
         guard canOpenURL(url), AppService.isDebug else { return }
         
-        let path = url.path(),
-            route = path.normalizedPath.convertFromURLSafeString()
+        let path = url.lastPathComponent,
+            route = path.convertFromURLSafeString()
           
         manager.switchActiveRoot(to: .launchScreenCoordinator)
 
@@ -109,8 +109,8 @@ final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
     func openURL(_ url: URL) {
         guard canOpenURL(url) else { return }
         
-        let path = url.path(),
-            route = path.normalizedPath.convertFromURLSafeString(),
+        let path = url.lastPathComponent,
+            route = path.convertFromURLSafeString(),
             queries = getQueries(from: url)
           
         manager.switchActiveRoot(to: .onboardingCoordinator)
@@ -157,6 +157,8 @@ final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
 // MARK: - Main Scene | Home Tab Handler
 /// Test links:
 /// - Home Tab: sauron://home/
+/// - Home Tab | Edit Portfolio Screen: sauron://home/edit-portfolio [use hyphens instead of underscores for directory names with spaces please]
+/// /// - Home Tab | Edit Portfolio Screen | Currency Settings sheet: sauron://home/edit-portfolio/currency-preference-bs
 /// /// - Home Tab | Events Section: sauron://home#events or sauron://home/#events [either works]
 final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
     typealias Router = HomeTabRouter
@@ -206,8 +208,8 @@ final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.path(),
-        route = path.normalizedPath.convertFromURLSafeString(),
+        let path = url.lastPathComponent,
+        route = path.convertFromURLSafeString(),
         _ = getQueries(from: url)
    
         manager.switchActiveRoot(to: .mainCoordinator)
@@ -301,8 +303,8 @@ final class WalletTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.path(),
-            route = path.normalizedPath.convertFromURLSafeString(),
+        let path = url.lastPathComponent,
+            route = path.convertFromURLSafeString(),
             _ = getQueries(from: url)
           
         manager.switchActiveRoot(to: .mainCoordinator)
@@ -387,8 +389,8 @@ final class SettingsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.path(),
-            route = path.normalizedPath.convertFromURLSafeString(),
+        let path = url.lastPathComponent,
+            route = path.convertFromURLSafeString(),
             _ = getQueries(from: url)
           
         manager.switchActiveRoot(to: .mainCoordinator)
@@ -474,8 +476,8 @@ final class AlertsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.path(),
-            route = path.normalizedPath.convertFromURLSafeString(),
+        let path = url.lastPathComponent,
+            route = path.convertFromURLSafeString(),
             _ = getQueries(from: url)
           
         manager.switchActiveRoot(to: .mainCoordinator)

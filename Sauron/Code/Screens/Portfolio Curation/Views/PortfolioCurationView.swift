@@ -93,15 +93,45 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
         return -(bottomSectionBackgroundTopPadding) + 5
     }
     
+    var body: some View {
+        mainBody
+        .presentContextMenu(with: model.contextMenuModel)
+        .animation(.spring(),
+                   value: model.contextPropertiesHasChanged)
+        .animation(.spring(), value: model.dependencies.fiatCurrencyManager.displayedCurrency)
+        .onAppear {
+            performOnAppearTasks()
+        }
+        .onDisappear {
+            performOnDisappearTasks()
+        }
+    }
+    
+    var mainBody: some View {
+        GeometryReader { geom in
+            ZStack {
+                sideVerticalDivider
+                
+                topSection
+                
+                bottomSection
+            }
+        }
+    }
+    
+    /// Refresh data whenever this view reappears
+    private func performOnAppearTasks() {
+        model.refresh()
+        model.contextMenuModel.shouldDisplay = false
+        
+        model.subscribeToAutomaticReloading()
+    }
+    
+    private func performOnDisappearTasks() {
+        model.unsubscribeFromAutomaticReloading()
+    }
+    
     // MARK: - Subviews
-    var selectedCoinsCounterView: some View {
-        Text("")
-    }
-    
-    var searchResultsCounterView: some View {
-        Text("")
-    }
-    
     var titleView: some View {
         Text(model.title)
             .withFont(model.titleFont)
@@ -369,7 +399,8 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
             )
             .scaledToFill()
         }
-        .padding(.bottom, assetsListScrollViewVerticalPadding)
+        .padding(.bottom,
+                 assetsListScrollViewVerticalPadding)
     }
     
     var assetSymbolContainer: some View {
@@ -474,14 +505,7 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
         }
     }
     
-    // MARK: - Subview Combinations
-    var counterTabsDisplayView: some View {
-        HStack {
-            searchResultsCounterView
-            selectedCoinsCounterView
-        }
-    }
-    
+    // MARK: - View Combinations
     var searchBarSection: some View {
         VStack {
             HStack(spacing: 0) {
@@ -499,6 +523,8 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
     var topSection: some View {
         ZStack {
             ScrollView(.vertical) {
+                Spacer(minLength: model.tabbarSafeArea)
+                
                 VStack(spacing: 0) {
                     HStack(alignment: .top, spacing: 0) {
                         titleView
@@ -569,31 +595,6 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                    value: displayBottomSection)
         .animation(.spring(),
                    value: model.canContinue)
-    }
-
-    var body: some View {
-        GeometryReader { geom in
-            ZStack {
-                sideVerticalDivider
-                
-                topSection
-                
-                bottomSection
-            }
-        }
-        .presentContextMenu(with: model.contextMenuModel)
-        .animation(.spring(),
-                   value: model.contextPropertiesHasChanged)
-        .animation(.spring(), value: model.dependencies.fiatCurrencyManager.displayedCurrency)
-        .onAppear {
-            performOnAppearTasks()
-        }
-    }
-    
-    /// Refresh data whenever this view reappears
-    private func performOnAppearTasks() {
-        model.refresh()
-        model.contextMenuModel.shouldDisplay = false
     }
 }
 
