@@ -11,13 +11,15 @@ import Foundation
 struct FormattingHelper {
     // MARK: - Number To String Formatting
     /// Converts a number to a string with a default 2 trailing decimal places
-    static func convertNumberToString(number: NSNumber,
+    static func convertNumberToString(number: Double,
                                       with trailingDecimalPlaces: Int = 2) -> String {
         return String(format: "%.\(trailingDecimalPlaces)f", number)
     }
     
     /// Converts a number to a percentage with a default of 2 trailing decimal places
-    static func convertToPercentage(number: NSNumber) -> String {
-        return self.convertNumberToString(number: number) + "%"
+    static func convertToPercentage(number: Double,
+                                    with trailingDecimalPlaces: Int = 2) -> String {
+        return self.convertNumberToString(number: number,
+                                          with: trailingDecimalPlaces) + "%"
     }
 }

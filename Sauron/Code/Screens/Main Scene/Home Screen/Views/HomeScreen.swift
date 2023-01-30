@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shimmer
 
 struct HomeScreen: View {
     typealias Router = HomeTabRouter
@@ -26,6 +27,12 @@ struct HomeScreen: View {
                 // Shared
                 sectionHeaderIconSize: CGSize = .init(width: 20,
                                                       height: 20),
+                showAllUtilityButtonSize: CGSize = .init(width: 120,
+                                                         height: 30),
+                editUtilityButtonSize: CGSize = .init(width: 80,
+                                                      height: 30),
+                sectionTransitionUtilityButtonSize: CGSize = .init(width: 85,
+                                                                   height: 25),
                 // My Portfolio
                 portfolioPlaceholderImageSize: CGSize = .init(width: 100,
                                                               height: 100),
@@ -43,11 +50,17 @@ struct HomeScreen: View {
                 // Shared
                 sectionHeaderItemSpacing: CGFloat = 15,
                 sectionHeaderTopSpacing: CGFloat = 10,
-                sectionHeaderLeadingPadding: CGFloat = 15,
+                sectionLeadingPadding: CGFloat = 15,
+                utilityButtonSpacing: CGFloat = 10,
                 // MY Portfolio
                 portfolioPlaceholderImageTopPadding: CGFloat = 35,
                 portfolioPlaceholderImageBottomPadding: CGFloat = 25,
-                portfolioBottomPadding: CGFloat = 10,
+                portfolioFooterTopPadding: CGFloat = 15,
+                portfolioBottomPadding: CGFloat = 0,
+                portfolioCoinGridContentHorizontalPadding: CGFloat = 20,
+                portfolioCoinGridContentVerticalPadding: CGFloat = 10,
+                portfolioCoinGridContentTopPadding: CGFloat = 10,
+                portfolioCoinGridContentItemSpacing: CGFloat = 20,
                 // Crypto News
                 cryptoNewsSectionHeaderItemSpacing: CGFloat = 10,
                 cryptoNewsSectionHeaderBottomPadding: CGFloat = 50,
@@ -60,8 +73,7 @@ struct HomeScreen: View {
                     backgroundGradient
                     backgroundColor
                 }
-                    .ignoresSafeArea()
-                
+                .ignoresSafeArea()
                 
                 contentContainer
                     .fullScreenCover(item: $model.fullCoverItemState,
@@ -232,7 +244,17 @@ extension HomeScreen {
         VStack(spacing: 0) {
             portfolioSectionHeader
             
-            portfolioPlaceholder
+            // Prompt user to add coins to their portfolio
+            if model.shouldDisplayPortfolioSectionPlaceholder {
+                portfolioPlaceholder
+            }
+            
+            // User has coins, display them like normal
+            if !model.shouldDisplayPortfolioSectionPlaceholder {
+                portfolioCoinContent
+                
+                portfolioSectionFooter
+            }
             
             Spacer()
         }
@@ -349,7 +371,7 @@ extension HomeScreen {
                 Spacer()
             }
                    .padding(.leading,
-                            sectionHeaderLeadingPadding)
+                            sectionLeadingPadding)
         }
     }
     
@@ -367,6 +389,7 @@ extension HomeScreen {
             .padding(.bottom,
                      portfolioPlaceholderImageBottomPadding)
             
+            // Start Portfolio Button
             StrongRectangularCTA(action: model.createPorfolioAction,
                                  backgroundColor: model.portfolioSectionPlaceholderButtonBackgroundColor,
                                  foregroundColor: model.portfolioSectionPlaceholderButtonForegroundColor,
@@ -379,15 +402,86 @@ extension HomeScreen {
                  portfolioPlaceholderImageTopPadding)
     }
     
-    //
-    //    var portfolioContentBody: some View {
-    //
-    //    }
+    var portfolioCoinContent: some View {
+        ScrollView(.horizontal,
+                   showsIndicators: false) {
+            
+            Group {
+                // Placeholder for when coins are loading
+                if model.portfolioIsLoading {
+                    HStack(spacing: portfolioCoinGridContentItemSpacing) {
+                        ForEach(model.placeholderViewRange, id: \.self)
+                        { _ in
+                            if let placeholderCoinData = model.placeholderCoinData {
+                                CoinGridInformationView(model: .init(coinModel: placeholderCoinData))
+                                    .redacted(reason: .placeholder)
+                                    .shimmering(bounce: false)
+                            }
+                        }
+                    }
+                    .transition(.slideForwards)
+                }
+                else {
+                    // The loaded coins
+                    HStack(spacing: portfolioCoinGridContentItemSpacing) {
+                        ForEach(model.portfolioCoins)
+                        { coin in
+                            CoinGridInformationView(model: .init(coinModel: coin))
+                        }
+                    }
+                    .transition(.slideBackwards)
+                }
+            }
+            .padding(.vertical,
+                     portfolioCoinGridContentVerticalPadding)
+            .padding(.horizontal,
+                     portfolioCoinGridContentHorizontalPadding)
+        }
+                   .padding(.top,
+                            portfolioCoinGridContentTopPadding)
+    }
     
-    //    var portfolioSectionFooter: some View {
-    //
-    //    }
-    //
+    var portfolioSectionFooter: some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: utilityButtonSpacing) {
+                // Show all button
+                StrongRectangularCTA(action: model.showAllPortfolioCoinsAction,
+                                     backgroundColor: model.utilityButtonBackgroundColor,
+                                     foregroundColor: model.utilityButtonTitleColor,
+                                     shadowColor: model.shadowColor,
+                                     font: model.utilityButtonTitleFont,
+                                     size: showAllUtilityButtonSize,
+                                     message: (model.showAllButtonTitle, nil))
+                
+                // Edit Button
+                StrongRectangularCTA(action: model.editPortfolioAction,
+                                     backgroundColor: model.utilityButtonBackgroundColor,
+                                     foregroundColor: model.utilityButtonTitleColor,
+                                     shadowColor: model.shadowColor,
+                                     font: model.utilityButtonTitleFont,
+                                     size: editUtilityButtonSize,
+                                     message: (model.editButtonTitle, nil))
+                
+                // Maximize / Minimize Portfolio Section
+                RoundedRectangularCTA(action: model.transitionPortfolioSectionAction,
+                                      backgroundColor: model.specializedUtilityButtonBackgroundColor,
+                                      titleGradient: model.specializedUtilityButtonTitleGradient,
+                                      shadowColor: model.shadowColor,
+                                      font: model.specializedUtilityButtonTitleFont,
+                                      size: sectionTransitionUtilityButtonSize,
+                                      message: (model.portfolioSectionTransitionButtonTitle, nil))
+                
+                Spacer()
+            }
+            // Unclip shadows
+            .padding(.vertical, 5)
+            .padding(.leading,
+                     sectionLeadingPadding)
+        }
+        .padding(.top,
+                 portfolioFooterTopPadding)
+    }
+    
     
     // Crypto News
     var cryptoNewsSectionTitle: some View {

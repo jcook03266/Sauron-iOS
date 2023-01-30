@@ -86,6 +86,16 @@ struct CoinModel: Identifiable, Codable, Equatable, Hashable {
         }
     }
     
+    /// An enum that lists the supported time scales for the user to pick from to display the change overtime across the range specified
+    enum TimeScale: String, CaseIterable, Hashable {
+        case one_hour = "1H"
+        case one_day = "1D"
+        case one_week = "1W"
+        case one_month = "1M"
+        case one_year = "1Y"
+        case all_time = "All"
+    }
+    
     private static func getPlaceholderJSONData() -> Data? {
         return DevEnvironment.shared.testCoinModelJSON.data(using: .utf8)
     }
@@ -122,9 +132,21 @@ struct CoinThemeColor: Identifiable, Equatable, Hashable {
     let id: String
     var themeColor: Color
     
+    // MARK: - Properties
+    static let additionalHue: CGFloat = 0,
+               additionalSaturation: CGFloat = 0.75,
+               additionalBrightness: CGFloat = 0.95,
+               darkColorAdditionalSaturation: CGFloat = -0.9,
+               darkColorAdditionalBrightness: CGFloat = 1
+    
     mutating func setThemeColorUsing(image: UIImage) {
         if let color = image.averageColor{
-            self.themeColor = Color(color)
+            let brightenedColor = color.modified(withAdditionalHue: CoinThemeColor.additionalHue,
+                                                 additionalSaturation: CoinThemeColor.additionalSaturation,
+                                                 additionalBrightness: CoinThemeColor.additionalBrightness)
+                .withAlphaComponent(1)
+            
+            self.themeColor = Color(brightenedColor)
         }
         
         // Default back to the app's theme color
@@ -132,8 +154,22 @@ struct CoinThemeColor: Identifiable, Equatable, Hashable {
     }
     
     static func getThemeColorFrom(image: UIImage) -> (UIColor, Color)? {
-        guard let color = image.averageColor else { return nil }
+        guard let color = image.averageColor
+        else { return nil }
         
-        return (color, Color(color))
+        let brightenedColor = color.modified(withAdditionalHue: CoinThemeColor.additionalHue,
+                                             additionalSaturation: CoinThemeColor.additionalSaturation,
+                                             additionalBrightness: CoinThemeColor.additionalBrightness)
+            .withAlphaComponent(1)
+
+// Deprecated: Using an alpha of 1 fixes a lot of the issues with darker color themes for the coin icons it seems
+//        /// If the color is too dark then decrease the saturation to essentially make it almost grayscale
+//        if color.isDark() {
+//            brightenedColor = brightenedColor.modified(withAdditionalHue: CoinThemeColor.additionalHue,
+//                                                       additionalSaturation: CoinThemeColor.darkColorAdditionalSaturation,
+//                                                       additionalBrightness: CoinThemeColor.darkColorAdditionalBrightness)
+//        }
+        
+        return (brightenedColor, Color(brightenedColor))
     }
 }

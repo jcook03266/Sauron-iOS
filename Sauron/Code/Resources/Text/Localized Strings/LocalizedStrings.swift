@@ -31,7 +31,7 @@ enum LocalizedStrings: String, CaseIterable {
          CANCEL,
          ABSENCE_OF_VALUE,
          SHOW_ALL,
-         QUICK_EDIT,
+         EDIT,
          MINIMIZE,
          MAXIMIZE,
          PREDICTION,

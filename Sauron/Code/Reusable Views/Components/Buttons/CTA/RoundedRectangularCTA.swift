@@ -12,6 +12,7 @@ struct RoundedRectangularCTA: View {
     var action: (() -> Void),
         backgroundColor: Color = Colors.primary_1.0,
         foregroundColor: Color = Colors.permanent_white.0,
+        titleGradient: LinearGradient? = nil,
         shadowColor: Color = Colors.shadow_1.0,
         font: FontRepository = .body_S_Bold,
         size: CGSize = CGSize(width: 350, height: 60),
@@ -47,6 +48,9 @@ struct RoundedRectangularCTA: View {
                 .withFont(font)
                 .padding([.all], padding)
                 .foregroundColor(foregroundColor)
+                .if(titleGradient != nil, transform: {
+                    $0.applyGradient(gradient: titleGradient!)
+                })
                 .background(backgroundColor)
                 .overlay(
                     ShapeBorderModifier<RoundedRectangle>(

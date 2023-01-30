@@ -70,6 +70,10 @@ class SRNEventBannerViewModel: GenericViewModel {
         return (totalPages > 1 && !forceHidePageBar) || forceDisplayPageBar
     }
     
+    var hasMultipleEvents: Bool {
+        return totalPages > 1
+    }
+    
     init() {
         self.pageBarViewModel = .init(totalPages: totalPages,
                                       currentPage: 0,
@@ -86,6 +90,10 @@ class SRNEventBannerViewModel: GenericViewModel {
     
     // MARK: - Auto-scrolling functionality
     func startAutoScroll(duration: CGFloat = SRNEventBannerViewModel.defaultAutoScrollDuration) {
+        /// Only auto scroll when there's more than one event
+        guard hasMultipleEvents
+        else { return }
+        
         autoScrollTimer = .init(interval: TimeInterval(duration),
                                 runLoop: .main,
                                 mode: .default)

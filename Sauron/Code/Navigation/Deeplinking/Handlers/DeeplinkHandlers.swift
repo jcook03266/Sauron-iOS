@@ -46,11 +46,12 @@ final class LaunchScreenDeeplinkHandler: DeeplinkHandlerProtocol {
     func openURL(_ url: URL) {
         guard canOpenURL(url), AppService.isDebug else { return }
         
-        let path = url.lastPathComponent,
+        let url = url.normalizeFromTrailingSlash(),
+            path = url.lastPathComponent,
             route = path.convertFromURLSafeString()
-          
+        
         manager.switchActiveRoot(to: .launchScreenCoordinator)
-
+        
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator
         else {
@@ -109,12 +110,13 @@ final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
     func openURL(_ url: URL) {
         guard canOpenURL(url) else { return }
         
-        let path = url.lastPathComponent,
+        let url = url.normalizeFromTrailingSlash(),
+            path = url.lastPathComponent,
             route = path.convertFromURLSafeString(),
             queries = getQueries(from: url)
-          
+        
         manager.switchActiveRoot(to: .onboardingCoordinator)
-
+        
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator
         else {
@@ -144,7 +146,7 @@ final class OnboardingDeeplinkHandler: DeeplinkHandlerProtocol {
         
         /// Filters
         if let portfolioCoinsOnlyFilter = queries[DeepLinkManager.DeepLinkConstants.portfolioCoinsOnlyFilterTag],
-            let bool = Bool(portfolioCoinsOnlyFilter)
+           let bool = Bool(portfolioCoinsOnlyFilter)
         {
             router.filterPortfolioCoinsOnly = bool
         }
@@ -208,12 +210,13 @@ final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.lastPathComponent,
-        route = path.convertFromURLSafeString(),
-        _ = getQueries(from: url)
-   
+        let url = url.normalizeFromTrailingSlash(),
+            path = url.lastPathComponent,
+            route = path.convertFromURLSafeString(),
+            queries = getQueries(from: url)
+        
         manager.switchActiveRoot(to: .mainCoordinator)
-
+        
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)
@@ -235,13 +238,33 @@ final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
                 .homeScreenSectionFragment = section
         }
         
-        /// Send this query directly to the router corresponding to the route specified by the url
-        ///if let query = queries[DeepLinkManager.DeepLinkConstants.queryTag] {}
+        /// Query Handling
+        if let query = queries[DeepLinkManager.DeepLinkConstants.queryTag] {
+            switch route {
+            case .main:
+                break
+            case .editPortfolio:
+                child
+                    .router
+                    .portfolioCurationSearchQuery = query
+            case .currencyPreferenceBottomSheet:
+                break
+            }
+        }
+        
+        /// Filters
+        if let portfolioCoinsOnlyFilter = queries[DeepLinkManager.DeepLinkConstants.portfolioCoinsOnlyFilterTag],
+           let bool = Bool(portfolioCoinsOnlyFilter)
+        {
+            // Use this child reference to the appropriate router, it's a direct pointer to the router, and updating it will update the UI
+            
+            child
+                .router
+                .filterPortfolioCoinsOnly = bool
+        }
         
         /// On tabbar context switch action
         let onNavigateAction: (() -> Void) = {}
-        
-        manager.setActiveDeepLinkTarget(to: url)
         
         /// Switch the active tab to the following, and then from the child coordinator handle the path navigation
         root
@@ -249,6 +272,7 @@ final class HomeTabDeeplinkHandler: DeeplinkHandlerProtocol {
             .navigateTo(tab: .home,
                         onNavigate: onNavigateAction)
         
+        manager.setActiveDeepLinkTarget(to: url)
         child.navigateTo(targetRoute: route)
     }
 }
@@ -303,12 +327,13 @@ final class WalletTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.lastPathComponent,
+        let url = url.normalizeFromTrailingSlash(),
+            path = url.lastPathComponent,
             route = path.convertFromURLSafeString(),
             _ = getQueries(from: url)
-          
+        
         manager.switchActiveRoot(to: .mainCoordinator)
-
+        
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)
@@ -389,12 +414,13 @@ final class SettingsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.lastPathComponent,
+        let url = url.normalizeFromTrailingSlash(),
+            path = url.lastPathComponent,
             route = path.convertFromURLSafeString(),
             _ = getQueries(from: url)
-          
+        
         manager.switchActiveRoot(to: .mainCoordinator)
-
+        
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)
@@ -476,12 +502,13 @@ final class AlertsTabDeeplinkHandler: DeeplinkHandlerProtocol {
         guard canOpenURL(url)
         else { return }
         
-        let path = url.lastPathComponent,
+        let url = url.normalizeFromTrailingSlash(),
+            path = url.lastPathComponent,
             route = path.convertFromURLSafeString(),
             _ = getQueries(from: url)
-          
+        
         manager.switchActiveRoot(to: .mainCoordinator)
-
+        
         guard let route = routes.init(rawValue: route),
               let root = manager.rootCoordinatorDelegate.activeRootCoordinator as? RCoordinator,
               let child = root.getChild(for: ChildCoordinator.self)

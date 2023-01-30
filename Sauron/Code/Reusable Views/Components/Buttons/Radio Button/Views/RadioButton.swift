@@ -66,10 +66,11 @@ extension RadioButton {
             model.didSelectAction()
         } label: {
             buttonBody
+            // Important: Do not put this animation modifier on the exterior of this button, the view will pop-in unexpectedly in lazy views
+                .animation(.spring(),
+                           value: model.isSelected)
         }
         .buttonStyle(.genericSpringyShrink)
-        .animation(.spring(),
-                   value: model.isSelected)
     }
 }
 

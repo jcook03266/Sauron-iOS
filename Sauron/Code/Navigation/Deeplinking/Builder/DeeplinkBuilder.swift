@@ -68,7 +68,7 @@ final class DeepLinkBuilder {
         
         // Directories
         for directory in directories {
-            urlString += directory
+            urlString += directory.getURLSafeString()
             urlString += directorySlash
         }
         

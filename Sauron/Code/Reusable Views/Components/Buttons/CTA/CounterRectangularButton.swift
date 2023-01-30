@@ -45,7 +45,7 @@ struct CounterRectangularButton: View {
     var hideCounterWhenItReaches: Int? = nil
     
     // MARK: - States
-    var isSelected: Bool
+    @Binding var isSelected: Bool
     
     private var shouldHideCounter: Bool {
         guard let hideIndex = hideCounterWhenItReaches
@@ -137,6 +137,6 @@ struct CounterRectangularButton_Previews: PreviewProvider {
     static var previews: some View {
         CounterRectangularButton(action: {},
                                  counter: 1,
-                                 isSelected: false)
+                                 isSelected: .constant(false))
     }
 }

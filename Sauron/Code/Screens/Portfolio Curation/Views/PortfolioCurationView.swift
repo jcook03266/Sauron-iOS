@@ -25,7 +25,7 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                 titleViewLeadingPadding: CGFloat = 90,
                 titleViewTrailingPadding: CGFloat = 20,
                 titleViewBottomPadding: CGFloat = 10,
-                titleViewTopPadding: CGFloat = 10, // Lines up with middle of back button
+                titleViewTopPadding: CGFloat = 10, // Lines up with middle of the back button
                 sideVerticalDividerWidth: CGFloat = 3,
                 sideVerticalDividerLeadingPadding: CGFloat = 35,
                 searchBarTopPadding: CGFloat = 20,
@@ -98,7 +98,10 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
         .presentContextMenu(with: model.contextMenuModel)
         .animation(.spring(),
                    value: model.contextPropertiesHasChanged)
-        .animation(.spring(), value: model.dependencies.fiatCurrencyManager.displayedCurrency)
+        .animation(.spring(),
+                   value: model.dependencies.fiatCurrencyManager.displayedCurrency)
+        .animation(.spring(),
+                   value: model.filterPortfolioCoins)
         .onAppear {
             performOnAppearTasks()
         }
@@ -206,7 +209,7 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                                              borderEnabled: true,
                                              counter: UInt(model.searchResultsCount),
                                              hideCounterWhenItReaches: 0,
-                                             isSelected: false)
+                                             isSelected: .constant(false))
                 }
                 
                 // Coin Counter
@@ -222,7 +225,7 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                                              borderEnabled: true,
                                              counter: UInt(model.portfolioCoins.count),
                                              hideCounterWhenItReaches: 0,
-                                             isSelected: model.filterPortfolioCoins)
+                                             isSelected: $model.filterPortfolioCoins)
                 }
             }
             .padding([.bottom], contextPropertiesHeaderVerticalPadding)
@@ -374,7 +377,6 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                         PCCoinRowView(model: .init(parentViewModel: model,
                                                    coinModel: $0,
                                                    isSelected: model.doesCoinExistInPortfolio(coin: $0)))
-                        
                         .id($0.hashValue)
                         .transition(.slideBackwards)
                     }

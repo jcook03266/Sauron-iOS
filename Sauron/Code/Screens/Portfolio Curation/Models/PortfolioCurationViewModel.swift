@@ -474,12 +474,14 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     // MARK: - Subscriptions
     private func addSubscribers() {
         // Updates the local coin store with data from the external coin store
-        dataStores.coinStore
+        dataStores
+            .coinStore
             .$coins
             .assign(to: &$coins)
         
         // Updates the local portfolio coins store with data from the external manager
-        dataStores.portfolioManager
+        dataStores
+            .portfolioManager
             .$coinEntities
             .assign(to: &$portfolioCoins)
         
@@ -492,15 +494,19 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             // Pass in external search queries and properties from the deeplinker here
             router
                 .$portfolioCurationSearchQuery
+                .receive(on: scheduler)
                 .assign(to: &searchBarTextFieldModel.$textEntry)
             
             // Triggers the portfolio coins only filter from an external source
             router
                 .$filterPortfolioCoinsOnly
+                .receive(on: scheduler)
                 .sink(receiveValue: { [weak self] in
                     guard let self = self else { return }
                     
-                    self.dataStores.coinStore.displayPortfolioCoinsOnly = $0
+                    self.dataStores
+                        .coinStore
+                        .displayPortfolioCoinsOnly = $0
                     self.filterPortfolioCoins = $0
                 })
                 .store(in: &cancellables)
@@ -508,14 +514,18 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
         else if let router = router as? HomeTabRouter {
             router
                 .$portfolioCurationSearchQuery
+                .receive(on: scheduler)
                 .assign(to: &searchBarTextFieldModel.$textEntry)
             
             router
                 .$filterPortfolioCoinsOnly
+                .receive(on: scheduler)
                 .sink(receiveValue: { [weak self] in
                     guard let self = self else { return }
                     
-                    self.dataStores.coinStore.displayPortfolioCoinsOnly = $0
+                    self.dataStores
+                        .coinStore
+                        .displayPortfolioCoinsOnly = $0
                     self.filterPortfolioCoins = $0
                 })
                 .store(in: &cancellables)
@@ -560,7 +570,9 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     
     // MARK: - Convenience Methods
     func doesCoinExistInPortfolio(coin: CoinModel) -> Bool {
-        return dataStores.portfolioManager.doesCoinExistInPortfolio(coin: coin)
+        return dataStores
+            .portfolioManager
+            .doesCoinExistInPortfolio(coin: coin)
     }
     
     /// Determines which asset identifier to display in the table

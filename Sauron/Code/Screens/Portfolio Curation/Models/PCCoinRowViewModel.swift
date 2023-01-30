@@ -32,25 +32,30 @@ class PCCoinRowViewModel<ParentCoordinator: Coordinator>: GenericViewModel {
         case .Symbol:
             return coinModel.symbol.uppercased()
         case .Name:
-            return coinModel.name.capitalizeAllFirstLetters
+            return coinModel.name
         }
     }
     
     /// With currency symbol
     var priceConvertedToCurrency: String {
-        return currencyManager.convertToCurrencyFormat(number: coinModel.currentPrice as NSNumber)
+        return currencyManager
+            .convertToCurrencyFormat(number: coinModel.currentPrice as NSNumber)
     }
     
     /// Without symbol attached to the front of the string
     var trimmedPriceConvertedToCurrency: String {
-        let currencySymbol = currencyManager.getCurrentSymbol().rawValue
+        let currencySymbol = currencyManager
+            .getCurrentSymbol()
+            .rawValue
         
         return currencyManager.convertToCurrencyFormat(number: coinModel.currentPrice as NSNumber)
             .replacingOccurrences(of: currencySymbol, with: "")
     }
     
     var currencySymbol: String {
-        return currencyManager.getCurrentSymbol().rawValue
+        return currencyManager
+            .getCurrentSymbol()
+            .rawValue
     }
     
     // MARK: - Data Store Dependencies
@@ -74,6 +79,7 @@ class PCCoinRowViewModel<ParentCoordinator: Coordinator>: GenericViewModel {
         HapticFeedbackDispatcher.genericButtonPress()
         self.isSelected.toggle()
         
+        self.radioButtonViewModel.isSelected = self.isSelected
         self.updateCoinSelectionState()
         
         return self.isSelected

@@ -12,6 +12,10 @@ import Combine
 class HomeScreenViewModel: CoordinatedGenericViewModel {
     typealias coordinator = HomeTabCoordinator
     
+    // MARK: - Properties
+    /// The maximum amount of elements to display on the home screen for each section, if the user wants to see all the data then they have to navigate to the respective detail view
+    let maxElementCount: Int = 5
+    
     // MARK: - Observed
     @ObservedObject var coordinator: coordinator
     /// Strong reference to the target router for listening to published values from deeplink parsing
@@ -21,20 +25,42 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     @ObservedObject var FFRScreenViewModel: FFRScreenViewModel<coordinator>
     
     // MARK: - Published
+    // Deeplinking Fragment
     @Published var selectedSection: Sections? = nil
+    // Greeting Message Display
+    @Published var userHasSeenHomepage: Bool = false
     // Navigation
     @Published var sheetItemState: HomeRoutes? = nil
     @Published var fullCoverItemState: HomeRoutes? = nil
     @Published var navigationPath: [HomeRoutes] = []
     
+    // MARK: - Section States
+    @Published var portfolioSectionMaximized: Bool = false
+    
+    // MARK: - Data Sources
+    @Published var allCoins: [CoinModel] = []
+    @Published var portfolioCoins: [CoinModel] = []
+    
+    // MARK: - Sorting Parameters
+    /// Highest values to lowest
+    @Published var portfolioSectionSortIsDescending: Bool = true
+    
     // MARK: - Subscriptions
-    var cancellables: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
+    private let scheduler: DispatchQueue = DispatchQueue.main
+    
+    // MARK: - Mock data for placeholders and lazy loading
+    var placeholderCoinData: CoinModel? {
+        return CoinModel.getPlaceholder()
+    }
+    let placeholderViewRange: Range<Int> = 0..<5
     
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
-        let userManager: UserManager = inject()
+        lazy var userManager: UserManager = HomeScreenViewModel.Dependencies.inject()
+        lazy var appService: AppService = HomeScreenViewModel.Dependencies.inject()
     }
-    let dependencies = Dependencies()
+    var dependencies = Dependencies()
     
     // MARK: - Data Stores
     struct DataStores: InjectableStores {
@@ -48,10 +74,15 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     // Shared
     let backgroundColor: Color = Color.clear,
         foregroundContainerColor: Color = Colors.neutral_100.0,
+        shadowColor: Color = Colors.shadow_1.0,
         titleForegroundColor: Color = Colors.permanent_white.0,
         titleIconForegroundColor: Color = Colors.permanent_white.0,
         sectionDividerColor: Color = Colors.neutral_200.0,
         sectionHeaderTitleColor: Color = Colors.black.0,
+        utilityButtonTitleColor: Color = Colors.permanent_white.0,
+        utilityButtonBackgroundColor: Color = Colors.permanent_black.0,
+        specializedUtilityButtonTitleGradient: LinearGradient = Colors.gradient_1,
+        specializedUtilityButtonBackgroundColor: Color = Colors.permanent_white.0,
         // My Portfolio
         portfolioHeaderIconGradient: LinearGradient = Colors.gradient_1,
         portfolioSectionPlaceholderImageColor: Color = Colors.black.0,
@@ -68,6 +99,8 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         // Shared
         sectionHeaderTitleFont: FontRepository = .heading_3,
         sectionHeaderTitleFontWeight: Font.Weight = .semibold,
+        utilityButtonTitleFont: FontRepository = .body_S_Bold,
+        specializedUtilityButtonTitleFont: FontRepository = .body_XS_Bold,
         // My Portfolio
         portfolioSectionPlaceholderButtonFont: FontRepository = .body_L_Bold,
         // Crypto News
@@ -87,9 +120,35 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         portfolioSectionSortButtonTitle: String = LocalizedStrings.getLocalizedString(for: .PERFORMANCE),
         portfolioSectionPlaceholderButtonTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_MY_PORTFOLIO_PLACEHOLDER_BUTTON_TITLE),
         // Crypto News
-        cryptoNewsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS)
+        cryptoNewsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS),
+        // Shared
+        showAllButtonTitle: String = LocalizedStrings.getLocalizedString(for: .SHOW_ALL),
+        editButtonTitle: String = LocalizedStrings.getLocalizedString(for: .EDIT),
+        maximizeButtonTitle: String = LocalizedStrings.getLocalizedString(for: .MAXIMIZE),
+        minimizeButtonTitle: String = LocalizedStrings.getLocalizedString(for: .MINIMIZE)
+    
+    // Dynamic Text | Portfolio Section
+    var portfolioSectionTransitionButtonTitle: String {
+        return portfolioSectionMaximized ? maximizeButtonTitle : minimizeButtonTitle
+    }
+    
+    // MARK: - Deeplinks
+    /// Moves the user to the edit screen and selects only the coins in their portfolio
+    var editPortfolioDeeplink: URL? {
+        let filterPortfolioCoinsOnlyTag = DeepLinkManager
+            .DeepLinkConstants
+            .portfolioCoinsOnlyFilterTag
+        
+        let tagArgument = true.description
+        
+        return DeepLinkBuilder
+            .buildDeeplinkFor(routerDirectory: .HomeRoutes,
+                              directories: [HomeRoutes.editPortfolio.rawValue],
+                              parameters: [filterPortfolioCoinsOnlyTag : tagArgument])
+    }
     
     // MARK: - Actions
+    // My Portfolio
     /// Push the user to the portfolio creation screen where they can create a portfolio if they don't have one currently
     var createPorfolioAction: (() -> Void) {
         return { [weak self] in
@@ -101,6 +160,35 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         }
     }
     
+    // Push the corresponding detail view for the full list / grid view
+    var showAllPortfolioCoinsAction: (() -> Void) {
+        return {}
+    }
+    
+    // Same as create action
+    var editPortfolioAction: (() -> Void) {
+        return { [weak self] in
+            guard let self = self,
+                  let editPortfolioDeeplink = self.editPortfolioDeeplink
+            else { return }
+            
+            self.dependencies
+                .appService
+                .deepLinkManager
+                .manage(editPortfolioDeeplink)
+        }
+    }
+    
+    // Shrinks / Enlarges the portfolio section into a list instead of a grid
+    var transitionPortfolioSectionAction: (() -> Void) {
+        return { [weak self] in
+            guard let self = self
+            else { return }
+            
+            self.portfolioSectionMaximized.toggle()
+        }
+    }
+    
     // TODO: - Create Daily Message Service For dynamic user message prompts for returning users, and first time users
     var title: String {
         return LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_GREETING_RETURNING_USER_1)
@@ -109,7 +197,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     // MARK: - Convenience
     /// Detect whether or not the event banner has multiple events loaded up
     var isEventBannerSingular: Bool {
-        return eventBannerCarouselViewModel.totalPages <= 1
+        return !eventBannerCarouselViewModel.hasMultipleEvents
     }
     
     /// If the user's portfolio is empty for some reason then prompt them to populate it
@@ -117,6 +205,22 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         return dataStores
             .portfolioManager
             .isEmpty
+    }
+    
+    var isCoinStoreEmpty: Bool {
+        return dataStores
+            .coinStore
+            .coins
+            .isEmpty
+    }
+    
+    /// If the user's portfolio is loading then display placeholder values
+    var portfolioIsLoading: Bool {
+       return !isPortfolioEmpty && isCoinStoreEmpty
+    }
+    
+    var shouldDisplayPortfolioSectionPlaceholder: Bool {
+        return isPortfolioEmpty
     }
     
     var shouldDisplayGreeting: Bool {
@@ -129,8 +233,14 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     // MARK: - Models
     var portfolioSortButtonViewModel: RectangularSortButtonViewModel {
         return .init(sortIconType: .pointer,
-                     sortOrderIsDescending: true,
-                     userTriggeredDescendingSortOrderToggleAction: .random(),
+                     sortOrderIsDescending: self.portfolioSectionSortIsDescending,
+                     userTriggeredDescendingSortOrderToggleAction: { [weak self] in
+            guard let self = self
+            else { return false }
+            
+            self.portfolioSectionSortIsDescending.toggle()
+            return self.portfolioSectionSortIsDescending
+        }(),
                      title: portfolioSectionSortButtonTitle)
     }
     
@@ -148,6 +258,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     }
     
     func addSubscribers() {
+        // MARK: - Navigation
         self.router
             .$homeScreenSectionFragment
             .assign(to: &$selectedSection)
@@ -163,6 +274,39 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         self.coordinator
             .$navigationPath
             .assign(to: &$navigationPath)
+        
+        // MARK: - Data Providers
+        dataStores
+            .coinStore
+            .$coins
+            .receive(on: scheduler)
+            .assign(to: &$allCoins)
+        
+        /// Portfolio Coins sorted by 'Performance' aka 24h volume
+        $portfolioSectionSortIsDescending
+            .combineLatest(
+                dataStores
+                    .coinStore
+                    .$portfolioCoins
+            )
+            .receive(on: scheduler)
+            .compactMap({ [weak self] publishers in
+                guard let self = self
+                else { return publishers.1 }
+                
+                let isDescendingSortOrder = publishers.0,
+                    coins = publishers.1,
+                    coinStore = self.dataStores.coinStore,
+                    sortKeyType = coinStore
+                    .sortKey.getVolumeType()
+                
+                return coinStore
+                    .sort(coins: coins,
+                          ascending: !isDescendingSortOrder,
+                          sortKey: .volume,
+                          sortKeyType: sortKeyType)
+            })
+            .assign(to: &$portfolioCoins)
     }
     
     // MARK: - Transient Content Control
@@ -172,7 +316,10 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
             .userManager
             .currentUser,
               !currentUser.hasVisitedHomeScreen
-        else { return }
+        else {
+            userHasSeenHomepage = true
+            return
+        }
         
         let delay = TimeInterval(10)
         
@@ -182,6 +329,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         {
             /// Inform observers that this observable object will change w/o requiring this value to be published
             currentUser.hasVisitedHomeScreen = true
+            self.userHasSeenHomepage = true
         }
     }
     

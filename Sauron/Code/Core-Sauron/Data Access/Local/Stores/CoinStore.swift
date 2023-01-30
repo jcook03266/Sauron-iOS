@@ -27,6 +27,7 @@ class CoinStore: StoreProtocol, Mockable {
     
     // MARK: - Published
     @Published private(set) var coins: [CoinModel] = []
+    @Published private(set) var portfolioCoins: [CoinModel] = []
     @Published private var themeColors: Set<CoinThemeColor> = []
     /// The current query being used to filter the store's data pool
     @Published var activeSearchQuery: String = ""
@@ -37,8 +38,9 @@ class CoinStore: StoreProtocol, Mockable {
     @Published private(set) var isSortOrderAscending: Bool = true
     
     // MARK: - Defaults
+    /// Highest market cap ranks at the top, lowest at the bottom for default sort key
     static let defaultSortKey: SortKeys = .rank,
-               defaultAscendingSortOrder: Bool = true
+               defaultAscendingSortOrder: Bool = false
     
     /// Use these variables to save sort properties to user defaults
     private var userPreferredSortKey: SortKeys {
@@ -129,8 +131,20 @@ class CoinStore: StoreProtocol, Mockable {
             .map(sortCoins)
             .assign(to: &$coins)
         
+        /// Portfolio Coins only, use this to view only portfolio coins
+        dataProvider
+            .$coins
+            .combineLatest(dataStores.portfolioManager.$coinEntities)
+            .compactMap { [self] publishers in
+                filterPortfolioCoins(unfilteredCoins: publishers.0,
+                                     shouldFilter: true,
+                                     portfolioCoins: publishers.1)
+            }
+            .assign(to: &$portfolioCoins)
+        
         /// Subscribe directly to the data provider and use this to build up the store for all coin theme colors
-        dataProvider.$coins
+        dataProvider
+            .$coins
             .sink { [weak self] coins in
                 guard let self = self else { return }
                 self.batchUpdateThemeColors(for: coins)
@@ -231,10 +245,12 @@ class CoinStore: StoreProtocol, Mockable {
         
         CoinImageFetcher(coinModel: coin).getImage { [weak self] in
             guard let self = self,
-                  let avgColor = $0.averageColor
+                  let color = CoinThemeColor.getThemeColorFrom(image: $0)
             else { return }
             
-            let coinThemeColor = CoinThemeColor(id: coin.id, themeColor: Color(avgColor))
+            let coinThemeColor = CoinThemeColor(id: coin.id,
+                                                themeColor: color.1)
+            
             self.themeColors.insert(coinThemeColor)
         }
     }
@@ -373,8 +389,9 @@ class CoinStore: StoreProtocol, Mockable {
                 value2 = coin2.currentPrice as! T
                 
             case .rank:
-                value1 = coin1.marketCapRank as! T
-                value2 = coin2.marketCapRank as! T
+                // Order is reversed b/c numerical ranks 1 -> ... indicates importance instead of numerical magnitude
+                value1 = coin2.marketCapRank as! T
+                value2 = coin1.marketCapRank as! T
                 
             case .volume:
                 value1 = coin1.totalVolume as! T
