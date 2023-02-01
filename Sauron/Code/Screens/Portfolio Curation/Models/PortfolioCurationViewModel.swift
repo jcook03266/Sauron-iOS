@@ -28,7 +28,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     // MARK: - Subscriptions
     var cancellables: Set<AnyCancellable> = []
     let scheduler: DispatchQueue = DispatchQueue.main
-    let coinDataRefreshInterval: CGFloat = 60 // 1 minute auto refresh interval
+    let coinDataRefreshInterval: CGFloat = 120 // 2 minute auto refresh interval
     
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
@@ -69,6 +69,17 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
         }
         
         return searchBarTextFieldModel
+    }
+    
+    // MARK: - Pagination
+    /// Only paginate when the data provider permits it and the user isn't currently filtering by portfolio coins only
+    var canPaginate: Bool {
+        return dataStores
+            .coinStore
+            .dataProvider
+            .canPaginate
+        &&
+        !filterPortfolioCoins
     }
     
     // MARK: - Lazy Loading
@@ -193,7 +204,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             self.dataStores
                 .coinStore
                 .updateSortingCriteria(sortKey: .name,
-                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
+                                       ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -205,7 +216,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             self.dataStores
                 .coinStore
                 .updateSortingCriteria(sortKey: .id,
-                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
+                                       ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -217,7 +228,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             self.dataStores
                 .coinStore
                 .updateSortingCriteria(sortKey: .price,
-                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
+                                       ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -229,7 +240,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             self.dataStores
                 .coinStore
                 .updateSortingCriteria(sortKey: .rank,
-                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
+                                       ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -242,7 +253,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
                 .dataStores
                 .coinStore
                 .updateSortingCriteria(sortKey: .volume,
-                                                            ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
+                                       ascendingOrder: self.contextMenuModel.sortInAscendingOrder)
         }
     }
     
@@ -442,25 +453,25 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
                   sideBarIcon: Icons.getIconImage(named: .textformat_abc),
                   isSelected: coinStore.isCurrenSortKey(sortKey: .name)),
             
-            .init(action: self.sortByIDAction,
-                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_ID_OPTION),
-                  sideBarIcon: Icons.getIconImage(named: .tag_fill),
-                  isSelected: coinStore.isCurrenSortKey(sortKey: .id)),
+                .init(action: self.sortByIDAction,
+                      label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_ID_OPTION),
+                      sideBarIcon: Icons.getIconImage(named: .tag_fill),
+                      isSelected: coinStore.isCurrenSortKey(sortKey: .id)),
             
-            .init(action: self.sortByPriceAction,
-                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_PRICE_OPTION),
-                  sideBarIcon: Icons.getIconImage(named: .dollarsign_square_fill),
-                  isSelected: coinStore.isCurrenSortKey(sortKey: .price)),
+                .init(action: self.sortByPriceAction,
+                      label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_PRICE_OPTION),
+                      sideBarIcon: Icons.getIconImage(named: .dollarsign_square_fill),
+                      isSelected: coinStore.isCurrenSortKey(sortKey: .price)),
             
-            .init(action: self.sortByRankAction,
-                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_RANK_OPTION),
-                  sideBarIcon: Icons.getIconImage(named: .list_number),
-                  isSelected: coinStore.isCurrenSortKey(sortKey: .rank)),
+                .init(action: self.sortByRankAction,
+                      label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_RANK_OPTION),
+                      sideBarIcon: Icons.getIconImage(named: .list_number),
+                      isSelected: coinStore.isCurrenSortKey(sortKey: .rank)),
             
-            .init(action: self.sortByVolumeAction,
-                  label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_VOLUME_OPTION),
-                  sideBarIcon: Icons.getIconImage(named: .flame_fill),
-                  isSelected: coinStore.isCurrenSortKey(sortKey: .volume))
+                .init(action: self.sortByVolumeAction,
+                      label: LocalizedStrings.getLocalizedString(for: .SORT_FILTER_CONTEXT_MENU_VOLUME_OPTION),
+                      sideBarIcon: Icons.getIconImage(named: .flame_fill),
+                      isSelected: coinStore.isCurrenSortKey(sortKey: .volume))
         ]
         
         contextMenuViewModel.selectedRow = contextMenuRows.first(where: { $0.isSelected })
@@ -530,7 +541,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
                 })
                 .store(in: &cancellables)
         }
-            
+        
         // Sorting order publisher for changing the sort order of coin data
         contextMenuModel
             .$sortInAscendingOrder
@@ -542,22 +553,23 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             .store(in: &cancellables)
     }
     
+    // MARK: - Auto-reload
     /// Refreshes the coin data provider every specified interval when the view model has been embedded in a view, and cancels this publisher when that view is removed from memory
     func subscribeToAutomaticReloading() {
         autoRefreshTimer = Timer.publish(every: coinDataRefreshInterval,
-                              on: .main,
-                              in: .default)
+                                         on: .main,
+                                         in: .default)
         
         autoRefreshTimer?
-                .autoconnect()
-                .receive(on: scheduler)
-                .sink { [weak self] _ in
-                    guard let self = self
-                    else { return }
-        
-                    self.refresh()
-                }
-                .store(in: &cancellables)
+            .autoconnect()
+            .receive(on: scheduler)
+            .sink { [weak self] _ in
+                guard let self = self
+                else { return }
+                
+                self.refresh()
+            }
+            .store(in: &cancellables)
     }
     
     func unsubscribeFromAutomaticReloading() {
@@ -566,6 +578,16 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
             .cancel()
         
         autoRefreshTimer = nil
+    }
+    
+    // MARK: - Pagination
+    func paginateToNextPage() {
+        guard canPaginate
+        else { return }
+        
+        dataStores
+            .coinStore
+            .paginateToNextPage()
     }
     
     // MARK: - Convenience Methods

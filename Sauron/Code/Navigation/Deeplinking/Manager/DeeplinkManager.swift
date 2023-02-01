@@ -63,6 +63,15 @@ extension DeepLinkManager: DeeplinkManagerProtocol {
 }
 
 // MARK: - Constants + Event Banner Actions
+struct URLConstants {
+    static let schemeSuffix = "://"
+    static let queryIdentifier = "?"
+    static let fragmentStub = "#"
+    static let directorySlash = "/"
+    static let parameterChainer = "&"
+    static let parameterEquator = "="
+}
+
 extension DeepLinkManager {
     /// Reusable constants for keeping track of proper URL formatting standards
     class DeepLinkConstants {
@@ -75,14 +84,8 @@ extension DeepLinkManager {
         static let identifier = "com.sauron.deeplinker"
         
         // Shared
-        static let schemeSuffix = "://"
         static let queryTag = "q"
         static let portfolioCoinsOnlyFilterTag = "pcf"
-        static let parameterStub = "/?"
-        static let fragmentStub = "#"
-        static let directorySlash = "/"
-        static let parameterChainer = "&"
-        static let parameterEquator = "="
     }
     
     /// All supported event banner deeplinks

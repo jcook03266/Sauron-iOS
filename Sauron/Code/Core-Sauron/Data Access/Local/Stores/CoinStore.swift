@@ -107,6 +107,11 @@ class CoinStore: StoreProtocol, Mockable {
         !mockEnvironment ? subscribeToProvider() : subscribeToMockProvider()
     }
     
+    // MARK: - Data Provider Proxy
+    func paginateToNextPage() {
+        dataProvider.paginateToNextPage()
+    }
+    
     // MARK: - Sort Key Mutation
     func changeSortKey(to sortKey: SortKeys) {
         userPreferredSortKey = sortKey

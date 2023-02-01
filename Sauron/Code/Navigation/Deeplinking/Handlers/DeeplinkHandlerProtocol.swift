@@ -39,13 +39,13 @@ extension DeeplinkHandlerProtocol {
     /// URL Prefix needed for this handler to function
     var deeplinkURLPrefix: String {
         return (DeepLinkManager.DeepLinkConstants.scheme +
-                DeepLinkManager.DeepLinkConstants.schemeSuffix +
+                URLConstants.schemeSuffix +
                 routerDirectory.rawValue.getURLSafeString())
     }
     
     var universalLinkURLPrefix: String {
         return (DeepLinkManager.DeepLinkConstants.universalScheme +
-                DeepLinkManager.DeepLinkConstants.schemeSuffix +
+                URLConstants.schemeSuffix +
                 DeepLinkManager.DeepLinkConstants.host +
                 routerDirectory.rawValue.getURLSafeString())
     }

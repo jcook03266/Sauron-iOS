@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import OrderedCollections
 
 /// Data provider that asynchronously fetches JSON data from the specified endpoints
 class CoinDataProvider: DataProviderProtocol, Mockable {
@@ -17,8 +18,10 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     @Published var coins: [CoinModel] = []
     
     // MARK: - Data Sources
-    var allCoinsEndpoint: URL {
-        return self.dependencies.endpointManager.getURL(for: .allCoins())
+    var endpointManager: CoinGeckoAPIEndpointManager {
+        return dependencies
+            .endpointManager
+            .coinGeckoAPIEndpointManager
     }
     
     // MARK: - Dependencies
@@ -33,6 +36,19 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
         let devEnvironment: DevEnvironment = inject()
     }
     let environments = InjectedEnvironments()
+    
+    // MARK: - Pagination
+    var currentPage: Int = CoinDataProvider.defaultPaginationStartingPage
+    /// Artificial Page limit for memory management and performance reasons as well as API throttling prevention as a max of 10-50 calls can be made per minute with the free tier of CoinGecko'sAPI
+    var maxPage: Int = 5
+    var canPaginate: Bool {
+        return currentPage < maxPage
+    }
+    
+    // MARK: - Constants
+    static let defaultPaginationStartingPage: Int = CoinGeckoAPIEndpointManager
+        .allCoinsEndpointBuilder
+        .defaultStartingPage
     
     private init() {
         setup()
@@ -51,23 +67,58 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
         !mockEnvironment ? fetchCoins() : mockFetchCoins()
     }
     
+    /// Load the upcoming data from the next page
+    func paginateToNextPage() {
+        guard canPaginate
+        else { return }
+        
+        currentPage += 1
+        
+        reload()
+    }
+    
     private func fetchCoins() {
         Task(priority: .high) {
             do {
-                let coinData = try await fetchData()
+                let paginatedCoinData = try await fetchData()
+                /// Create a unique copy of all coins to ensure no duplicate coin data is appended to the coin array
+                var tempCoinBuffer: OrderedSet<CoinModel> = OrderedSet(coins)
                 
-                coins = try JSONParsingHelper.parseJSON(with: [CoinModel].self,
-                                                     using: coinData)
+                for coinDatum in paginatedCoinData {
+                    let parsedCoins = try JSONParsingHelper
+                        .parseJSON(with: [CoinModel].self,
+                                   using: coinDatum)
+                    
+                    for coin in parsedCoins {
+                        tempCoinBuffer.updateOrAppend(coin)
+                    }
+                }
+                
+                coins = Array(tempCoinBuffer)
             }
-            catch {
-                throw error
-            }
+            catch { throw error }
         }
     }
     
-    func fetchData() async throws -> Data {
+    func fetchData() async throws -> [Data] {
         do {
-            return try await dependencies.networkingService.fetchData(from: allCoinsEndpoint)
+            var sequentialData: [Data] = [],
+                endpoint = endpointManager
+                .allCoinsEndpoint
+            
+            // Specify the pagination upper limit
+            endpoint.currentPage = currentPage
+            
+            // Iterate through all the page specific endpoints
+            for endpoint in endpoint.build() {
+                let data = try await dependencies
+                    .networkingService
+                    .fetchData(from: endpoint)
+                
+                sequentialData.append(data)
+            }
+            
+            return sequentialData
         }
         catch { throw error }
     }
@@ -76,7 +127,11 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     func mockFetchCoins() {
         Task(priority: .high) {
             do {
-                if let coinData = environments.devEnvironment.testCoinModelJSONArray.data(using: .utf8) {
+                if let coinData = environments
+                    .devEnvironment
+                    .testCoinModelJSONArray
+                    .data(using: .utf8)
+                {
                     coins = try JSONParsingHelper.parseJSON(with: [CoinModel].self,
                                                             using: coinData)
                 }

@@ -30,7 +30,6 @@ struct CoinGridInformationView: View {
                 chartSize: CGSize = .init(width: 175,
                                           height: 125),
                 chartBorderWidth: CGFloat = 1,
-                chartBorderCornerRadius: CGFloat = 10,
                 chartShadowRadius: CGFloat = 2,
                 chartShadowOffset: CGSize = .init(width: 0,
                                                   height: 2),
@@ -129,7 +128,7 @@ extension CoinGridInformationView {
             
             HStack(spacing: 0) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: chartBorderCornerRadius)
+                    RoundedRectangle(cornerRadius: graphCornerRadius)
                         .stroke(model.graphBorderGradient,
                                 lineWidth: chartBorderWidth)
                     
@@ -138,7 +137,7 @@ extension CoinGridInformationView {
                                             verticalPadding: 40,
                                             animationsEnabled: false,
                                             glowEnabled: true)
-                    .cornerRadius(chartBorderCornerRadius,
+                    .cornerRadius(graphCornerRadius,
                                   corners: .allCorners)
                 }
                 .frame(width: chartSize.width,
@@ -188,7 +187,7 @@ extension CoinGridInformationView {
     var percentageChangeChip: some View {
         ZStack {
             Rectangle()
-                .cornerRadius(coinIDTextViewCornerRadius,
+                .cornerRadius(percentageChangeChipCornerRadius,
                               corners: [.bottomLeft, .bottomRight])
                 .foregroundColor(model.percentageChangeChipBackgroundColor)
                 .shadow(color: model.shadowColor,

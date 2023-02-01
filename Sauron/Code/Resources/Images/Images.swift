@@ -188,5 +188,7 @@ enum SystemIconRepository: String, CaseIterable, Hashable {
          cloud_sun_bolt_fill = "cloud.sun.bolt.fill",
          mic_circle_fill = "mic.circle.fill",
          chart_bar_fill = "chart.bar.fill",
-         chart_pie_fill = "chart.pie.fill"
+         chart_pie_fill = "chart.pie.fill",
+         arrow_down_forward = "arrow.down.forward",
+         arrow_up_forward = "arrow.up.forward"
 }

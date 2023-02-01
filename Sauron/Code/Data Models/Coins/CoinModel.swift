@@ -21,10 +21,11 @@ struct CoinModel: Identifiable, Codable, Equatable, Hashable {
     let marketCap, totalVolume: Double
     let marketCapRank: Int
     let fullyDilutedValuation: Double?
-    let high24H, low24H, priceChange24H, priceChangePercentage24H: Double
-    let marketCapChange24H, marketCapChangePercentage24H: Double
-    let circulatingSupply, totalSupply, maxSupply, ath: Double?
-    let athChangePercentage: Double
+    let high24H, low24H, priceChange24H, priceChangePercentage24H: Double?
+    let marketCapChange24H, marketCapChangePercentage24H: Double?
+    let circulatingSupply: Double
+    let totalSupply, maxSupply: Double?
+    let ath, athChangePercentage: Double
     let athDate: String
     let atl, atlChangePercentage: Double
     let atlDate: String
@@ -61,16 +62,12 @@ struct CoinModel: Identifiable, Codable, Equatable, Hashable {
         let condition = lhs.id == rhs.id
         && lhs.name == rhs.name
         && lhs.symbol == rhs.symbol
-        && lhs.athDate == rhs.athDate
         
         return condition
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(currentPrice)
-        hasher.combine(marketCap)
-        hasher.combine(totalVolume)
     }
     
     // MARK: - Placeholder data for lazy loading
@@ -161,14 +158,14 @@ struct CoinThemeColor: Identifiable, Equatable, Hashable {
                                              additionalSaturation: CoinThemeColor.additionalSaturation,
                                              additionalBrightness: CoinThemeColor.additionalBrightness)
             .withAlphaComponent(1)
-
-// Deprecated: Using an alpha of 1 fixes a lot of the issues with darker color themes for the coin icons it seems
-//        /// If the color is too dark then decrease the saturation to essentially make it almost grayscale
-//        if color.isDark() {
-//            brightenedColor = brightenedColor.modified(withAdditionalHue: CoinThemeColor.additionalHue,
-//                                                       additionalSaturation: CoinThemeColor.darkColorAdditionalSaturation,
-//                                                       additionalBrightness: CoinThemeColor.darkColorAdditionalBrightness)
-//        }
+        
+        // Deprecated: Using an alpha of 1 fixes a lot of the issues with darker color themes for the coin icons it seems
+        //        /// If the color is too dark then decrease the saturation to essentially make it almost grayscale
+        //        if color.isDark() {
+        //            brightenedColor = brightenedColor.modified(withAdditionalHue: CoinThemeColor.additionalHue,
+        //                                                       additionalSaturation: CoinThemeColor.darkColorAdditionalSaturation,
+        //                                                       additionalBrightness: CoinThemeColor.darkColorAdditionalBrightness)
+        //        }
         
         return (brightenedColor, Color(brightenedColor))
     }

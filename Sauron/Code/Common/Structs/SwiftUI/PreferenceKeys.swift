@@ -18,10 +18,10 @@ struct ViewSizeKey: PreferenceKey {
 }
 
 struct PositionPreferenceKey: PreferenceKey {
-        typealias Value = CGPoint
+    typealias Value = CGPoint
     static var defaultValue: Value = .zero
-
-        static func reduce(value: inout Value, nextValue: () -> Value) {
-            value = nextValue()
-        }
+    
+    static func reduce(value: inout Value, nextValue: () -> Value) {
+        value = nextValue()
+    }
 }

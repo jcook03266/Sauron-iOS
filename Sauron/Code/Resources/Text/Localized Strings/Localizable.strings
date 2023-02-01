@@ -45,7 +45,7 @@
 "MAXIMIZE" = "Maximize";
 "PREDICTION" = "Prediction";
 "TIMELINE" = "Timeline";
-"PERFORMANCE" = "Performance";
+"VOLUME" = "Volume";
 
 // MARK: - Cover Screen
 "COVER_SCREEN_TITLE_WELCOME_BACK" = "Welcome Back";

@@ -12,7 +12,7 @@ struct RectangularSortButton: View {
     @StateObject var model: RectangularSortButtonViewModel
     
     // MARK: - Dimensions
-    var mainSize: CGSize = .init(width: 135, height: 30)
+    var mainSize: CGSize = .init(width: 100, height: 30)
     private let iconSize: CGSize = .init(width: 15,
                                          height: 15),
                 borderWidth: CGFloat = 3
@@ -95,6 +95,6 @@ struct RectangularSortButton_Previews: PreviewProvider {
         RectangularSortButton(model: .init(sortIconType: .pointer,
                                            sortOrderIsDescending: false,
                                            userTriggeredDescendingSortOrderToggleAction: .random(),
-                                           title: LocalizedStrings.getLocalizedString(for: .PERFORMANCE)))
+                                           title: LocalizedStrings.getLocalizedString(for: .VOLUME)))
     }
 }

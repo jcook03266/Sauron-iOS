@@ -390,6 +390,8 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                     placeholderListView
                         .transition(.slideForwards)
                 }
+                
+                paginationIndicator
             }
             .animation(.spring(),
                        value: model.coins.count)
@@ -403,6 +405,18 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
         }
         .padding(.bottom,
                  assetsListScrollViewVerticalPadding)
+    }
+    
+    /// View at the bottom of the asset list scroll view that acts as a flag for the model to paginate to the next batch of data
+    var paginationIndicator: some View {
+        Group {
+            Rectangle()
+                .frame(width: 0,
+                       height: 0)
+                .onAppear {
+                    model.paginateToNextPage()
+                }
+        }
     }
     
     var assetSymbolContainer: some View {

@@ -36,7 +36,7 @@ enum LocalizedStrings: String, CaseIterable {
          MAXIMIZE,
          PREDICTION,
          TIMELINE,
-         PERFORMANCE,
+         VOLUME,
          COVER_SCREEN_TITLE_WELCOME_BACK,
          COVER_SCREEN_TITLE_WELCOME_BACK_NEWLINE,
          GET_STARTED_SCREEN_CURATE_BUTTON,

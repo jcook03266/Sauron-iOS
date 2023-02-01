@@ -53,13 +53,13 @@ final class DeepLinkBuilder {
     {
         var urlString = ""
         let scheme = DeepLinkManager.DeepLinkConstants.scheme,
-            schemeSuffix = DeepLinkManager.DeepLinkConstants.schemeSuffix,
+            schemeSuffix = URLConstants.schemeSuffix,
             host = routerDirectory.rawValue.getURLSafeString(),
-            parameterStub = DeepLinkManager.DeepLinkConstants.parameterStub,
-            fragmentStub = DeepLinkManager.DeepLinkConstants.fragmentStub,
-            directorySlash = DeepLinkManager.DeepLinkConstants.directorySlash,
-            parameterChainer = DeepLinkManager.DeepLinkConstants.parameterChainer,
-            parameterEquator = DeepLinkManager.DeepLinkConstants.parameterEquator
+            parameterStub = URLConstants.queryIdentifier,
+            fragmentStub = URLConstants.fragmentStub,
+            directorySlash = URLConstants.directorySlash,
+            parameterChainer = URLConstants.parameterChainer,
+            parameterEquator = URLConstants.parameterEquator
         
         urlString += scheme
         urlString += schemeSuffix
@@ -101,14 +101,14 @@ final class DeepLinkBuilder {
     {
         var urlString = ""
         let universalScheme = DeepLinkManager.DeepLinkConstants.universalScheme,
-            schemeSuffix = DeepLinkManager.DeepLinkConstants.schemeSuffix,
+            schemeSuffix = URLConstants.schemeSuffix,
             host = DeepLinkManager.DeepLinkConstants.host,
             path = routerDirectory.rawValue.getURLSafeString(),
-            parameterStub = DeepLinkManager.DeepLinkConstants.parameterStub,
-            fragmentStub = DeepLinkManager.DeepLinkConstants.fragmentStub,
-            directorySlash = DeepLinkManager.DeepLinkConstants.directorySlash,
-            parameterChainer = DeepLinkManager.DeepLinkConstants.parameterChainer,
-            parameterEquator = DeepLinkManager.DeepLinkConstants.parameterEquator
+            parameterStub = URLConstants.queryIdentifier,
+            fragmentStub = URLConstants.fragmentStub,
+            directorySlash = URLConstants.directorySlash,
+            parameterChainer = URLConstants.parameterChainer,
+            parameterEquator = URLConstants.parameterEquator
         
         urlString += universalScheme
         urlString += schemeSuffix

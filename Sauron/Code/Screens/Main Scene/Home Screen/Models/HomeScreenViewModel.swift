@@ -25,6 +25,9 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     @ObservedObject var FFRScreenViewModel: FFRScreenViewModel<coordinator>
     
     // MARK: - Published
+    // Data Cycling
+    @Published var isReloading: Bool = false
+    
     // Deeplinking Fragment
     @Published var selectedSection: Sections? = nil
     // Greeting Message Display
@@ -117,7 +120,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     // MARK: - Localized Text
     // My Portfolio
     let portfolioSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_MY_PORTFOLIO),
-        portfolioSectionSortButtonTitle: String = LocalizedStrings.getLocalizedString(for: .PERFORMANCE),
+        portfolioSectionSortButtonTitle: String = LocalizedStrings.getLocalizedString(for: .VOLUME),
         portfolioSectionPlaceholderButtonTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_MY_PORTFOLIO_PLACEHOLDER_BUTTON_TITLE),
         // Crypto News
         cryptoNewsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS),
@@ -148,6 +151,20 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     }
     
     // MARK: - Actions
+    // Data Cycling
+    var refresh: (() -> Void) {
+        return { [weak self] in
+            guard let self = self else { return }
+            
+            self.isReloading = true
+            self.dataStores.coinStore.refresh()
+            
+            DispatchQueue.main.async {
+                self.isReloading = false
+            }
+        }
+    }
+    
     // My Portfolio
     /// Push the user to the portfolio creation screen where they can create a portfolio if they don't have one currently
     var createPorfolioAction: (() -> Void) {
@@ -300,11 +317,12 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
                     sortKeyType = coinStore
                     .sortKey.getVolumeType()
                 
-                return coinStore
+                return Array(coinStore
                     .sort(coins: coins,
                           ascending: !isDescendingSortOrder,
                           sortKey: .volume,
                           sortKeyType: sortKeyType)
+                    .prefix(self.maxElementCount))
             })
             .assign(to: &$portfolioCoins)
     }
