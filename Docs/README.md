@@ -30,6 +30,7 @@
 * [Handling Sensitive User Data ⇲](#Handling-Sensitive-User-Data)
 * [FTUE Onboarding Demo ⇲](#FTUE-Onboarding-Demo)
 * [Optional Authentication Gateway Demo ⇲](#Optional-Authentication-Gateway-Demo)
+* [Home Screen Demo ⇲](#Home-Screen-Demo)
 * [Thirdparty Services Used for Development ⇲](#Thirdparty-Services-Used-for-Development)
 * [Important Advisory ⇲](#Important-Advisory)
 </details>
@@ -107,6 +108,14 @@ https://user-images.githubusercontent.com/63657230/212473279-acb62b56-8b78-457f-
 ## Optional Authentication Gateway Demo:
 
 https://user-images.githubusercontent.com/63657230/213867124-845f19cc-6090-4667-b37c-0c5b4809a0a1.mp4
+
+</div>
+
+<div align="center">
+
+## Home Screen Demo:
+
+https://user-images.githubusercontent.com/63657230/216316498-113340a8-9b54-445f-8b3f-686b2f6e99f7.mp4
 
 </div>
 
