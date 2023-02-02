@@ -29,6 +29,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     var cancellables: Set<AnyCancellable> = []
     let scheduler: DispatchQueue = DispatchQueue.main
     let coinDataRefreshInterval: CGFloat = 120 // 2 minute auto refresh interval
+    let searchBarDebounceCharacterLimit: Int = 2 // Debounce until the user enters two or more characters to get a more refined search for performance reasons
     
     // MARK: - Dependencies
     struct Dependencies: InjectableServices {
@@ -72,14 +73,28 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     }
     
     // MARK: - Pagination
-    /// Only paginate when the data provider permits it and the user isn't currently filtering by portfolio coins only
+    /// The default starting page for pagination is 1
+    var currentPage: Int = 1
+    
+    /// The total amount of 'pages' the coin data can be divided up into to save on performance when first loading the curation view (Divisors of 100 only or the max items per page (250) specified by the coin data provider)
+    var maxPaginationPage: Int {
+        /// 250 / 10 = 25 coins per page
+        return 10
+    }
+    
+    var percentageOfPaginatedCoinsCurrentlyLoaded: Double {
+        return Double(currentPage) / Double(maxPaginationPage)
+    }
+    
+    var elementUpperLimitForCurrentPage: Int {
+        let coinCount = dataStores.coinStore.coinCount
+        
+        return Int(Double(coinCount) * percentageOfPaginatedCoinsCurrentlyLoaded)
+    }
+    
+    /// Only paginate when the user is viewing all coins and not just their portfolio coins, and not searching for any coins as the search results page should only display top results instead of all results
     var canPaginate: Bool {
-        return dataStores
-            .coinStore
-            .dataProvider
-            .canPaginate
-        &&
-        !filterPortfolioCoins
+        return currentPage < maxPaginationPage && !filterPortfolioCoins && !isUserSearching
     }
     
     // MARK: - Lazy Loading
@@ -128,9 +143,15 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
         return !searchBarTextFieldModel
             .textEntry
             .isEmpty
+        &&
+        !isSearchBarDebounceActive
     }
     
-    var contextPropertiesHasChanged: Bool {
+    var isSearchBarDebounceActive: Bool {
+        return searchBarTextFieldModel.textEntry.count < searchBarDebounceCharacterLimit
+    }
+    
+    var contextPropertiesHaveChanged: Bool {
         return Bool.XOR(operands: [isUserSearching,
                                    !isSearchBarActive,
                                    userHasSelectedCoins])
@@ -148,8 +169,8 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
         return { [weak self] in
             guard let self = self else { return }
             
-            self.dataStores.coinStore.displayPortfolioCoinsOnly.toggle()
-            self.filterPortfolioCoins = self.dataStores.coinStore.displayPortfolioCoinsOnly
+            self.filterPortfolioCoins.toggle()
+            self.dataStores.coinStore.displayPortfolioCoinsOnly = self.filterPortfolioCoins
         }
     }
     
@@ -435,6 +456,7 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
         self.searchBarTextFieldModel = builtSearchBarTextFieldModel
         self.contextMenuModel = buildContextMenuModel()
         
+        resetPaginationPage()
         addSubscribers()
     }
     
@@ -484,23 +506,6 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     
     // MARK: - Subscriptions
     private func addSubscribers() {
-        // Updates the local coin store with data from the external coin store
-        dataStores
-            .coinStore
-            .$coins
-            .assign(to: &$coins)
-        
-        // Updates the local portfolio coins store with data from the external manager
-        dataStores
-            .portfolioManager
-            .$coinEntities
-            .assign(to: &$portfolioCoins)
-        
-        // Updates the coin store's search query whenever the text entry's publisher emits a new value (note: A debounce interval is active)
-        searchBarTextFieldModel
-            .$textEntry
-            .assign(to: &dataStores.coinStore.$activeSearchQuery)
-        
         if let router = router as? OnboardingRouter {
             // Pass in external search queries and properties from the deeplinker here
             router
@@ -542,6 +547,38 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
                 .store(in: &cancellables)
         }
         
+        // Updates the local coin store with data from the external coin store
+        dataStores
+            .coinStore
+            .$coins
+            .receive(on: scheduler)
+            .map({ [weak self] in
+                guard let self = self,
+                      self.canPaginate
+                else { return $0 }
+                
+                return Array($0.prefix(self.elementUpperLimitForCurrentPage))
+            })
+            .assign(to: &$coins)
+        
+        // Updates the local portfolio coins store with data from the external manager
+        dataStores
+            .portfolioManager
+            .$coinEntities
+            .assign(to: &$portfolioCoins)
+        
+        // Updates the coin store's search query whenever the text entry's publisher emits a new value (note: A debounce interval is active)
+        searchBarTextFieldModel
+            .$textEntry
+            .map({ [weak self] in
+                guard let self = self,
+                      !self.isSearchBarDebounceActive
+                else { return "" }
+
+                return $0.removeTrailingSpaces()
+            })
+            .assign(to: &dataStores.coinStore.$activeSearchQuery)
+        
         // Sorting order publisher for changing the sort order of coin data
         contextMenuModel
             .$sortInAscendingOrder
@@ -581,13 +618,17 @@ class PortfolioCurationViewModel<ParentCoordinator: Coordinator>: CoordinatedGen
     }
     
     // MARK: - Pagination
+    func resetPaginationPage() {
+        currentPage = 1
+    }
+    
+    /// Paginates to the next page and refreshes any stale data
     func paginateToNextPage() {
         guard canPaginate
         else { return }
         
-        dataStores
-            .coinStore
-            .paginateToNextPage()
+        currentPage += 1
+        refresh()
     }
     
     // MARK: - Convenience Methods

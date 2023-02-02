@@ -29,7 +29,7 @@ struct EndpointManager {
         
         /// Gets latest conversion rates from the base parameter [USD]
         case latestRates(URL = "https://api.exchangerate.host/latest?base=USD".asURL!)
-
+        
         func getAssociatedValue() -> URL {
             switch self {
             case .latestRates(let endpoint):
@@ -81,29 +81,32 @@ class CoinGeckoAPIEndpointManager {
     struct allCoinsEndpointBuilder {
         let manager: CoinGeckoAPIEndpointManager,
             baseURLString: String = "https://api.coingecko.com/api/v3/coins/markets",
+            /// Specify this + page = 0 to search for any specific coins by ID to return
+            coinIDsParameter = "ids",
             targetCurrencyParameter = "vs_currency",
-                sortKeyParameter = "order",
-                coinsPerPageParameter = "per_page",
-                paginationParameter = "page",
-                sparklineParameter = "sparkline"
+            sortKeyParameter = "order",
+            coinsPerPageParameter = "per_page",
+            paginationParameter = "page",
+            sparklineParameter = "sparkline"
         
         var targetConversionCurrency: targetCurrencies = .usd,
-            sparklineEnabled: Bool = true,
-            /// Pagination, the page up to which all coin data will be returned [eg. page 1 -> 100 coins total, page 2 -> 200 coins total] [1 indexed]
-            currentPage: Int = allCoinsEndpointBuilder.defaultStartingPage,
-            /// [min 1..250 max]
-            coinsPerPage: Int = allCoinsEndpointBuilder.defaultCoinPerPageLimit,
-            sortKey: sortKeys = .marketCapDescending
+    coinIDsToQuery: [String] = [],
+    sparklineEnabled: Bool = true,
+        /// Pagination, the page up to which all coin data will be returned [eg. page 1 -> 100 coins total, page 2 -> 200 coins total] [1 indexed]
+    currentPage: Int = allCoinsEndpointBuilder.defaultStartingPage,
+        /// [min 1..250 max]
+    coinsPerPage: Int = allCoinsEndpointBuilder.defaultCoinPerPageLimit,
+    sortKey: sortKeys = .marketCapDescending
         
         static let defaultStartingPage: Int = 1,
-                   defaultCoinPerPageLimit: Int = 100
+                   defaultCoinPerPageLimit: Int = 250
         
         // MARK: - Convenience
         /// The range of the pagination
         var pageRange: ClosedRange<Int> {
             return allCoinsEndpointBuilder.defaultStartingPage...currentPage
         }
-            
+        
         /// Builds multiple URLs that return different pages of JSON coin data to be sequentially concatenated on the receiving end after being parsed
         func build() -> [URL] {
             var builtEndpoints: [URL] = [],
@@ -115,19 +118,46 @@ class CoinGeckoAPIEndpointManager {
                     sparklineParameter: sparklineEnabled.description
                 ]
             
+            // Join the coin ids (if any) with commas and use percent encoding in order to format the url properly
+           parameters[coinIDsParameter] = coinIDsToQuery
+               .joined(separator: ",")
+               .addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
             for page in pageRange {
                 parameters[paginationParameter] = page.description
                 
                 builtEndpoints.append(
                     manager
-                    .buildURL(using: baseURLString,
-                                 with: parameters)
+                        .buildURL(using: baseURLString,
+                                  with: parameters)
                 )
             }
             
             return builtEndpoints
         }
-     
+        
+        /// Builds just one URL, pagination is not possible as only one page specific URL can be returned by this method at a time, this is best suited for querying specific coin IDs with the current page set to 0 to invalidate the pagination factor on the backend
+        func buildJust() -> URL {
+            var parameters: [String : String] = [
+                    targetCurrencyParameter : targetConversionCurrency.rawValue,
+                    sortKeyParameter : sortKey.rawValue,
+                    coinsPerPageParameter : coinsPerPage.description,
+                    paginationParameter: "",
+                    sparklineParameter: sparklineEnabled.description
+                ]
+            
+            // Join the coin ids (if any) with commas and use percent encoding in order to format the url properly
+           parameters[coinIDsParameter] = coinIDsToQuery
+               .joined(separator: ",")
+               .addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            parameters[paginationParameter] = currentPage.description
+            
+            return manager
+                .buildURL(using: baseURLString,
+                          with: parameters)
+        }
+        
         /// The base currency to compare all coin data against
         enum targetCurrencies: String, CaseIterable {
             case usd

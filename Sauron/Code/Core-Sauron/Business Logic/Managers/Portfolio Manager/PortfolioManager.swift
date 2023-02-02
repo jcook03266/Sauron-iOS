@@ -20,10 +20,10 @@ class PortfolioManager: ObservableObject {
     
     // MARK: - Data Provider Dependencies
     struct DataProviders: InjectableDataProviders {
-        let portfolioDataProvider: PortfolioDataProvider = inject()
-        let coinDataProvider: CoinDataProvider = inject()
+        lazy var portfolioDataProvider: PortfolioDataProvider = PortfolioManager.DataProviders.inject()
+        lazy var coinDataProvider: CoinDataProvider = PortfolioManager.DataProviders.inject()
     }
-    let dataProviders = DataProviders()
+    var dataProviders = DataProviders()
     
     // MARK: - Subscriptions
     var cancellables: Set<AnyCancellable> = []

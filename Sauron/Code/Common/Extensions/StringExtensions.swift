@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - Localizable Strings + General Formatting
 extension String {
     /// Gets a localized version of the current string from a table that Xcode generates for you when exporting localizations
     var localized: String {
@@ -95,6 +96,20 @@ extension String {
             guard index == 0 else { return word }
             return word.lowercased()
         }.joined(separator: " ")
+    }
+}
+
+// MARK: - Search Bar Queries
+extension String {
+    /// Removes any trailing white space in a search query to rule out unnecessary characters
+    func removeTrailingSpaces() -> String {
+        let lastNonWhiteSpaceCharIndex = self.lastIndex { $0 != " " }
+        
+        guard self.last == " ",
+              let lastNonWhiteSpaceCharIndex = lastNonWhiteSpaceCharIndex
+        else { return self }
+   
+        return String(self.prefix(through: lastNonWhiteSpaceCharIndex))
     }
 }
 

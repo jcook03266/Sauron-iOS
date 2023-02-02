@@ -97,7 +97,7 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
         mainBody
         .presentContextMenu(with: model.contextMenuModel)
         .animation(.spring(),
-                   value: model.contextPropertiesHasChanged)
+                   value: model.contextPropertiesHaveChanged)
         .animation(.spring(),
                    value: model.dependencies.fiatCurrencyManager.displayedCurrency)
         .animation(.spring(),
@@ -124,14 +124,14 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
     
     /// Refresh data whenever this view reappears
     private func performOnAppearTasks() {
-        model.refresh()
+        //model.refresh()
         model.contextMenuModel.shouldDisplay = false
         
-        model.subscribeToAutomaticReloading()
+        //model.subscribeToAutomaticReloading()
     }
     
     private func performOnDisappearTasks() {
-        model.unsubscribeFromAutomaticReloading()
+        //model.unsubscribeFromAutomaticReloading()
     }
     
     // MARK: - Subviews
@@ -209,7 +209,7 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                                              borderEnabled: true,
                                              counter: UInt(model.searchResultsCount),
                                              hideCounterWhenItReaches: 0,
-                                             isSelected: .constant(false))
+                                             isSelected: false)
                 }
                 
                 // Coin Counter
@@ -225,7 +225,7 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
                                              borderEnabled: true,
                                              counter: UInt(model.portfolioCoins.count),
                                              hideCounterWhenItReaches: 0,
-                                             isSelected: $model.filterPortfolioCoins)
+                                             isSelected: model.filterPortfolioCoins)
                 }
             }
             .padding([.bottom], contextPropertiesHeaderVerticalPadding)
@@ -373,11 +373,10 @@ struct PortfolioCurationView<ParentCoordinator: Coordinator>: View {
             
             LazyVStack(spacing: assetsListViewItemSpacing) {
                 if !model.isCoinsEmpty {
-                    ForEach(model.coins) {
+                    ForEach(model.coins, id: \.self) {
                         PCCoinRowView(model: .init(parentViewModel: model,
                                                    coinModel: $0,
                                                    isSelected: model.doesCoinExistInPortfolio(coin: $0)))
-                        .id($0.hashValue)
                         .transition(.slideBackwards)
                     }
                     .animation(.spring(),

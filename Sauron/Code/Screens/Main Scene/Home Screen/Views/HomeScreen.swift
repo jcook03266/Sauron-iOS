@@ -23,52 +23,61 @@ struct HomeScreen: View {
     
     // MARK: - Dimensions
     let foregroundContainerCornerRadius: CGFloat = 40,
-                titleHeight: CGFloat = 40,
-                sectionDividerHeight: CGFloat = 1,
-                // Shared
-                sectionHeaderIconSize: CGSize = .init(width: 20,
-                                                      height: 20),
-                showAllUtilityButtonSize: CGSize = .init(width: 120,
-                                                         height: 30),
-                editUtilityButtonSize: CGSize = .init(width: 80,
-                                                      height: 30),
-                sectionTransitionUtilityButtonSize: CGSize = .init(width: 85,
-                                                                   height: 25),
-                // My Portfolio
-                portfolioPlaceholderImageSize: CGSize = .init(width: 100,
-                                                              height: 100),
-                portfolioPlaceholderButtonSize: CGSize = .init(width: 270,
-                                                               height: 50),
-                // Crypto News
-                cryptoNewsSectionIconSize: CGSize = .init(width: 35,
-                                                          height: 35)
+        titleHeight: CGFloat = 40,
+        sectionDividerHeight: CGFloat = 1,
+        // Shared
+        sectionHeaderIconSize: CGSize = .init(width: 20,
+                                              height: 20),
+        showAllUtilityButtonSize: CGSize = .init(width: 120,
+                                                 height: 30),
+        editUtilityButtonSize: CGSize = .init(width: 80,
+                                              height: 30),
+        sectionTransitionUtilityButtonSize: CGSize = .init(width: 85,
+                                                           height: 25),
+        // My Portfolio
+        portfolioPlaceholderImageSize: CGSize = .init(width: 100,
+                                                      height: 100),
+        portfolioPlaceholderButtonSize: CGSize = .init(width: 270,
+                                                       height: 50),
+        // Crypto News
+        cryptoNewsSectionIconSize: CGSize = .init(width: 35,
+                                                  height: 35)
     
     // MARK: - Padding + Spacing
     let titleSectionBottomPadding: CGFloat = 10,
-                titleSectionLeadingPadding: CGFloat = 10,
-                sectionDividerVerticalPadding: CGFloat = 10,
-                scrollViewBottomPadding: CGFloat = 100,
-                // Shared
-                sectionHeaderItemSpacing: CGFloat = 15,
-                sectionHeaderTopSpacing: CGFloat = 10,
-                sectionLeadingPadding: CGFloat = 15,
-                utilityButtonSpacing: CGFloat = 10,
-                // MY Portfolio
-                portfolioPlaceholderImageTopPadding: CGFloat = 35,
-                portfolioPlaceholderImageBottomPadding: CGFloat = 25,
-                portfolioFooterTopPadding: CGFloat = 10,
-                portfolioBottomPadding: CGFloat = 0,
-                portfolioCoinContentHorizontalPadding: CGFloat = 20,
-                portfolioCoinContentVerticalPadding: CGFloat = 10,
-                portfolioCoinContentTopPadding: CGFloat = 10,
-                // Crypto News
-                cryptoNewsSectionHeaderItemSpacing: CGFloat = 10,
-                cryptoNewsSectionHeaderBottomPadding: CGFloat = 50,
-                cryptoNewsSectionHeaderLeadingPadding: CGFloat = 40
+        titleSectionLeadingPadding: CGFloat = 10,
+        sectionDividerVerticalPadding: CGFloat = 10,
+        scrollViewBottomPadding: CGFloat = 100,
+        // Shared
+        sectionHeaderItemSpacing: CGFloat = 15,
+        sectionHeaderTopSpacing: CGFloat = 10,
+        sectionLeadingPadding: CGFloat = 15,
+        utilityButtonSpacing: CGFloat = 10,
+        coinContentScrollViewVerticalPadding: CGFloat = 30,
+        sectionFooterVerticalPadding: CGFloat = 5,
+        sectionFooterTopPadding: CGFloat = 10,
+        // My Portfolio
+        portfolioPlaceholderImageTopPadding: CGFloat = 35,
+        portfolioPlaceholderImageBottomPadding: CGFloat = 25,
+        portfolioCoinContentHorizontalPadding: CGFloat = 20,
+        portfolioCoinContentTopPadding: CGFloat = 10,
+        // All Assets
+        allAssetsContentHorizontalPadding: CGFloat = 20,
+        allAssetsCoinContentTopPadding: CGFloat = 10,
+        // Crypto News
+        cryptoNewsSectionHeaderItemSpacing: CGFloat = 10,
+        cryptoNewsSectionHeaderBottomPadding: CGFloat = 50,
+        cryptoNewsSectionHeaderLeadingPadding: CGFloat = 40
     
     // Dynamic Content
+    // My Portfolio
     var portfolioCoinContentItemSpacing: CGFloat {
         return model.portfolioSectionMaximized ? 20 : 10
+    }
+    
+    // All Assets
+    var allAssetsCoinContentItemSpacing: CGFloat {
+        return model.allAssetsSectionMaximized ? 20 : 10
     }
     
     var body: some View {
@@ -116,6 +125,8 @@ struct HomeScreen: View {
                    value: model.shouldDisplayGreeting)
         .animation(.spring(),
                    value: model.portfolioSectionMaximized)
+        .animation(.spring(),
+                   value: model.allAssetsSectionMaximized)
         .animation(.easeInOut, value: model.isReloading)
         .onAppear {
             performOnAppearTasks()
@@ -211,6 +222,11 @@ extension HomeScreen {
                             .id(HomeScreenViewModel
                                 .Sections
                                 .myPortfolio)
+                        
+                        allAssetsSection
+                            .id(HomeScreenViewModel
+                                .Sections
+                                .allAssets)
                         
                         cryptoNewsSection
                             .id(HomeScreenViewModel

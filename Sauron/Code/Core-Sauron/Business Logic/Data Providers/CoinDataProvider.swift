@@ -16,6 +16,8 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     
     // MARK: - Published
     @Published var coins: [CoinModel] = []
+    /// A static reference of the most relevant stable coins on the market, used to categorize stable coins from the rest of the user's portfolio coins for statistical reasons
+    @Published var stableCoins: [CoinModel] = []
     
     // MARK: - Data Sources
     var endpointManager: CoinGeckoAPIEndpointManager {
@@ -31,6 +33,12 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     }
     let dependencies = Dependencies()
     
+    // MARK: - Data Store Dependencies
+    struct DataStores: InjectableStores {
+        lazy var portfolioManager: PortfolioManager = CoinDataProvider.DataStores.inject()
+    }
+    var dataStores = DataStores()
+    
     // MARK: - Environments
     struct InjectedEnvironments: Environments {
         let devEnvironment: DevEnvironment = inject()
@@ -38,11 +46,12 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     let environments = InjectedEnvironments()
     
     // MARK: - Pagination
-    var currentPage: Int = CoinDataProvider.defaultPaginationStartingPage
+    /// The starting page is maximized to hold the amount of coins listed static, this is to simplify the application's data acquisition pipeline so that the user can only work with a select set of coins, of course when there's a coin present in the user's portfolio that's not listed in this set then a separate fetch is made to return those coins in question
+    var currentPage: Int = CoinDataProvider.maxPage
     /// Artificial Page limit for memory management and performance reasons as well as API throttling prevention as a max of 10-50 calls can be made per minute with the free tier of CoinGecko'sAPI
-    var maxPage: Int = 5
+    static let maxPage: Int = 2
     var canPaginate: Bool {
-        return currentPage < maxPage
+        return currentPage < CoinDataProvider.maxPage
     }
     
     // MARK: - Constants
@@ -77,30 +86,82 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
         reload()
     }
     
+    // MARK: - Data Transformation
     private func fetchCoins() {
+        fetchPortfolioCoins()
+        fetchAllCoins()
+    }
+    
+    /// Return coins specific to the user's portfolio first before getting all coins, this allows for a faster load time on the home screen
+    private func fetchPortfolioCoins() {
+       // The specific IDs to fetch from the endpoint
+       let portfolioCoinIDs = dataStores
+            .portfolioManager
+            .coinEntities
+            .compactMap { return $0.coinID }
+        
         Task(priority: .high) {
             do {
-                let paginatedCoinData = try await fetchData()
-                /// Create a unique copy of all coins to ensure no duplicate coin data is appended to the coin array
-                var tempCoinBuffer: OrderedSet<CoinModel> = OrderedSet(coins)
+                let coinData = try await fetchData(for: portfolioCoinIDs)
+
+                let parsedCoins = try JSONParsingHelper
+                    .parseJSON(with: [CoinModel].self,
+                               using: coinData)
                 
-                for coinDatum in paginatedCoinData {
-                    let parsedCoins = try JSONParsingHelper
-                        .parseJSON(with: [CoinModel].self,
-                                   using: coinDatum)
-                    
-                    for coin in parsedCoins {
-                        tempCoinBuffer.updateOrAppend(coin)
-                    }
-                }
-                
-                coins = Array(tempCoinBuffer)
+                updateCoinData(with: parsedCoins)
             }
             catch { throw error }
         }
     }
     
-    func fetchData() async throws -> [Data] {
+    private func fetchStableCoins() {
+        
+    }
+ 
+    private func fetchAllCoins() {
+        Task(priority: .high) {
+            do {
+                let paginatedCoinData = try await fetchAllData()
+
+                for coinDatum in paginatedCoinData {
+                    let parsedCoins = try JSONParsingHelper
+                        .parseJSON(with: [CoinModel].self,
+                                   using: coinDatum)
+                    
+                    updateCoinData(with: parsedCoins)
+                }
+            }
+            catch { throw error }
+        }
+    }
+    
+    private func updateCoinData(with newCoins: [CoinModel]) {
+        /// Create a unique copy of all coins to ensure no duplicate coin data is appended to the coin array
+        var tempCoinBuffer: OrderedSet<CoinModel> = OrderedSet(coins)
+        
+        for coin in newCoins {
+            tempCoinBuffer.updateOrAppend(coin)
+        }
+        
+        coins = Array(tempCoinBuffer)
+    }
+    
+    // MARK: - Data Acquistion
+    func fetchData(for coinIDs: [String]) async throws -> Data {
+        do {
+            var endPoint = endpointManager.allCoinsEndpoint
+            
+            // Returns the coins from any page, not just a specific one
+            endPoint.currentPage = 0
+            endPoint.coinIDsToQuery = coinIDs
+            
+            return try await dependencies
+                .networkingService
+                .fetchData(from: endPoint.buildJust())
+        }
+    }
+    
+    func fetchAllData() async throws -> [Data] {
         do {
             var sequentialData: [Data] = [],
                 endpoint = endpointManager

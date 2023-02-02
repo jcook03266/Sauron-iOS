@@ -68,10 +68,10 @@ satelliteButtonShadowColor: Color = Colors.shadow_1.0
     
     // MARK: - Clear textfield button properties
     var clearTextFieldButtonIcon: Image = Icons.getIconImage(named: .arrow_clockwise),
-clearTextFieldButtonGradient: LinearGradient? = Colors.gradient_1,
-clearTextFieldButtonIconTintColor: Color = Colors.permanent_white.0,
-clearTextFieldButtonBackgroundColor: Color = Colors.permanent_black.0,
-clearTextFieldButtonShadowColor: Color = Colors.shadow_1.0
+        clearTextFieldButtonGradient: LinearGradient? = Colors.gradient_1,
+        clearTextFieldButtonIconTintColor: Color = Colors.permanent_white.0,
+        clearTextFieldButtonBackgroundColor: Color = Colors.permanent_black.0,
+        clearTextFieldButtonShadowColor: Color = Colors.shadow_1.0
     
     /// Clears the textfield's current text entry
     var clearTextFieldButtonAction: (() -> Void) {

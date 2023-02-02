@@ -83,6 +83,9 @@ class CoinStore: StoreProtocol, Mockable {
     
     // MARK: - Convenience variables
     var searchResultCount: Int = 0
+    var coinCount: Int {
+        return coins.count
+    }
     
     // MARK: - Data Store Dependencies
     struct DataStores: InjectableStores {
@@ -96,7 +99,7 @@ class CoinStore: StoreProtocol, Mockable {
     }
     let dependencies = Dependencies()
     
-    init() {
+    private init() {
         setup()
     }
     

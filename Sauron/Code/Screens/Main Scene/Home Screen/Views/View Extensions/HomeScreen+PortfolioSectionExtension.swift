@@ -23,16 +23,11 @@ extension HomeScreen {
             // User has coins, display them like normal
             if !model.shouldDisplayPortfolioSectionPlaceholder {
                 portfolioCoinContent
-                
                 portfolioSectionFooter
             }
-            
-            Spacer()
         }
         .padding(.top,
                  sectionHeaderTopSpacing)
-        .padding(.bottom,
-                 portfolioBottomPadding)
     }
 }
 
@@ -172,10 +167,6 @@ extension HomeScreen {
                     portfolioListView
                 }
             }
-            .animation(.spring(),
-                       value: model.portfolioSectionMaximized)
-            .padding(.vertical,
-                     portfolioCoinContentVerticalPadding)
             .padding(.horizontal,
                      portfolioCoinContentHorizontalPadding)
         }
@@ -216,11 +207,12 @@ extension HomeScreen {
                 Spacer()
             }
             // Unclip shadows
-            .padding(.vertical, 5)
+            .padding(.vertical,
+                     sectionFooterVerticalPadding)
             .padding(.leading,
                      sectionLeadingPadding)
         }
         .padding(.top,
-                 portfolioFooterTopPadding)
+                 sectionFooterTopPadding)
     }
 }

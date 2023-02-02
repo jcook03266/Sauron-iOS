@@ -39,6 +39,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     
     // MARK: - Section States
     @Published var portfolioSectionMaximized: Bool = false
+    @Published var allAssetsSectionMaximized: Bool = false
     
     // MARK: - Data Sources
     @Published var allCoins: [CoinModel] = []
@@ -92,6 +93,8 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         portfolioSectionPlaceholderButtonBackgroundColor: Color = Colors.permanent_black.0,
         portfolioSectionPlaceholderButtonForegroundColor: Color = Colors.permanent_white.0,
         portfolioSectionPlaceholderButtonShadowColor: Color = Colors.shadow_2.0,
+        // All Assets
+       allAssetsHeaderIconGradient: LinearGradient = Colors.gradient_1,
         // Crypto News Section
         cryptoNewsSectionTitleGradient: LinearGradient = Colors.gradient_1,
         cryptoNewsImageColor: Color = Colors.black.0
@@ -114,6 +117,8 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     // My Portfolio
     let portfolioSectionIcon: Image = Icons.getIconImage(named: .chart_pie_fill),
         portfolioSectionPlaceholderImage: Image = Images.getImage(named: .placeholder_coin_stack_three),
+        // All Assets
+        allAssetsSectionIcon: Image = Icons.getIconImage(named: .chart_bar_fill),
         // Crypto News Section
         cryptoNewsSectionIcon: Image = Icons.getIconImage(named: .mic_circle_fill)
     
@@ -122,6 +127,8 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     let portfolioSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_MY_PORTFOLIO),
         portfolioSectionSortButtonTitle: String = LocalizedStrings.getLocalizedString(for: .VOLUME),
         portfolioSectionPlaceholderButtonTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_MY_PORTFOLIO_PLACEHOLDER_BUTTON_TITLE),
+        // All Assets
+        allAssetsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_ALL_ASSETS),
         // Crypto News
         cryptoNewsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_CRYPTO_NEWS),
         // Shared
@@ -132,7 +139,12 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     
     // Dynamic Text | Portfolio Section
     var portfolioSectionTransitionButtonTitle: String {
-        return portfolioSectionMaximized ? maximizeButtonTitle : minimizeButtonTitle
+        return portfolioSectionMaximized ? minimizeButtonTitle : maximizeButtonTitle
+    }
+    
+    // Dynamic Text | All Assets Section
+    var allAssetsSectionTransitionButtonTitle: String {
+        return portfolioSectionMaximized ? minimizeButtonTitle : maximizeButtonTitle
     }
     
     // MARK: - Deeplinks
@@ -206,6 +218,20 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         }
     }
     
+    // All Assets
+    var showAllAssetsCoinsAction: (() -> Void) {
+        return {}
+    }
+    
+    var transitionAllAssetsSectionAction: (() -> Void) {
+        return { [weak self] in
+            guard let self = self
+            else { return }
+            
+            self.allAssetsSectionMaximized.toggle()
+        }
+    }
+    
     // TODO: - Create Daily Message Service For dynamic user message prompts for returning users, and first time users
     var title: String {
         return LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_GREETING_RETURNING_USER_1)
@@ -231,11 +257,6 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
             .isEmpty
     }
     
-    /// If the user's portfolio is loading then display placeholder values
-    var portfolioIsLoading: Bool {
-       return !isPortfolioEmpty && isCoinStoreEmpty
-    }
-    
     var shouldDisplayPortfolioSectionPlaceholder: Bool {
         return isPortfolioEmpty
     }
@@ -246,6 +267,17 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
             .currentUser
             .hasVisitedHomeScreen
     }
+    
+    // MARK: - Lazy Loading
+    /// If the user's portfolio is loading then display placeholder values
+    var portfolioIsLoading: Bool {
+       return !isPortfolioEmpty && isCoinStoreEmpty
+    }
+    
+    var allAssetsIsLoading: Bool {
+       return isCoinStoreEmpty
+    }
+    
     
     // MARK: - Models
     var portfolioSortButtonViewModel: RectangularSortButtonViewModel {
@@ -293,10 +325,28 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
             .assign(to: &$navigationPath)
         
         // MARK: - Data Providers
+        /// All Coins [Statically Sorted by Rank [Descending]]
         dataStores
             .coinStore
             .$coins
             .receive(on: scheduler)
+            .compactMap({ [weak self] in
+                guard let self = self
+                else { return $0 }
+                
+                let isDescendingSortOrder = true,
+                    coins = $0,
+                    coinStore = self.dataStores.coinStore,
+                    sortKeyType = coinStore
+                    .sortKey.getRankType()
+                
+                return Array(coinStore
+                    .sort(coins: coins,
+                          ascending: !isDescendingSortOrder,
+                          sortKey: .rank,
+                          sortKeyType: sortKeyType)
+                    .prefix(self.maxElementCount))
+            })
             .assign(to: &$allCoins)
         
         /// Portfolio Coins sorted by 'Performance' aka 24h volume
