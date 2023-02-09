@@ -138,7 +138,7 @@ class CoinGridInformationViewModel: GenericViewModel {
     @ObservedObject var miniChartViewModel: MiniHistoricalChartViewModel
     @Published var pageBarViewModel: PageBarViewModel!
     
-    // MARK: - Data Manipulation
+    // MARK: - Data Manipulation / Convenience
     var chartData: [Double] {
         return coinModel.sparklineIn7D.price ?? []
     }
@@ -155,12 +155,11 @@ class CoinGridInformationViewModel: GenericViewModel {
         return priceChange >= 0
     }
     
-    // MARK: - Convenience
     var allowedTimeScalesCount: UInt {
         return UInt(allowedTimeScales.count)
     }
     
-    // The index of the currently selected time scale in the allowed time scales array
+    /// The index of the currently selected time scale in the allowed time scales array
     var selectedTimeScaleIndexInAllowedTimeScales: Int {
         return allowedTimeScales.firstIndex(of: self.selectedTimeScale) ?? 0
     }

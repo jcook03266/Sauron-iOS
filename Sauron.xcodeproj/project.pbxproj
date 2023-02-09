@@ -224,6 +224,12 @@
 		49C2D000298125DB004E2987 /* BannerEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C2CFFF298125DB004E2987 /* BannerEventView.swift */; };
 		49C39C4329793DC100630412 /* IntToTimeConversionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C39C4229793DC100630412 /* IntToTimeConversionHelper.swift */; };
 		49D30E232986AC45001037F6 /* Path+QuadCurve+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D30E222986AC45001037F6 /* Path+QuadCurve+Extensions.swift */; };
+		49EE7C38298E8E7B006D2037 /* GlobalMarketDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EE7C37298E8E7B006D2037 /* GlobalMarketDataModel.swift */; };
+		49EE7C3A298E9677006D2037 /* TrendingSearchedCoinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EE7C39298E9677006D2037 /* TrendingSearchedCoinsModel.swift */; };
+		49EE7C3D298F2FE1006D2037 /* HomeScreenUserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EE7C3C298F2FE1006D2037 /* HomeScreenUserPreferences.swift */; };
+		49EE7C3F298F3ACD006D2037 /* HomeScreen+TrendingSectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EE7C3E298F3ACD006D2037 /* HomeScreen+TrendingSectionExtension.swift */; };
+		49EE7C44298F3F0B006D2037 /* CoinChipletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EE7C43298F3F0B006D2037 /* CoinChipletView.swift */; };
+		49EE7C46298F3F25006D2037 /* CoinChipletViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EE7C45298F3F25006D2037 /* CoinChipletViewModel.swift */; };
 		49F4B7062973736300319E39 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F4B7052973736300319E39 /* KeychainManager.swift */; };
 		49F4B7092973A73A00319E39 /* UserDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F4B7082973A73A00319E39 /* UserDataModel.swift */; };
 		49F4B70C2973AB5B00319E39 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F4B70B2973AB5B00319E39 /* UserManager.swift */; };
@@ -473,6 +479,12 @@
 		49C2CFFF298125DB004E2987 /* BannerEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerEventView.swift; sourceTree = "<group>"; };
 		49C39C4229793DC100630412 /* IntToTimeConversionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntToTimeConversionHelper.swift; sourceTree = "<group>"; };
 		49D30E222986AC45001037F6 /* Path+QuadCurve+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+QuadCurve+Extensions.swift"; sourceTree = "<group>"; };
+		49EE7C37298E8E7B006D2037 /* GlobalMarketDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalMarketDataModel.swift; sourceTree = "<group>"; };
+		49EE7C39298E9677006D2037 /* TrendingSearchedCoinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingSearchedCoinsModel.swift; sourceTree = "<group>"; };
+		49EE7C3C298F2FE1006D2037 /* HomeScreenUserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenUserPreferences.swift; sourceTree = "<group>"; };
+		49EE7C3E298F3ACD006D2037 /* HomeScreen+TrendingSectionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeScreen+TrendingSectionExtension.swift"; sourceTree = "<group>"; };
+		49EE7C43298F3F0B006D2037 /* CoinChipletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinChipletView.swift; sourceTree = "<group>"; };
+		49EE7C45298F3F25006D2037 /* CoinChipletViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinChipletViewModel.swift; sourceTree = "<group>"; };
 		49F4B7052973736300319E39 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		49F4B7082973A73A00319E39 /* UserDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataModel.swift; sourceTree = "<group>"; };
 		49F4B70B2973AB5B00319E39 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -657,6 +669,7 @@
 				49147096298A3A66006ACCCB /* HomeScreen+PortfolioSectionExtension.swift */,
 				49147098298A3C0D006ACCCB /* HomeScreen+CryptoNewsSectionExtension.swift */,
 				4914709A298A3CC3006ACCCB /* HomeScreen+AllCoinsSectionExtension.swift */,
+				49EE7C3E298F3ACD006D2037 /* HomeScreen+TrendingSectionExtension.swift */,
 			);
 			path = "View Extensions";
 			sourceTree = "<group>";
@@ -797,6 +810,7 @@
 			isa = PBXGroup;
 			children = (
 				4925C892295B5E97006E1A80 /* CoinModel.swift */,
+				49EE7C39298E9677006D2037 /* TrendingSearchedCoinsModel.swift */,
 			);
 			path = Coins;
 			sourceTree = "<group>";
@@ -804,6 +818,7 @@
 		4925C891295B5D91006E1A80 /* Markets */ = {
 			isa = PBXGroup;
 			children = (
+				49EE7C37298E8E7B006D2037 /* GlobalMarketDataModel.swift */,
 			);
 			path = Markets;
 			sourceTree = "<group>";
@@ -1961,6 +1976,7 @@
 		499E12EA2954D6F8004C61CE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				49EE7C40298F3EE4006D2037 /* Coin Chiplet View */,
 				490D27C72986945600F57589 /* Charts */,
 				490D27BE2986841D00F57589 /* Coin List Information View */,
 				490D27BD298683F500F57589 /* Coin Grid Information View */,
@@ -2340,6 +2356,7 @@
 		49AB9D572972D7450044EC8D /* Home Screen */ = {
 			isa = PBXGroup;
 			children = (
+				49EE7C3B298F2FCC006D2037 /* User Preferences */,
 				498EDB96297C20EC00A6EE35 /* Models */,
 				498EDB95297C181100A6EE35 /* Views */,
 			);
@@ -2538,6 +2555,39 @@
 				49AB217B2981559400F85B52 /* PageBarViewModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		49EE7C3B298F2FCC006D2037 /* User Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				49EE7C3C298F2FE1006D2037 /* HomeScreenUserPreferences.swift */,
+			);
+			path = "User Preferences";
+			sourceTree = "<group>";
+		};
+		49EE7C40298F3EE4006D2037 /* Coin Chiplet View */ = {
+			isa = PBXGroup;
+			children = (
+				49EE7C42298F3EF5006D2037 /* Views */,
+				49EE7C41298F3EF0006D2037 /* Models */,
+			);
+			path = "Coin Chiplet View";
+			sourceTree = "<group>";
+		};
+		49EE7C41298F3EF0006D2037 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				49EE7C45298F3F25006D2037 /* CoinChipletViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		49EE7C42298F3EF5006D2037 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				49EE7C43298F3F0B006D2037 /* CoinChipletView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		49F4B7042973731100319E39 /* Keychain */ = {
@@ -2824,6 +2874,7 @@
 				499E12E42954D647004C61CE /* VOCViewModel.swift in Sources */,
 				4925C8B1295C6B48006E1A80 /* StoreProtocol.swift in Sources */,
 				498EDB98297C240900A6EE35 /* HomeScreen.swift in Sources */,
+				49EE7C44298F3F0B006D2037 /* CoinChipletView.swift in Sources */,
 				499E13182954D6F8004C61CE /* PartitionedProgressView.swift in Sources */,
 				49216A08296040930078CCC3 /* PCCoinRowViewModel.swift in Sources */,
 				490D27CD2986949E00F57589 /* MiniHistoricalChartView.swift in Sources */,
@@ -2861,6 +2912,7 @@
 				499E13162954D6F8004C61CE /* ProgressBarNavigationCoordinator.swift in Sources */,
 				49916A83297CC15700EC2BCB /* SRNTabbar.swift in Sources */,
 				4914709B298A3CC3006ACCCB /* HomeScreen+AllCoinsSectionExtension.swift in Sources */,
+				49EE7C38298E8E7B006D2037 /* GlobalMarketDataModel.swift in Sources */,
 				49916AA0297D5DD600EC2BCB /* AlertsTabRouter.swift in Sources */,
 				492169F5295FAE670078CCC3 /* CoinImageView.swift in Sources */,
 				49A0B59F296D49B5003324A3 /* LanguageManager.swift in Sources */,
@@ -2942,7 +2994,9 @@
 				49A0B594296D3DE9003324A3 /* EndpointManager.swift in Sources */,
 				49AFC46729888884005221A9 /* CoinListInformationViewModel.swift in Sources */,
 				499E12B92954D3E8004C61CE /* SheetModifier.swift in Sources */,
+				49EE7C46298F3F25006D2037 /* CoinChipletViewModel.swift in Sources */,
 				49147099298A3C0D006ACCCB /* HomeScreen+CryptoNewsSectionExtension.swift in Sources */,
+				49EE7C3D298F2FE1006D2037 /* HomeScreenUserPreferences.swift in Sources */,
 				499E12822954C40F004C61CE /* GenericNavigationProtocol.swift in Sources */,
 				491429B3294D05540083CC9D /* Sauron.xcdatamodeld in Sources */,
 				4996AF7E297E036C00112DC0 /* MailingListService.swift in Sources */,
@@ -2954,11 +3008,13 @@
 				49975A7129726BCB00C29090 /* ExchangeRateDataProvider.swift in Sources */,
 				490871652977A31F00EC6D6F /* ObfuscatedSegment.swift in Sources */,
 				4908716B2977A54900EC6D6F /* ObfuscatedPasscodeSegment.swift in Sources */,
+				49EE7C3A298E9677006D2037 /* TrendingSearchedCoinsModel.swift in Sources */,
 				490871632976B15300EC6D6F /* MainCoordinatorView.swift in Sources */,
 				49B22B8B29566DB1009C3F4F /* PasscodeValidator.swift in Sources */,
 				49A0B582296B8D1D003324A3 /* PreferenceBottomSheetViewModel.swift in Sources */,
 				499E134129552550004C61CE /* LoopingVideoPlayerUIView.swift in Sources */,
 				499E13302955251E004C61CE /* VOCView.swift in Sources */,
+				49EE7C3F298F3ACD006D2037 /* HomeScreen+TrendingSectionExtension.swift in Sources */,
 				49916A9A297D5D0D00EC2BCB /* SettingsTabRouter.swift in Sources */,
 				49C2D000298125DB004E2987 /* BannerEventView.swift in Sources */,
 				4908716D2977A6C200EC6D6F /* KeypadUtilityButton.swift in Sources */,

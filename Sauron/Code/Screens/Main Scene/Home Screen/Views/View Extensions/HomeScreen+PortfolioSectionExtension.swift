@@ -42,7 +42,7 @@ extension HomeScreen {
                    spacing: sectionHeaderItemSpacing) {
                 // Title
                 Text(model.portfolioSectionTitle)
-                    .withFont(model.sectionHeaderTitleFont)
+                    .withFont(model.portfolioSectionHeaderTitleFont)
                     .fontWeight(model.sectionHeaderTitleFontWeight)
                     .foregroundColor(model.sectionHeaderTitleColor)
                     .minimumScaleFactor(0.5)
@@ -61,6 +61,8 @@ extension HomeScreen {
                 
                 Spacer()
             }
+                   .padding(.vertical,
+                            sectionHeaderItemVerticalPadding)
                    .padding(.leading,
                             sectionLeadingPadding)
         }
@@ -128,7 +130,8 @@ extension HomeScreen {
         Group {
             // Placeholder for when coins are loading
             if model.portfolioIsLoading {
-                VStack(spacing: portfolioCoinContentItemSpacing) {
+                VStack(alignment: .leading,
+                       spacing: portfolioCoinContentItemSpacing) {
                     ForEach(model.placeholderViewRange, id: \.self)
                     { _ in
                         if let placeholderCoinData = model.placeholderCoinData {
@@ -141,7 +144,8 @@ extension HomeScreen {
             }
             else {
                 // The loaded coins
-                VStack(spacing: portfolioCoinContentItemSpacing) {
+                VStack(alignment: .leading,
+                       spacing: portfolioCoinContentItemSpacing) {
                     ForEach(model.portfolioCoins)
                     { coin in
                         CoinListInformationView(model: .init(coinModel: coin))
@@ -156,22 +160,28 @@ extension HomeScreen {
     }
     
     var portfolioCoinContent: some View {
-        ScrollView(model.portfolioSectionMaximized ? .horizontal : .vertical,
+        ScrollView(model
+            .homeScreenUserPreferences
+            .portfolioSectionMaximized ? .horizontal : .vertical,
                    showsIndicators: false) {
             
             Group {
-                if model.portfolioSectionMaximized {
+                if model
+                    .homeScreenUserPreferences
+                    .portfolioSectionMaximized {
                     portfolioGridView
                 }
                 else {
                     portfolioListView
                 }
             }
+            .padding(.bottom,
+                     portfolioCoinContentPadding)
             .padding(.horizontal,
                      portfolioCoinContentHorizontalPadding)
         }
                    .padding(.top,
-                            portfolioCoinContentTopPadding)
+                            portfolioCoinContentPadding)
     }
     
     var portfolioSectionFooter: some View {

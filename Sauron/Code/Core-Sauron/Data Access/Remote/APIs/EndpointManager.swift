@@ -39,13 +39,19 @@ struct EndpointManager {
     }
 }
 
-
-/// If next page's data is empty then don't increment the page counter ??
-
 /// CoinGecko API Endpoint manager that manages all necessary endpoints and allows for direct customization of each get request
 /// using api specific values to ensure a safe url resolution for every custom attribute added
 class CoinGeckoAPIEndpointManager {
-    var allCoinsEndpoint: allCoinsEndpointBuilder {
+    // MARK: - Endpoints
+    var allCoinsEndpoint: AllCoinsEndpointBuilder {
+        return .init(manager: self)
+    }
+    
+    var trendingCoinsEndpoint: TrendingCoinsEndpointBuilder {
+        return .init(manager: self)
+    }
+    
+    var globalMarketEndpoint: GlobalMarketEndpointBuilder {
         return .init(manager: self)
     }
     
@@ -78,25 +84,53 @@ class CoinGeckoAPIEndpointManager {
         return url
     }
     
-    struct allCoinsEndpointBuilder {
+    /// Data source interface for fetching higher level info about the entire crypto market
+    struct GlobalMarketEndpointBuilder {
+        let manager: CoinGeckoAPIEndpointManager,
+            baseURLString: String = "https://api.coingecko.com/api/v3/global"
+        
+        func build() -> URL {
+            // This endpoint doesn't require parameters so an empty dict is passed
+            return manager
+                .buildURL(using: baseURLString,
+                          with: [:])
+        }
+    }
+    
+    /// Top-7 trending coins on CoinGecko (Descending [Most searched])
+    struct TrendingCoinsEndpointBuilder {
+        let manager: CoinGeckoAPIEndpointManager,
+            baseURLString: String = "https://api.coingecko.com/api/v3/search/trending"
+        
+        func build() -> URL {
+            return manager
+                .buildURL(using: baseURLString,
+                          with: [:])
+        }
+    }
+    
+    /// Data source interface for fetching info about all cryptocurrencies
+    struct AllCoinsEndpointBuilder {
         let manager: CoinGeckoAPIEndpointManager,
             baseURLString: String = "https://api.coingecko.com/api/v3/coins/markets",
             /// Specify this + page = 0 to search for any specific coins by ID to return
             coinIDsParameter = "ids",
             targetCurrencyParameter = "vs_currency",
+            categoryParameter = "category",
             sortKeyParameter = "order",
             coinsPerPageParameter = "per_page",
             paginationParameter = "page",
             sparklineParameter = "sparkline"
         
         var targetConversionCurrency: targetCurrencies = .usd,
-    coinIDsToQuery: [String] = [],
-    sparklineEnabled: Bool = true,
-        /// Pagination, the page up to which all coin data will be returned [eg. page 1 -> 100 coins total, page 2 -> 200 coins total] [1 indexed]
-    currentPage: Int = allCoinsEndpointBuilder.defaultStartingPage,
-        /// [min 1..250 max]
-    coinsPerPage: Int = allCoinsEndpointBuilder.defaultCoinPerPageLimit,
-    sortKey: sortKeys = .marketCapDescending
+            category: Categories = .all,
+            coinIDsToQuery: [String] = [],
+            sparklineEnabled: Bool = true,
+            /// Pagination, the page up to which all coin data will be returned [eg. page 1 -> 100 coins total, page 2 -> 200 coins total] [1 indexed]
+            currentPage: Int = AllCoinsEndpointBuilder.defaultStartingPage,
+            /// [min 1..250 max]
+            coinsPerPage: Int = AllCoinsEndpointBuilder.defaultCoinPerPageLimit,
+            sortKey: sortKeys = .marketCapDescending
         
         static let defaultStartingPage: Int = 1,
                    defaultCoinPerPageLimit: Int = 250
@@ -104,7 +138,7 @@ class CoinGeckoAPIEndpointManager {
         // MARK: - Convenience
         /// The range of the pagination
         var pageRange: ClosedRange<Int> {
-            return allCoinsEndpointBuilder.defaultStartingPage...currentPage
+            return AllCoinsEndpointBuilder.defaultStartingPage...currentPage
         }
         
         /// Builds multiple URLs that return different pages of JSON coin data to be sequentially concatenated on the receiving end after being parsed
@@ -118,10 +152,16 @@ class CoinGeckoAPIEndpointManager {
                     sparklineParameter: sparklineEnabled.description
                 ]
             
+            
+            // Provide the category parameter only if a specific category has been specified
+            if category != .all {
+                parameters[categoryParameter] = category.rawValue
+            }
+            
             // Join the coin ids (if any) with commas and use percent encoding in order to format the url properly
-           parameters[coinIDsParameter] = coinIDsToQuery
-               .joined(separator: ",")
-               .addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            parameters[coinIDsParameter] = coinIDsToQuery
+                .joined(separator: ",")
+                .addingPercentEncoding(withAllowedCharacters: .alphanumerics)
             
             for page in pageRange {
                 parameters[paginationParameter] = page.description
@@ -139,23 +179,30 @@ class CoinGeckoAPIEndpointManager {
         /// Builds just one URL, pagination is not possible as only one page specific URL can be returned by this method at a time, this is best suited for querying specific coin IDs with the current page set to 0 to invalidate the pagination factor on the backend
         func buildJust() -> URL {
             var parameters: [String : String] = [
-                    targetCurrencyParameter : targetConversionCurrency.rawValue,
-                    sortKeyParameter : sortKey.rawValue,
-                    coinsPerPageParameter : coinsPerPage.description,
-                    paginationParameter: "",
-                    sparklineParameter: sparklineEnabled.description
-                ]
+                targetCurrencyParameter : targetConversionCurrency.rawValue,
+                sortKeyParameter : sortKey.rawValue,
+                coinsPerPageParameter : coinsPerPage.description,
+                paginationParameter: "",
+                sparklineParameter: sparklineEnabled.description
+            ]
             
             // Join the coin ids (if any) with commas and use percent encoding in order to format the url properly
-           parameters[coinIDsParameter] = coinIDsToQuery
-               .joined(separator: ",")
-               .addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            parameters[coinIDsParameter] = coinIDsToQuery
+                .joined(separator: ",")
+                .addingPercentEncoding(withAllowedCharacters: .alphanumerics)
             
             parameters[paginationParameter] = currentPage.description
             
             return manager
                 .buildURL(using: baseURLString,
                           with: parameters)
+        }
+        
+        /// All supported crypto currency categories via CoinGecko, Note: set the page number parameter to 0 when querying, pagination isn't supported
+        enum Categories: String, CaseIterable {
+            /// No category, returns all coins
+            case all = ""
+            case stableCoins = "stablecoins"
         }
         
         /// The base currency to compare all coin data against

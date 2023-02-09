@@ -26,9 +26,16 @@ class CoinStore: StoreProtocol, Mockable {
     @ObservedObject var dataProvider: CoinDataProvider = .shared
     
     // MARK: - Published
+    // Coins
     @Published private(set) var coins: [CoinModel] = []
     @Published private(set) var portfolioCoins: [CoinModel] = []
+    @Published private(set) var trendingCoins: [CoinModel] = []
+    @Published private(set) var stableCoins: [CoinModel] = []
+    
+    // Coin Theme Colors
     @Published private var themeColors: Set<CoinThemeColor> = []
+    
+    // Searching / Filtering
     /// The current query being used to filter the store's data pool
     @Published var activeSearchQuery: String = ""
     @Published var displayPortfolioCoinsOnly: Bool = false
@@ -149,6 +156,16 @@ class CoinStore: StoreProtocol, Mockable {
                                      portfolioCoins: publishers.1)
             }
             .assign(to: &$portfolioCoins)
+        
+        /// Stable Coins
+        dataProvider
+            .$stableCoins
+            .assign(to: &$stableCoins)
+        
+        /// Trending Coins
+        dataProvider
+            .$trendingCoins
+            .assign(to: &$trendingCoins)
         
         /// Subscribe directly to the data provider and use this to build up the store for all coin theme colors
         dataProvider

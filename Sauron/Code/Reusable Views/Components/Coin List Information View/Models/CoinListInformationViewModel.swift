@@ -139,7 +139,7 @@ class CoinListInformationViewModel: GenericViewModel {
     @ObservedObject var coinImageViewModel: CoinImageViewModel
     @ObservedObject var miniChartViewModel: MiniHistoricalChartViewModel
     
-    // MARK: - Data Manipulation
+    // MARK: - Data Manipulation / Convenience
     var chartData: [Double] {
         return coinModel.sparklineIn7D.price ?? []
     }
@@ -161,8 +161,6 @@ class CoinListInformationViewModel: GenericViewModel {
             .portfolioManager
             .doesCoinExistInPortfolio(coin: coinModel)
     }
-    
-    // MARK: - Convenience
     
     init(coinModel: CoinModel) {
         self.coinModel = coinModel

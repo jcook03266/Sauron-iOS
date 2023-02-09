@@ -51,19 +51,24 @@ struct HomeScreen: View {
         // Shared
         sectionHeaderItemSpacing: CGFloat = 15,
         sectionHeaderTopSpacing: CGFloat = 10,
+        sectionHeaderItemVerticalPadding: CGFloat = 2,
         sectionLeadingPadding: CGFloat = 15,
         utilityButtonSpacing: CGFloat = 10,
         coinContentScrollViewVerticalPadding: CGFloat = 30,
         sectionFooterVerticalPadding: CGFloat = 5,
-        sectionFooterTopPadding: CGFloat = 10,
+        sectionFooterTopPadding: CGFloat = 5,
         // My Portfolio
         portfolioPlaceholderImageTopPadding: CGFloat = 35,
         portfolioPlaceholderImageBottomPadding: CGFloat = 25,
         portfolioCoinContentHorizontalPadding: CGFloat = 20,
-        portfolioCoinContentTopPadding: CGFloat = 10,
+        portfolioCoinContentPadding: CGFloat = 10,
+        // Trending
+        trendingCoinContentItemSpacing: CGFloat = 20,
+        trendingCoinsContentPadding: CGFloat = 10,
+        trendingCoinsContentHorizontalPadding: CGFloat = 20,
         // All Assets
         allAssetsContentHorizontalPadding: CGFloat = 20,
-        allAssetsCoinContentTopPadding: CGFloat = 10,
+        allAssetsCoinContentPadding: CGFloat = 10,
         // Crypto News
         cryptoNewsSectionHeaderItemSpacing: CGFloat = 10,
         cryptoNewsSectionHeaderBottomPadding: CGFloat = 50,
@@ -72,12 +77,12 @@ struct HomeScreen: View {
     // Dynamic Content
     // My Portfolio
     var portfolioCoinContentItemSpacing: CGFloat {
-        return model.portfolioSectionMaximized ? 20 : 10
+        return model.homeScreenUserPreferences.portfolioSectionMaximized ? 20 : 10
     }
     
     // All Assets
     var allAssetsCoinContentItemSpacing: CGFloat {
-        return model.allAssetsSectionMaximized ? 20 : 10
+        return model.homeScreenUserPreferences.allAssetsSectionMaximized ? 20 : 10
     }
     
     var body: some View {
@@ -124,9 +129,13 @@ struct HomeScreen: View {
         .animation(.spring(),
                    value: model.shouldDisplayGreeting)
         .animation(.spring(),
-                   value: model.portfolioSectionMaximized)
+                   value: model
+            .homeScreenUserPreferences
+            .portfolioSectionMaximized)
         .animation(.spring(),
-                   value: model.allAssetsSectionMaximized)
+                   value: model
+            .homeScreenUserPreferences
+            .allAssetsSectionMaximized)
         .animation(.easeInOut, value: model.isReloading)
         .onAppear {
             performOnAppearTasks()
@@ -223,6 +232,11 @@ extension HomeScreen {
                                 .Sections
                                 .myPortfolio)
                         
+                        trendingSection
+                            .id(HomeScreenViewModel
+                                .Sections
+                                .trendingCoins)
+                        
                         allAssetsSection
                             .id(HomeScreenViewModel
                                 .Sections
@@ -284,6 +298,8 @@ extension HomeScreen {
                           corners: [.topLeft,
                                     .bottomLeft])
     }
+    
+    // Trending
     
     // Shared
     var sectionDivider: some View {

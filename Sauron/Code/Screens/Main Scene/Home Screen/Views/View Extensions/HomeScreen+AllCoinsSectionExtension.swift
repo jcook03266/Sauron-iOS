@@ -14,7 +14,8 @@ extension HomeScreen {
     var allAssetsSection: some View {
         VStack(spacing: 0) {
             sectionDivider
-                .padding(.top, -sectionDividerVerticalPadding)
+                .padding(.top,
+                         -sectionDividerVerticalPadding)
             
             allAssetsSectionHeader
             allAssetsCoinContent
@@ -34,7 +35,7 @@ extension HomeScreen {
                    spacing: sectionHeaderItemSpacing) {
                 // Title
                 Text(model.allAssetsSectionTitle)
-                    .withFont(model.sectionHeaderTitleFont)
+                    .withFont(model.allAssetsSectionHeaderTitleFont)
                     .fontWeight(model.sectionHeaderTitleFontWeight)
                     .foregroundColor(model.sectionHeaderTitleColor)
                     .minimumScaleFactor(0.5)
@@ -90,7 +91,8 @@ extension HomeScreen {
         Group {
             // Placeholder for when coins are loading
             if model.allAssetsIsLoading {
-                VStack(spacing: allAssetsCoinContentItemSpacing) {
+                VStack(alignment: .leading,
+                       spacing: allAssetsCoinContentItemSpacing) {
                     ForEach(model.placeholderViewRange, id: \.self)
                     { _ in
                         if let placeholderCoinData = model.placeholderCoinData {
@@ -103,7 +105,8 @@ extension HomeScreen {
             }
             else {
                 // The loaded coins
-                VStack(spacing: allAssetsCoinContentItemSpacing) {
+                VStack(alignment: .leading,
+                       spacing: allAssetsCoinContentItemSpacing) {
                     ForEach(model.allCoins)
                     { coin in
                         CoinListInformationView(model: .init(coinModel: coin))
@@ -118,21 +121,27 @@ extension HomeScreen {
     }
     
     var allAssetsCoinContent: some View {
-        ScrollView(model.allAssetsSectionMaximized ? .horizontal : .vertical,
+        ScrollView(model
+            .homeScreenUserPreferences
+            .allAssetsSectionMaximized ? .horizontal : .vertical,
                    showsIndicators: false) {
             Group {
-                if model.allAssetsSectionMaximized {
+                if model
+                    .homeScreenUserPreferences
+                    .allAssetsSectionMaximized {
                     allAssetsGridView
                 }
                 else {
                     allAsssetsListView
                 }
             }
+            .padding(.bottom,
+                     allAssetsCoinContentPadding)
             .padding(.horizontal,
                      allAssetsContentHorizontalPadding)
         }
                    .padding(.top,
-                            allAssetsCoinContentTopPadding)
+                            allAssetsCoinContentPadding)
     }
     
     var allAssetsSectionFooter: some View {

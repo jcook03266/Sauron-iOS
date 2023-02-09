@@ -15,9 +15,18 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     static let shared: CoinDataProvider = .init()
     
     // MARK: - Published
+    // Coins <CoinModel>
     @Published var coins: [CoinModel] = []
+    @Published var trendingCoins: [CoinModel] = []
     /// A static reference of the most relevant stable coins on the market, used to categorize stable coins from the rest of the user's portfolio coins for statistical reasons
     @Published var stableCoins: [CoinModel] = []
+    
+    // Trending Coins <TrendingSearchedCoinsModel>
+    // Keeps track of the trending 'score' attributed to each trending coin
+    @Published var trendingSearchedCoinsIndex: TrendingSearchedCoinsModel? = nil
+    
+    // Global Market <GlobalMarketDataModel>
+    @Published var globalMarketInformation: GlobalMarketDataModel? = nil
     
     // MARK: - Data Sources
     var endpointManager: CoinGeckoAPIEndpointManager {
@@ -56,7 +65,7 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     
     // MARK: - Constants
     static let defaultPaginationStartingPage: Int = CoinGeckoAPIEndpointManager
-        .allCoinsEndpointBuilder
+        .AllCoinsEndpointBuilder
         .defaultStartingPage
     
     private init() {
@@ -68,12 +77,12 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     }
     
     func load() {
-        !mockEnvironment ? fetchCoins() : mockFetchCoins()
+        !mockEnvironment ? fetchAll() : mockFetchAll()
     }
     
     /// If network access was interrupted the first time or if data needs to be fetched again use this
     func reload() {
-        !mockEnvironment ? fetchCoins() : mockFetchCoins()
+        !mockEnvironment ? fetchAll() : mockFetchAll()
     }
     
     /// Load the upcoming data from the next page
@@ -86,10 +95,25 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
         reload()
     }
     
+    /// Fetches and parses all required coin and market data
+    func fetchAll() {
+        fetchCoins()
+        fetchGlobalMarketInformation()
+        fetchTrendingCoins()
+    }
+    
+    func mockFetchAll() {
+        mockFetchCoins()
+    }
+}
+
+// MARK: - Coin Market Data
+extension CoinDataProvider {
     // MARK: - Data Transformation
     private func fetchCoins() {
         fetchPortfolioCoins()
         fetchAllCoins()
+        fetchStableCoins()
     }
     
     /// Return coins specific to the user's portfolio first before getting all coins, this allows for a faster load time on the home screen
@@ -102,7 +126,7 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
         
         Task(priority: .high) {
             do {
-                let coinData = try await fetchData(for: portfolioCoinIDs)
+                let coinData = try await fetchCoinData(for: portfolioCoinIDs)
 
                 let parsedCoins = try JSONParsingHelper
                     .parseJSON(with: [CoinModel].self,
@@ -115,13 +139,24 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     }
     
     private func fetchStableCoins() {
-        
+        Task(priority: .high) {
+            do {
+                let coinData = try await fetchStableCoinData()
+
+                let parsedCoins = try JSONParsingHelper
+                    .parseJSON(with: [CoinModel].self,
+                               using: coinData)
+                
+                updateCoinData(with: parsedCoins)
+            }
+            catch { throw error }
+        }
     }
  
     private func fetchAllCoins() {
         Task(priority: .high) {
             do {
-                let paginatedCoinData = try await fetchAllData()
+                let paginatedCoinData = try await fetchAllCoinData()
 
                 for coinDatum in paginatedCoinData {
                     let parsedCoins = try JSONParsingHelper
@@ -147,7 +182,7 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
     }
     
     // MARK: - Data Acquistion
-    func fetchData(for coinIDs: [String]) async throws -> Data {
+    func fetchCoinData(for coinIDs: [String]) async throws -> Data {
         do {
             var endPoint = endpointManager.allCoinsEndpoint
             
@@ -160,8 +195,24 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
                 .fetchData(from: endPoint.buildJust())
         }
     }
+
+    func fetchStableCoinData() async throws -> Data {
+        do {
+            var endpoint = endpointManager.allCoinsEndpoint
+            
+            // Category in which the target coin type lies
+            endpoint.category = .stableCoins
+            endpoint.currentPage = 0
+            
+            let endpointURL = endpoint.buildJust()
+            
+            return try await dependencies
+                .networkingService
+                .fetchData(from: endpointURL)
+        }
+    }
     
-    func fetchAllData() async throws -> [Data] {
+    func fetchAllCoinData() async throws -> [Data] {
         do {
             var sequentialData: [Data] = [],
                 endpoint = endpointManager
@@ -181,7 +232,6 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
             
             return sequentialData
         }
-        catch { throw error }
     }
     
     // MARK: - Mock Methods
@@ -198,6 +248,70 @@ class CoinDataProvider: DataProviderProtocol, Mockable {
                 }
             }
             catch { throw error }
+        }
+    }
+}
+
+// MARK: - Global Market Data
+extension CoinDataProvider {
+    func fetchGlobalMarketInformation() {
+        Task(priority: .high) {
+            do {
+                let globalMarketData = try await fetchGlobalMarketData()
+
+                globalMarketInformation = try JSONParsingHelper
+                    .parseJSON(with: GlobalMarketDataModel.self,
+                               using: globalMarketData)
+            }
+            catch { throw error }
+        }
+    }
+    
+    func fetchGlobalMarketData() async throws -> Data {
+        do {
+            let endPoint = endpointManager.globalMarketEndpoint
+            
+            return try await dependencies
+                .networkingService
+                .fetchData(from: endPoint.build())
+        }
+    }
+}
+
+// MARK: - Trending Coin Data
+extension CoinDataProvider {
+    func fetchTrendingCoins() {
+        Task(priority: .high) {
+            do {
+                let trendingCoinData = try await fetchTrendingCoinData(),
+                trendingSearchedCoinsModel = try JSONParsingHelper
+                    .parseJSON(with: TrendingSearchedCoinsModel.self,
+                               using: trendingCoinData)
+                
+                // Transform trending searched coins to coin models
+                let coinIDs = trendingSearchedCoinsModel.coins.map { $0.metaData.id },
+                    trendingCoinModelData = try await fetchCoinData(for: coinIDs)
+                
+                let parsedCoins = try JSONParsingHelper
+                    .parseJSON(with: [CoinModel].self,
+                               using: trendingCoinModelData)
+                
+                trendingSearchedCoinsIndex = trendingSearchedCoinsModel
+                
+                trendingCoins = parsedCoins
+                updateCoinData(with: parsedCoins)
+            }
+            catch { throw error }
+        }
+    }
+    
+    func fetchTrendingCoinData() async throws -> Data {
+        do {
+            let endpoint = endpointManager.trendingCoinsEndpoint
+            
+            return try await dependencies
+                .networkingService
+                .fetchData(from: endpoint.build())
         }
     }
 }

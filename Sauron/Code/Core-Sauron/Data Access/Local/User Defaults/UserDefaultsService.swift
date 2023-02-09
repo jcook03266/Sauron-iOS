@@ -55,6 +55,13 @@ final class UserDefaultsService {
         case userAuthTokenLifeCyclePreference(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userAuthTokenLifeCyclePreference",
                                                                                                     defaultReturnValue: SRNUserAuthenticator.defaultAuthTokenLifeCycleDuration.rawValue))
         
+        // MARK: - Home Screen User Preferences
+        case userPrefersPortfolioSectionMaximized(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userPrefersPortfolioSectionMaximized",
+                                                                                                   defaultReturnValue: HomeScreenUserPreferences.defaultUserPrefersPortfolioSectionMaximizedValue))
+        
+        case userPrefersAllAssetsSectionMaximized(UserDefaultsValueKey<Any> = UserDefaultsValueKey<Any>("userPrefersAllAssetsSectionMaximized",
+                                                                                                   defaultReturnValue: HomeScreenUserPreferences.defaultUserPrefersAllAssetsSectionMaximized))
+        
         func getAssociatedValue() -> UserDefaultsValueKey<Any> {
             switch self {
             case .didCompleteFTUE(let value):
@@ -70,6 +77,10 @@ final class UserDefaultsService {
             case .userAuthMethodPreference(let value):
                 return value
             case .userAuthTokenLifeCyclePreference(let value):
+                return value
+            case .userPrefersPortfolioSectionMaximized(let value):
+                return value
+            case .userPrefersAllAssetsSectionMaximized(let value):
                 return value
             }
         }

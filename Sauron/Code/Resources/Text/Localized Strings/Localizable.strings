@@ -114,6 +114,8 @@
 // Portfolio Section
 "HOME_SCREEN_SECTION_TITLE_MY_PORTFOLIO" = "My Portfolio";
 "HOME_SCREEN_SECTION_MY_PORTFOLIO_PLACEHOLDER_BUTTON_TITLE" = "Start Your Portfolio";
+// Trending Section
+"HOME_SCREEN_SECTION_TITLE_TRENDING" = "Trending";
 // Assets Section
 "HOME_SCREEN_SECTION_TITLE_ALL_ASSETS" = "All Assets";
 // Daily Highs Section

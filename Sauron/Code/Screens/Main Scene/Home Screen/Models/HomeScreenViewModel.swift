@@ -25,9 +25,10 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     @ObservedObject var FFRScreenViewModel: FFRScreenViewModel<coordinator>
     
     // MARK: - Published
+    // User Preferences
+    @Published var homeScreenUserPreferences: HomeScreenUserPreferences = .init()
     // Data Cycling
     @Published var isReloading: Bool = false
-    
     // Deeplinking Fragment
     @Published var selectedSection: Sections? = nil
     // Greeting Message Display
@@ -37,13 +38,10 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     @Published var fullCoverItemState: HomeRoutes? = nil
     @Published var navigationPath: [HomeRoutes] = []
     
-    // MARK: - Section States
-    @Published var portfolioSectionMaximized: Bool = false
-    @Published var allAssetsSectionMaximized: Bool = false
-    
     // MARK: - Data Sources
     @Published var allCoins: [CoinModel] = []
     @Published var portfolioCoins: [CoinModel] = []
+    @Published var trendingCoins: [CoinModel] = []
     
     // MARK: - Sorting Parameters
     /// Highest values to lowest
@@ -93,8 +91,10 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         portfolioSectionPlaceholderButtonBackgroundColor: Color = Colors.permanent_black.0,
         portfolioSectionPlaceholderButtonForegroundColor: Color = Colors.permanent_white.0,
         portfolioSectionPlaceholderButtonShadowColor: Color = Colors.shadow_2.0,
+        // Trending
+        trendingHeaderIconGradient: LinearGradient = Colors.gradient_1,
         // All Assets
-       allAssetsHeaderIconGradient: LinearGradient = Colors.gradient_1,
+        allAssetsHeaderIconGradient: LinearGradient = Colors.gradient_1,
         // Crypto News Section
         cryptoNewsSectionTitleGradient: LinearGradient = Colors.gradient_1,
         cryptoNewsImageColor: Color = Colors.black.0
@@ -103,7 +103,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     let titleFont: FontRepository = .heading_2,
         titleFontWeight: Font.Weight = .semibold,
         // Shared
-        sectionHeaderTitleFont: FontRepository = .heading_3,
+        sectionHeaderTitleFont: FontRepository = .heading_4,
         sectionHeaderTitleFontWeight: Font.Weight = .semibold,
         utilityButtonTitleFont: FontRepository = .body_S_Bold,
         specializedUtilityButtonTitleFont: FontRepository = .body_XS_Bold,
@@ -113,10 +113,22 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
         cryptoNewsSectionTitleFont: FontRepository = .heading_4,
         cryptoNewsSectionTitleFontWeight: Font.Weight = .semibold
     
+    // Dynamic Font
+    // My Portfolio
+    var portfolioSectionHeaderTitleFont: FontRepository {
+        return homeScreenUserPreferences.portfolioSectionMaximized ? .heading_4 : .heading_5
+    }
+    // All Assets
+    var allAssetsSectionHeaderTitleFont: FontRepository {
+        return homeScreenUserPreferences.allAssetsSectionMaximized ? .heading_4 : .heading_5
+    }
+    
     // MARK: - Assets
     // My Portfolio
     let portfolioSectionIcon: Image = Icons.getIconImage(named: .chart_pie_fill),
         portfolioSectionPlaceholderImage: Image = Images.getImage(named: .placeholder_coin_stack_three),
+        // Trending
+        trendingSectionIcon: Image = Icons.getIconImage(named: .flame_fill),
         // All Assets
         allAssetsSectionIcon: Image = Icons.getIconImage(named: .chart_bar_fill),
         // Crypto News Section
@@ -127,6 +139,8 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     let portfolioSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_MY_PORTFOLIO),
         portfolioSectionSortButtonTitle: String = LocalizedStrings.getLocalizedString(for: .VOLUME),
         portfolioSectionPlaceholderButtonTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_MY_PORTFOLIO_PLACEHOLDER_BUTTON_TITLE),
+        // Trending
+        trendingSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_TRENDING),
         // All Assets
         allAssetsSectionTitle: String = LocalizedStrings.getLocalizedString(for: .HOME_SCREEN_SECTION_TITLE_ALL_ASSETS),
         // Crypto News
@@ -139,12 +153,12 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     
     // Dynamic Text | Portfolio Section
     var portfolioSectionTransitionButtonTitle: String {
-        return portfolioSectionMaximized ? minimizeButtonTitle : maximizeButtonTitle
+        return homeScreenUserPreferences.portfolioSectionMaximized ? minimizeButtonTitle : maximizeButtonTitle
     }
     
     // Dynamic Text | All Assets Section
     var allAssetsSectionTransitionButtonTitle: String {
-        return portfolioSectionMaximized ? minimizeButtonTitle : maximizeButtonTitle
+        return homeScreenUserPreferences.allAssetsSectionMaximized ? minimizeButtonTitle : maximizeButtonTitle
     }
     
     // MARK: - Deeplinks
@@ -214,7 +228,9 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
             guard let self = self
             else { return }
             
-            self.portfolioSectionMaximized.toggle()
+            self.homeScreenUserPreferences
+                .portfolioSectionMaximized
+                .toggle()
         }
     }
     
@@ -228,7 +244,9 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
             guard let self = self
             else { return }
             
-            self.allAssetsSectionMaximized.toggle()
+            self.homeScreenUserPreferences
+                .allAssetsSectionMaximized
+                .toggle()
         }
     }
     
@@ -271,11 +289,11 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     // MARK: - Lazy Loading
     /// If the user's portfolio is loading then display placeholder values
     var portfolioIsLoading: Bool {
-       return !isPortfolioEmpty && isCoinStoreEmpty
+        return !isPortfolioEmpty && isCoinStoreEmpty
     }
     
     var allAssetsIsLoading: Bool {
-       return isCoinStoreEmpty
+        return isCoinStoreEmpty
     }
     
     
@@ -345,7 +363,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
                           ascending: !isDescendingSortOrder,
                           sortKey: .rank,
                           sortKeyType: sortKeyType)
-                    .prefix(self.maxElementCount))
+                        .prefix(self.maxElementCount))
             })
             .assign(to: &$allCoins)
         
@@ -372,9 +390,16 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
                           ascending: !isDescendingSortOrder,
                           sortKey: .volume,
                           sortKeyType: sortKeyType)
-                    .prefix(self.maxElementCount))
+                        .prefix(self.maxElementCount))
             })
             .assign(to: &$portfolioCoins)
+        
+        /// Trending Coins [Max of 7 Coins fetched from the API so the max element count doesn't apply to this data source]
+        dataStores
+            .coinStore
+            .$trendingCoins
+            .receive(on: scheduler)
+            .assign(to: &$trendingCoins)
     }
     
     // MARK: - Transient Content Control
@@ -426,6 +451,7 @@ class HomeScreenViewModel: CoordinatedGenericViewModel {
     enum Sections: String, CaseIterable {
         case eventBanner = "events"
         case myPortfolio = "my portfolio"
+        case trendingCoins = "trending"
         case allAssets = "all assets"
         case highPerformers = "highs"
         case lowPerformers = "lows"
