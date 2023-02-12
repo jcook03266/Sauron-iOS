@@ -11,3 +11,10 @@ import Foundation
 protocol RoutesProtocol {
     var id: String { get }
 }
+
+/// Identifiable conformance implementation
+extension RoutesProtocol {
+    var id: String {
+        return UUID().uuidString
+    }
+}

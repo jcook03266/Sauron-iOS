@@ -1,8 +1,8 @@
 //
 //  Routes.swift
-//  Inspec
+//  Sauron
 //
-//  Created by Justin Cook on 11/15/22.
+//  Created by Justin Cook on 12/22/22.
 //
 
 import Foundation
@@ -13,20 +13,12 @@ import Foundation
 /// Note: Any new views must be added under their respective router
 
 // MARK: - Launch Screen Router
-enum LaunchScreenRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
-    var id: String {
-        UUID().uuidString
-    }
-    
+enum LaunchScreenRoutes: String, CaseIterable, Hashable, RoutesProtocol {
     case main = "" /// Default root route implementation
 }
 
 // MARK: - Onboarding Router
-enum OnboardingRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
-    var id: String {
-        UUID().uuidString
-    }
-
+enum OnboardingRoutes: String, CaseIterable, Hashable, RoutesProtocol {
     case main = ""
     case getStarted = "get started"
     case portfolioCuration = "portfolio curation"
@@ -35,13 +27,9 @@ enum OnboardingRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProto
 }
 
 // MARK: - Main / Tabbar Router [For tabbar use only, no deeplinks!]
-enum MainRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
+enum MainRoutes: String, CaseIterable, Hashable, RoutesProtocol {
     /// For tabbar use only, hence why the auth screen is excluded
     static var allCases: [MainRoutes] = [.home, .wallet, .settings, .alerts]
-    
-    var id: String {
-        UUID().uuidString
-    }
     
     case home
     case wallet
@@ -51,46 +39,26 @@ enum MainRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
 }
 
 // MARK: - Home Tab router
-enum HomeRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
-    var id: String {
-        UUID().uuidString
-    }
-    
+enum HomeRoutes: String, CaseIterable, Hashable, RoutesProtocol {
     case main = ""
     case editPortfolio = "edit portfolio"
     case currencyPreferenceBottomSheet = "currency preference bs" // BS For bottom sheet presentation preference
 }
 // MARK: - Wallets Tab Router
-enum WalletRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
-    var id: String {
-        UUID().uuidString
-    }
-    
+enum WalletRoutes: String, CaseIterable, Hashable, RoutesProtocol {
     case main = ""
 }
 // MARK: - Settings Tab Router
-enum SettingsRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
-    var id: String {
-        UUID().uuidString
-    }
-    
+enum SettingsRoutes: String, CaseIterable, Hashable, RoutesProtocol {
     case main = ""
 }
 // MARK: - Alerts Tab Router
-enum AlertsRoutes: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
-    var id: String {
-        UUID().uuidString
-    }
-    
+enum AlertsRoutes: String, CaseIterable, Hashable, RoutesProtocol {
     case main = ""
 }
 
 /// A record of all possible route pathways across the app, this is used to deeplink a user into a specific part of the application when they trigger a link with a scheme specific to this application
-enum RouteDirectories: String, CaseIterable, Hashable, Identifiable, RoutesProtocol {
-    var id: String {
-        UUID().uuidString
-    }
-    
+enum RouteDirectories: String, CaseIterable, Hashable, RoutesProtocol {
     /// Routable Sections
     case LaunchScreenRoutes = "launch"
     case OnboardingRoutes = "onboarding"

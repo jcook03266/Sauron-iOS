@@ -246,12 +246,12 @@ struct Colors {
     }
 }
 
-// MARK: Colors Enum
+// MARK: Colors
 enum ColorRepository: String, CaseIterable, Codable, Hashable {
     case primary_1, primary_2, primary_3, secondary_1, secondary_2, secondary_3, black, neutral_900, neutral_800, neutral_700, neutral_600, neutral_500, neutral_400, neutral_300, neutral_200, neutral_100, white, attention, shadow_1, shadow_2, text_black, text_white, permanent_white, permanent_black, black_45, backdrop
 }
 
-// MARK: Gradients Enum
+// MARK: Gradients
 enum GradientRepository: String, CaseIterable, Codable, Hashable {
     case gradient_1, gradient_2, gradient_3, gradient_4, gradient_5, gradient_6
 }

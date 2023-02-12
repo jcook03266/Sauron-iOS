@@ -42,8 +42,9 @@ public struct CoordinatorDispatcher {
         }
     }
     
-    /// Keeps track of all tabbar tab coordinators
+    /// Keeps track of all non-root coordinators
     enum Coordinators: Hashable, CaseIterable {
+        /// Tabbar Tab Coordinators
         case homeTabCoordinator
         case walletTabCoordinator
         case settingsTabCoordinator

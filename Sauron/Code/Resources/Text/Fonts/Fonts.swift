@@ -87,7 +87,9 @@ struct Fonts {
         return Font(getUIFont(named: fontName))
     }
     
-    static func getFont(named fontName: FontRepository, with weight: UIFont.Weight) -> Font {
+    static func getFont(named fontName: FontRepository,
+                        with weight: UIFont.Weight) -> Font
+    {
         return Font(getUIFont(named: fontName,
                               with: weight))
     }
@@ -100,7 +102,6 @@ struct Fonts {
                               size: size))
     }
     
-    /** Returns: UIFont, LineHeight, Letter Spacing [When using attributed strings w/ UIFonts] (tracking [do not use kerning])*/
     static func getUIFont(named fontName: FontRepository) -> UIFont {
         let attributes = getAttributes(for: fontName),
             size = attributes.0,
@@ -111,7 +112,9 @@ struct Fonts {
     }
     
     /** Polymorphism for specifying a custom weight for a given font name*/
-    static func getUIFont(named fontName: FontRepository, with weight: UIFont.Weight) -> UIFont {
+    static func getUIFont(named fontName: FontRepository,
+                          with weight: UIFont.Weight) -> UIFont
+    {
         let attributes = getAttributes(for: fontName),
             size = attributes.0
         
